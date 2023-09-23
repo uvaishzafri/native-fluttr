@@ -1,0 +1,182 @@
+{
+  "project_info": {
+    "project_number": "1076611361348",
+    "project_id": "native-dev-bd8e3",
+    "storage_bucket": "native-dev-bd8e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076611361348:android:c05fcec68d3431532aaa11",
+        "android_client_info": {
+          "package_name": "com.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076611361348-e6q4falahuk9l28a86791a7j010u0f2o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app",
+            "certificate_hash": "04c27ee73892f590a92466e66516eead31d641af"
+          }
+        },
+        {
+          "client_id": "1076611361348-pf5hv6sjnqrnk6e520scvu4gmoeiokar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsoe-EcKcrNsANToRiGvce26l9wtkx2LM"
+        },
+        {
+          "current_key": "AIzaSyCmLVC-Iquox9ahjGlJW1UrnR6emqzB-TQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076611361348-pf5hv6sjnqrnk6e520scvu4gmoeiokar.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1076611361348-2ejks4rpiahmsa4ls1pgu3hm0qq65blg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.benative.mobile"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076611361348:android:b227cd834fb0b00f2aaa11",
+        "android_client_info": {
+          "package_name": "me.benative.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076611361348-pf5hv6sjnqrnk6e520scvu4gmoeiokar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsoe-EcKcrNsANToRiGvce26l9wtkx2LM"
+        },
+        {
+          "current_key": "AIzaSyCmLVC-Iquox9ahjGlJW1UrnR6emqzB-TQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076611361348-pf5hv6sjnqrnk6e520scvu4gmoeiokar.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1076611361348-2ejks4rpiahmsa4ls1pgu3hm0qq65blg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.benative.mobile"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076611361348:android:a6dc822f4476f87d2aaa11",
+        "android_client_info": {
+          "package_name": "me.benative.mobile.stg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076611361348-pf5hv6sjnqrnk6e520scvu4gmoeiokar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsoe-EcKcrNsANToRiGvce26l9wtkx2LM"
+        },
+        {
+          "current_key": "AIzaSyCmLVC-Iquox9ahjGlJW1UrnR6emqzB-TQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076611361348-pf5hv6sjnqrnk6e520scvu4gmoeiokar.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1076611361348-2ejks4rpiahmsa4ls1pgu3hm0qq65blg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.benative.mobile"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076611361348:android:c1267b43d78f98812aaa11",
+        "android_client_info": {
+          "package_name": "mobile.benative.me.development"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076611361348-mhfqnubsl078ne6dpbvsno6pur002qmt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mobile.benative.me.development",
+            "certificate_hash": "04c27ee73892f590a92466e66516eead31d641af"
+          }
+        },
+        {
+          "client_id": "1076611361348-pf5hv6sjnqrnk6e520scvu4gmoeiokar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsoe-EcKcrNsANToRiGvce26l9wtkx2LM"
+        },
+        {
+          "current_key": "AIzaSyCmLVC-Iquox9ahjGlJW1UrnR6emqzB-TQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076611361348-pf5hv6sjnqrnk6e520scvu4gmoeiokar.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1076611361348-2ejks4rpiahmsa4ls1pgu3hm0qq65blg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.benative.mobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
