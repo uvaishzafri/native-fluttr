@@ -17,6 +17,7 @@ class NativeTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => TextField(
         controller: controller,
+        onChanged: onChanged,
         decoration: InputDecoration(
           filled: true,
           fillColor: Theme.of(context).colorScheme.tertiaryContainer,

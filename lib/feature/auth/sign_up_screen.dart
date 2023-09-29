@@ -14,6 +14,7 @@ import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/text.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 
 const _assetFolder = 'assets/auth';
@@ -88,6 +89,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _goToSignIpScreen() {
     context.router.replace(const SignInRoute());
+  }
+
+  // TODO: This is for DEMO
+  void _storeUserIdToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userIdToken', "DEMO_ID_TOKEN");
+  }
+
+  void _goToHomeScreen() {
+    _storeUserIdToken();
+    context.router.replace(const HomeWrapperRoute());
   }
 
   @override
@@ -530,6 +542,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
+          Future.delayed(const Duration(seconds: 10), () {
+            // TODO: This is for DEMO
+            Navigator.pop(context);
+            _showEmailVerifiedDialog();
+          });
+
           return WillPopScope(
               onWillPop: () => Future.value(false),
               child: SimpleDialog(
@@ -588,14 +606,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _showEmailVerifiedDialog() async {
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pop(context);
-      _goToSignIpScreen();
-    });
     await showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
+          // TODO: This is for DEMO
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.pop(context);
+            _goToHomeScreen();
+          });
           return WillPopScope(
               onWillPop: () => Future.value(false),
               child: SimpleDialog(
@@ -655,7 +674,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: NativeTextField(
               _emailController,
-              hintText: 'Enter ID',
+              hintText: 'Email ID',
               onChanged: (value) {
                 setState(() {
                   _isInputCompleted = value.isValidEmail();

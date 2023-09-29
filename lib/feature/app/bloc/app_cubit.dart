@@ -31,8 +31,25 @@ class AppCubit extends HydratedCubit<AppState> {
     return prefs.getBool('skippedOnBoarding') ?? false;
   }
 
+  Future<String?> _getStoreUserIdToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userIdToken');
+  }
+
   checkAuth() async {
     bool isSkipped = await _getStoreOnboardInfo();
+    String? idToken = await _getStoreUserIdToken();
+
+    if (idToken != null) {
+      emit(AppState.loggedIn(
+          isSkipped,
+          const AuthResult(
+            name: "DEMO",
+            isExpired: false,
+            expiry: 10000,
+          )));
+      return;
+    }
     // _firebaseAuth.
     // emit(state.copyWith(
     //   hasSkippedOnboarding: isSkipped

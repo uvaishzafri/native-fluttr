@@ -78,30 +78,30 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(children: [
       Row(
         children: [
-          NativeUserCard(
-            native: Native(
-                user: "Sarah",
-                type: NativeType.field(),
-                energy: 33,
-                goodFits: [
-                  NativeType.field(),
-                  NativeType.field(),
-                  NativeType.field()
-                ]),
-            userImage: Image.asset("$_assetFolder/ic_test.png"),
-          ),
-          NativeUserCard(
-            native: Native(
-                user: "Sarah",
-                type: NativeType.field(),
-                energy: 33,
-                goodFits: [
-                  NativeType.field(),
-                  NativeType.field(),
-                  NativeType.field()
-                ]),
-            userImage: Image.asset("$_assetFolder/ic_test.png"),
-          )
+          // NativeUserCard(
+          //   native: Native(
+          //       user: "Sarah",
+          //       type: NativeType.field(),
+          //       energy: 33,
+          //       goodFits: [
+          //         NativeType.field(),
+          //         NativeType.field(),
+          //         NativeType.field()
+          //       ]),
+          //   userImage: Image.asset("$_assetFolder/ic_test.png"),
+          // ),
+          // NativeUserCard(
+          //   native: Native(
+          //       user: "Sarah",
+          //       type: NativeType.field(),
+          //       energy: 33,
+          //       goodFits: [
+          //         NativeType.field(),
+          //         NativeType.field(),
+          //         NativeType.field()
+          //       ]),
+          //   userImage: Image.asset("$_assetFolder/ic_test.png"),
+          // )
         ],
       )
     ]);
