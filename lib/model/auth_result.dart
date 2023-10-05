@@ -8,8 +8,8 @@ part 'auth_result.freezed.dart';
 @freezed
 class AuthResult with _$AuthResult {
   const factory AuthResult({
-    required User user,
+    required String name,
     required bool isExpired,
-    required Long expiry,
+    required int expiry,
   }) = _AuthResult;
 }

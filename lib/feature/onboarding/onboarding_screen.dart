@@ -43,6 +43,11 @@ class OnboardingScreen extends StatelessWidget {
     logger.d(prefs.getBool('skippedOnBoarding'));
   }
 
+  _navigateToSignIn(BuildContext context) {
+    _storeOnboardInfo();
+    context.router.replace(const SignInRoute());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,8 +55,7 @@ class OnboardingScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              _storeOnboardInfo();
-              context.router.replace(const SignInRoute());
+              _navigateToSignIn(context);
             },
             child: Text(
               "Skip",
@@ -159,7 +163,7 @@ class OnboardingScreen extends StatelessWidget {
                               ? _pageController.nextPage(
                                   duration: const Duration(milliseconds: 250),
                                   curve: Curves.linear)
-                              : context.router.replace(const SignInRoute());
+                              : _navigateToSignIn(context);
                         },
                         child: Container(
                           margin: const EdgeInsets.symmetric(
