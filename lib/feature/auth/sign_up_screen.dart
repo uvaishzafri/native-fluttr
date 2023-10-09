@@ -41,6 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   StreamController<ErrorAnimationType>? errorController;
   bool _isInputCompleted = false;
+  String _otp = '';
 
   @override
   void initState() {
@@ -87,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _timer?.cancel();
   }
 
-  void _goToSignIpScreen() {
+  void _goToSignInScreen() {
     context.router.replace(const SignInRoute());
   }
 
@@ -185,12 +186,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             color: Colors.green.shade600,
             fontWeight: FontWeight.bold,
           ),
-          length: 4,
+          length: 6,
           obscureText: false,
           blinkWhenObscuring: false,
           animationType: AnimationType.fade,
           validator: (v) {
-            if (v!.length < 3) {
+            if (v!.length < 6) {
               return null;
             } else {
               return null;
@@ -207,7 +208,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             shape: PinCodeFieldShape.box,
             borderRadius: BorderRadius.circular(5),
             fieldHeight: 56,
-            fieldWidth: 67,
+            fieldWidth: 45,
             activeFillColor: fillColor,
             inactiveColor: fillColor,
             selectedColor: fillColor,
@@ -222,17 +223,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
           keyboardType: TextInputType.number,
           onCompleted: (value) {
             // debugPrint("Completed");
+            _otp = value;
           },
           // onTap: () {
           //   print("Pressed");
           // },
           onChanged: (value) {
             debugPrint(value);
-            bloc.inputPincode();
+            // bloc.inputPincode(value);
 
-            if (value.length == 4) {
+            if (value.length == 6) {
               setState(() {
                 _isInputCompleted = true;
+                _otp = value;
               });
             } else {
               setState(() {
@@ -291,7 +294,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     setState(() {
                       _isInputCompleted = false;
                     });
-                    bloc.inputEmail();
+                    bloc.inputPincode(_otp);
                   },
             child: const Text(
               'Next',
@@ -494,7 +497,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             onPressed: !_isEnabledSubmitPhoneButton
                 ? null
                 : () {
-                    bloc.inputPincode();
+                    bloc.submitPhoneNumber(_number.phoneNumber ?? '', true);
                   },
             child: const Text(
               'Get OTP',
@@ -528,7 +531,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  _goToSignIpScreen();
+                  _goToSignInScreen();
                 },
             )),
           ],

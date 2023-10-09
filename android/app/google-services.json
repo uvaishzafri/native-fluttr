@@ -100,6 +100,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1076611361348-dqc6i747dpublaij3l0q9017h1lg9i2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.benative.mobile.stg",
+            "certificate_hash": "c460b66e46544d831913d85c145ae1ebb2456e65"
+          }
+        },
+        {
           "client_id": "1076611361348-pf5hv6sjnqrnk6e520scvu4gmoeiokar.apps.googleusercontent.com",
           "client_type": 3
         }

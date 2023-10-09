@@ -35,6 +35,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   StreamController<ErrorAnimationType>? errorController;
   bool _isInputCompleted = false;
+  String _otp = '';
 
   @override
   void initState() {
@@ -162,12 +163,12 @@ class _SignInScreenState extends State<SignInScreen> {
             color: Colors.green.shade600,
             fontWeight: FontWeight.bold,
           ),
-          length: 4,
+          length: 6,
           obscureText: false,
           blinkWhenObscuring: false,
           animationType: AnimationType.fade,
           validator: (v) {
-            if (v!.length < 3) {
+            if (v!.length < 6) {
               return null;
             } else {
               return null;
@@ -184,7 +185,7 @@ class _SignInScreenState extends State<SignInScreen> {
             shape: PinCodeFieldShape.box,
             borderRadius: BorderRadius.circular(5),
             fieldHeight: 56,
-            fieldWidth: 67,
+            fieldWidth: 45,
             activeFillColor: fillColor,
             inactiveColor: fillColor,
             selectedColor: fillColor,
@@ -206,6 +207,7 @@ class _SignInScreenState extends State<SignInScreen> {
           //   )
           // ],
           onCompleted: (value) {
+            _otp = value;
             // debugPrint("Completed");
           },
           // onTap: () {
@@ -213,14 +215,15 @@ class _SignInScreenState extends State<SignInScreen> {
           // },
           onChanged: (value) {
             debugPrint(value);
-            bloc.inputPincode();
+            // bloc.inputPincode(value);
             // setState(() {
             //   _isError = false;
             // });
 
-            if (value.length == 4) {
+            if (value.length == 6) {
               setState(() {
                 _isInputCompleted = true;
+                _otp = value;
               });
             } else {
               setState(() {
@@ -276,7 +279,8 @@ class _SignInScreenState extends State<SignInScreen> {
             onPressed: !_isInputCompleted
                 ? null
                 : () {
-                    bloc.erorrPincode();
+                    bloc.inputPincode(_otp);
+                    // bloc.erorrPincode();
                   },
             child: const Text(
               'Sign in',
@@ -443,7 +447,7 @@ class _SignInScreenState extends State<SignInScreen> {
           height: 56.0,
           width: double.infinity,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(6)),
+              borderRadius: const BorderRadius.all(Radius.circular(6)),
               boxShadow: const [
                 BoxShadow(
                   color: Color(0x19616161),
@@ -479,7 +483,7 @@ class _SignInScreenState extends State<SignInScreen> {
             onPressed: !_isEnabledSubmitPhoneButton
                 ? null
                 : () {
-                    bloc.inputPincode();
+                    bloc.submitPhoneNumber(_number.phoneNumber ?? '', false);
                   },
             child: const Text(
               'Get OTP',

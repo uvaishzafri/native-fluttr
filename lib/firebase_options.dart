@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1076611361348',
     projectId: 'native-dev-bd8e3',
     storageBucket: 'native-dev-bd8e3.appspot.com',
-    androidClientId: '1076611361348-e6q4falahuk9l28a86791a7j010u0f2o.apps.googleusercontent.com',
+    androidClientId: '1076611361348-dqc6i747dpublaij3l0q9017h1lg9i2e.apps.googleusercontent.com',
     iosClientId: '1076611361348-2ejks4rpiahmsa4ls1pgu3hm0qq65blg.apps.googleusercontent.com',
     iosBundleId: 'me.benative.mobile',
   );
