@@ -73,7 +73,7 @@ Future<void> main() async {
             : await getApplicationDocumentsDirectory(),
       );
 
-      return runApp(TranslationProvider(child: const App()));
+      return runApp(TranslationProvider(child: App()));
     },
     (exception, stackTrace) async {
       getIt<Logger>().e("", exception, stackTrace);

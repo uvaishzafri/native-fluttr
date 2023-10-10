@@ -12,7 +12,7 @@ import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/auth/auth_scaffold.dart';
 import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/util/string_ext.dart';
-import 'package:native/widget/text.dart';
+import 'package:native/widget/native_text_field.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';

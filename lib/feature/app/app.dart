@@ -12,7 +12,10 @@ import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/i18n/translations.g.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  App({super.key});
+
+  final AppRouter appRouter = getIt<AppRouter>();
+  final Config config = getIt<Config>();
 
   // This widget is the root of your application.
   @override
@@ -22,8 +25,6 @@ class App extends StatelessWidget {
       child: BlocBuilder<AppCubit, AppState>(
         buildWhen: (p, c) => p.theme != c.theme,
         builder: (context, state) {
-          final AppRouter appRouter = getIt<AppRouter>();
-          final Config config = getIt<Config>();
           return GlobalLoaderOverlay(
               useDefaultLoading: false,
               overlayWidget: Center(
@@ -93,17 +94,18 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
     return BlocProvider(
         create: (context) => context.read<AppCubit>(),
         child: BlocListener<AppCubit, AppState>(
+          // listenWhen: (previous, current) => true,
           listener: (context, state) {
             FlutterNativeSplash.remove();
-
-            if (state.authResult != null) {
-              context.router.replace(const HomeWrapperRoute());
-            } else {
-              (state.hasSkippedOnboarding == false)
-                  ? context.router.replace(OnboardingRoute())
-                  // : context.router.replace(const HomeWrapperRoute());
-                  : context.router.replace(const SignInRoute());
-            }
+            context.router.replace(const BasicDetailsRoute());
+            // if (state.authResult != null) {
+            //   context.router.replace(const HomeWrapperRoute());
+            // } else {
+            //   (state.hasSkippedOnboarding == false)
+            //       ? context.router.replace(OnboardingRoute())
+            //       // : context.router.replace(const HomeWrapperRoute());
+            //       : context.router.replace(const SignInRoute());
+            // }
           },
           child: RepaintBoundary(
             key: _key,

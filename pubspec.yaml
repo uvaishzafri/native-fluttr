@@ -71,7 +71,11 @@ dependencies:
   sprintf: ^7.0.0
   loader_overlay: ^2.3.2
   dotted_line: ^3.2.2
-
+  image_picker: ^1.0.4
+  dropdown_button2: ^2.3.9
+  flutter_holo_date_picker: ^1.1.2+1
+  cloud_firestore: ^4.9.3
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -112,7 +116,8 @@ flutter:
     - assets/onboarding/
     - assets/auth/
     - assets/home/
-    - .env.prod
+    - assets/profile/
+    - assets/chat/
     - .env.stg
 
   # An image asset can refer to one or more resolution-specific "variants", see

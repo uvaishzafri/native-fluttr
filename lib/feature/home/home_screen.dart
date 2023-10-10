@@ -6,7 +6,7 @@ import 'package:native/feature/home/bloc/home_cubit.dart';
 import 'package:native/feature/home/home_scaffold.dart';
 import 'package:native/model/native.dart';
 import 'package:native/widget/native_card.dart';
-import 'package:native/widget/text.dart';
+import 'package:native/widget/native_text_field.dart';
 
 const _assetFolder = 'assets/home';
 

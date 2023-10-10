@@ -5,14 +5,14 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_cubit.freezed.dart';
 part 'auth_state.dart';
 
 @lazySingleton
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this._firebaseRepository, this._logger)
-      : super(const AuthState.initial());
+  AuthCubit(this._firebaseRepository, this._logger) : super(const AuthState.initial());
 
   final FirebaseRepository _firebaseRepository;
   final Logger _logger;
@@ -21,8 +21,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   void submitPhoneNumber(String phoneNumber, bool isSignUp) {
     this.isSignUp = isSignUp;
-    _firebaseRepository.submitPhoneNumber(
-        phoneNumber, verificationCompleted, verificationFailed, codeSent);
+    _firebaseRepository.submitPhoneNumber(phoneNumber, verificationCompleted, verificationFailed, codeSent);
     emit(const AuthState.inputPincode());
   }
 
@@ -44,8 +43,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> inputPincode(String otpCode) async {
     try {
-      PhoneAuthCredential credential =
-          _firebaseRepository.submitOTP(otpCode, verificationId);
+      PhoneAuthCredential credential = _firebaseRepository.submitOTP(otpCode, verificationId);
       await signIn(credential);
     } catch (error) {
       emit(const AuthState.errorPincode());
@@ -60,8 +58,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (idToken != null) {
           _storeUserIdToken(idToken);
         } else {
-          emit(AuthState.failed(
-              exception: Exception('Unable to get user token from firebase')));
+          emit(AuthState.failed(exception: Exception('Unable to get user token from firebase')));
           return;
         }
         if (isSignUp) {
@@ -70,8 +67,7 @@ class AuthCubit extends Cubit<AuthState> {
           emit(AuthState.authorized(user: userCredentials.user!));
         }
       } else {
-        emit(AuthState.failed(
-            exception: Exception('Unable to get user details from firebase')));
+        emit(AuthState.failed(exception: Exception('Unable to get user details from firebase')));
       }
     } catch (error) {
       emit(const AuthState.errorPincode());

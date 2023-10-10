@@ -6,6 +6,8 @@ class NativeTextField extends StatelessWidget {
     this.hintText,
     this.prefixIcon,
     this.onChanged,
+    this.maxLength,
+    this.maxLines,
     Key? key,
   }) : super(key: key);
 
@@ -13,29 +15,26 @@ class NativeTextField extends StatelessWidget {
   final String? hintText;
   final Icon? prefixIcon;
   final ValueChanged<String>? onChanged;
+  final int? maxLength;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) => TextField(
         controller: controller,
         onChanged: onChanged,
+        maxLength: maxLength,
+        maxLines: maxLines,
         decoration: InputDecoration(
           filled: true,
           fillColor: Theme.of(context).colorScheme.tertiaryContainer,
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.transparent, width: 0.0),
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           hintText: hintText,
           prefixIcon: prefixIcon, //icon at head of input
-          hintStyle: const TextStyle(
-              color: Color(0x321E1E1E),
-              fontSize: 14,
-              fontWeight: FontWeight.w500),
-          labelStyle: const TextStyle(
-              color: Color(0xff1E1E1E),
-              fontSize: 14,
-              fontWeight: FontWeight.w500),
+          hintStyle: const TextStyle(color: Color(0x321E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
+          labelStyle: const TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
         ),
       );
 }

@@ -108,6 +108,11 @@ class _SignInScreenState extends State<SignInScreen> {
             if (state is AuthErrorPincodeState) {
               errorController!.add(ErrorAnimationType.shake);
             }
+            if (state is AuthAuthorizedState) {
+              context.router.replaceAll([
+                const HomeWrapperRoute()
+              ]);
+            }
           },
         ));
   }
