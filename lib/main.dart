@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:native/config.dart';
 import 'package:native/di/di.dart';
 import 'package:native/firebase_options.dart';
 import 'package:native/i18n/translations.g.dart';
@@ -49,15 +47,14 @@ Future<void> main() async {
       // Use device locale.
       LocaleSettings.useDeviceLocale();
 
-      // Configures dependency injection to init modules and singletons.
-      await configureDi();
-      getIt<Logger>().d("DI has been configured");
-
       // Initial Firebase
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      FirebaseAuth.instance.tenantId = getIt<Config>().tenantId;
+
+      // Configures dependency injection to init modules and singletons.
+      await configureDi();
+      getIt<Logger>().d("DI has been configured");
 
       if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS) {
         // Sets up allowed device orientations and other settings for the app.

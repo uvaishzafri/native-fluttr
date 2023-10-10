@@ -24,7 +24,6 @@ class Config with _$Config {
     required String hacknewsBaseUrl,
     required bool debugShowCheckedModeBanner,
     required bool debugShowMaterialGrid,
-    required String tenantId,
   }) = _Config;
 
   Config._();
@@ -69,8 +68,6 @@ class Config with _$Config {
         break;
     }
 
-    final tenandId = dotenv.env['AUTH_TENANT_ID'] ?? '';
-
     return Config(
       build: build,
       flavor: flavor,
@@ -78,7 +75,6 @@ class Config with _$Config {
       hacknewsBaseUrl: hacknewsBaseUrl,
       debugShowCheckedModeBanner: build == Build.debug,
       debugShowMaterialGrid: false,
-      tenantId: tenandId,
     );
   }
 
