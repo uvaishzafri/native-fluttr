@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_dropdown.dart';
@@ -18,33 +19,6 @@ class OtherDetailsScreen extends StatefulWidget {
 }
 
 class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
-  final Map<String, List<String>> items = {
-    'Christian': [
-      'Catholic',
-      'Russian',
-      'Syriac',
-    ],
-    'Hindu': [
-      'Bengali',
-      'Brahmin',
-      'Marwadi'
-    ],
-    'Buddhist': [
-      'Bengali',
-      'Brahmin',
-      'Marwadi'
-    ],
-    'Muslim': [
-      'Bengali',
-      'Brahmin',
-      'Marwadi'
-    ],
-    'Jain': [
-      'Bengali',
-      'Brahmin',
-      'Marwadi'
-    ],
-  };
 
   String? selectedReligion;
   String? selectedCommunity;
@@ -89,7 +63,7 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
             },
             value: selectedReligion,
             searchController: religionSearchController,
-            items: items.keys
+            items: religions.keys
                 .map((item) => DropdownMenuItem(
                       value: item,
                       child: NativeMediumBodyText(item),
@@ -108,7 +82,7 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
               value: selectedCommunity,
               searchController: communitySearchController,
               items: selectedReligion != null
-                  ? items[selectedReligion]!
+                  ? religions[selectedReligion]!
                       .map((item) => DropdownMenuItem(
                             value: item,
                             child: NativeMediumBodyText(item),

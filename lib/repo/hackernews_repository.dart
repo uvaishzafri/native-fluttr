@@ -15,7 +15,7 @@ class HackNewsRepository {
   Future<Either<Exception, List<int>>> topStories() async {
     final response = await _dioClient.get('/topstories.json');
 
-    if (!isSuccess(response.statusCode)) return Left(RequestError());
+    if (!isSuccess(response.statusCode)) return Left(RequestError(''));
     if (response.data == null) return Left(NoResponseBody());
 
     final body = response.data as List;
@@ -25,7 +25,7 @@ class HackNewsRepository {
   Future<Either<Exception, List<int>>> bestStories() async {
     final response = await _dioClient.get('/beststories.json');
 
-    if (!isSuccess(response.statusCode)) return Left(RequestError());
+    if (!isSuccess(response.statusCode)) return Left(RequestError(''));
     if (response.data == null) return Left(NoResponseBody());
 
     final body = response.data as List;
@@ -35,7 +35,7 @@ class HackNewsRepository {
   Future<Either<Exception, Story>> story(int id) async {
     final response = await _dioClient.get('/item/$id.json');
 
-    if (!isSuccess(response.statusCode)) return Left(RequestError());
+    if (!isSuccess(response.statusCode)) return Left(RequestError(''));
     if (response.data == null) return Left(NoResponseBody());
 
     final story = Story.fromJson(response.data as Map<String, dynamic>);

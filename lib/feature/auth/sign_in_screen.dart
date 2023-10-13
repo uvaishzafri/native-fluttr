@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart';
@@ -11,8 +12,13 @@ import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/auth/auth_scaffold.dart';
 import 'package:native/feature/auth/bloc/auth_cubit.dart';
+import 'package:native/util/string_ext.dart';
+import 'package:native/widget/native_button.dart';
+import 'package:native/widget/native_text_field.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sprintf/sprintf.dart';
+
+const _assetFolder = 'assets/auth';
 
 @RoutePage()
 class SignInScreen extends StatefulWidget {
@@ -23,7 +29,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final Logger logger = getIt<Logger>();
   final String _initialCountry = 'IN';
   PhoneNumber _number = PhoneNumber(isoCode: 'IN');
@@ -32,6 +39,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Timer? _timer;
   int _start = initialTimerValue;
+  Timer? _checkEmailVerifiedTimer;
 
   StreamController<ErrorAnimationType>? errorController;
   bool _isInputCompleted = false;
@@ -47,8 +55,10 @@ class _SignInScreenState extends State<SignInScreen> {
     if (errorController?.isClosed == false) {
       errorController?.close();
     }
-
+    _controller.dispose();
+    _emailController.dispose();
     _timer?.cancel();
+    _checkEmailVerifiedTimer?.cancel();
     super.dispose();
   }
 
@@ -83,6 +93,10 @@ class _SignInScreenState extends State<SignInScreen> {
     context.router.replace(const SignUpRoute());
   }
 
+  void _goToSignInScreen() {
+    context.router.replace(const SignInRoute());
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -96,6 +110,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 state is AuthErrorPincodeState) {
               return AuthScaffold(_inputPincode(
                   context, bloc, _number.phoneNumber ?? "", state));
+            } else if (state is AuthInputEmailState || state is AuthEmailSendFailedState) {
+              return AuthScaffold(_inputEmail(context, bloc, _number.phoneNumber ?? "", state));
             } else {
               return AuthScaffold(_inputPhone(context, bloc));
             }
@@ -107,6 +123,27 @@ class _SignInScreenState extends State<SignInScreen> {
             }
             if (state is AuthErrorPincodeState) {
               errorController!.add(ErrorAnimationType.shake);
+            }
+            if (state is AuthErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
+            }
+            if (state is AuthEmailSendFailedState) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
+            }
+            if (state is AuthErrorPincodeState) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
+            }
+            if (state is AuthEmailVerificationCompleteState) {
+              _checkEmailVerifiedTimer?.cancel();
+              Navigator.pop(context);
+              _showEmailVerifiedDialog();
+            }
+            if (state is AuthEmailVerificationSentState) {
+              _checkEmailVerifiedTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+                final bloc = BlocProvider.of<AuthCubit>(context);
+                bloc.checkIfEmailVerified();
+              });
+              _showSentVerificationEmailDialog(_emailController.text);
             }
             if (state is AuthAuthorizedState) {
               context.router.replaceAll([
@@ -284,6 +321,7 @@ class _SignInScreenState extends State<SignInScreen> {
             onPressed: !_isInputCompleted
                 ? null
                 : () {
+                    FocusManager.instance.primaryFocus?.unfocus();
                     bloc.inputPincode(_otp);
                     // bloc.erorrPincode();
                   },
@@ -421,7 +459,7 @@ class _SignInScreenState extends State<SignInScreen> {
             fontWeight: FontWeight.w500,
           ),
           // initialValue: number,
-          textFieldController: controller,
+          textFieldController: _controller,
           formatInput: true,
           keyboardType: const TextInputType.numberWithOptions(
               signed: true, decimal: true),
@@ -448,68 +486,75 @@ class _SignInScreenState extends State<SignInScreen> {
           countries: [_initialCountry],
         ),
         const SizedBox(height: 30),
-        Container(
-          height: 56.0,
-          width: double.infinity,
-          decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(6)),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x19616161),
-                  offset: Offset(10, 10),
-                  blurRadius: 10.0,
-                  spreadRadius: 1.0,
-                ),
-              ],
-              gradient: LinearGradient(
-                colors: [
-                  _isEnabledSubmitPhoneButton
-                      ? const Color(0xB2BE94C6)
-                      : const Color(0x55BE94C6),
-                  _isEnabledSubmitPhoneButton
-                      ? const Color(0xB2BE94C6)
-                      : const Color(0x55BE94C6),
-                  _isEnabledSubmitPhoneButton
-                      ? const Color(0xB27BC6CC)
-                      : const Color(0x557BC6CC),
-                ],
-              )),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.transparent,
-              disabledForegroundColor: Colors.transparent,
-              backgroundColor: Colors.transparent,
-              disabledBackgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-            onPressed: !_isEnabledSubmitPhoneButton
-                ? null
-                : () {
-                    bloc.submitPhoneNumber(_number.phoneNumber ?? '', false);
-                  },
-            child: const Text(
-              'Get OTP',
-              style: TextStyle(
-                color: Color(0xffffffff),
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+        NativeButton(
+          isEnabled: _isEnabledSubmitPhoneButton,
+          text: 'Get OTP',
+          onPressed: !_isEnabledSubmitPhoneButton
+              ? null
+              : () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  bloc.submitPhoneNumber(_number.phoneNumber ?? '', false);
+                },
         ),
+        // Container(
+        //   height: 56.0,
+        //   width: double.infinity,
+        //   decoration: BoxDecoration(
+        //       borderRadius: const BorderRadius.all(Radius.circular(6)),
+        //       boxShadow: const [
+        //         BoxShadow(
+        //           color: Color(0x19616161),
+        //           offset: Offset(10, 10),
+        //           blurRadius: 10.0,
+        //           spreadRadius: 1.0,
+        //         ),
+        //       ],
+        //       gradient: LinearGradient(
+        //         colors: [
+        //           _isEnabledSubmitPhoneButton
+        //               ? const Color(0xB2BE94C6)
+        //               : const Color(0x55BE94C6),
+        //           _isEnabledSubmitPhoneButton
+        //               ? const Color(0xB2BE94C6)
+        //               : const Color(0x55BE94C6),
+        //           _isEnabledSubmitPhoneButton
+        //               ? const Color(0xB27BC6CC)
+        //               : const Color(0x557BC6CC),
+        //         ],
+        //       )),
+        //   child: ElevatedButton(
+        //     style: ElevatedButton.styleFrom(
+        //       foregroundColor: Colors.transparent,
+        //       disabledForegroundColor: Colors.transparent,
+        //       backgroundColor: Colors.transparent,
+        //       disabledBackgroundColor: Colors.transparent,
+        //       shadowColor: Colors.transparent,
+        //       shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(6),
+        //       ),
+        //     ),
+        //     onPressed: !_isEnabledSubmitPhoneButton
+        //         ? null
+        //         : () {
+        //             bloc.submitPhoneNumber(_number.phoneNumber ?? '', false);
+        //           },
+        //     child: const Text(
+        //       'Get OTP',
+        //       style: TextStyle(
+        //         color: Color(0xffffffff),
+        //         fontSize: 18,
+        //         fontWeight: FontWeight.w600,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
               "Don't have an account? ",
-              style: TextStyle(
-                  color: Color(0xff1E1E1E),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500),
+              style: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
             ),
             Text.rich(TextSpan(
               text: 'Sign up',
@@ -526,6 +571,187 @@ class _SignInScreenState extends State<SignInScreen> {
                 },
             )),
           ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showSentVerificationEmailDialog(String email) async {
+    await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          Future.delayed(const Duration(seconds: 10), () {
+            // TODO: This is for DEMO
+            // Navigator.pop(context);
+            // _showEmailVerifiedDialog();
+          });
+
+          return WillPopScope(
+              onWillPop: () => Future.value(false),
+              child: SimpleDialog(
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 38, horizontal: 21),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset("$_assetFolder/ic_send_email_verification.svg"),
+                        const SizedBox(height: 28),
+                        const Text(
+                          "Verify your Email ID",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          "Please click on the link sent to your email address $email to verify",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Color(0xff1E1E1E), fontSize: 12, fontWeight: FontWeight.w400),
+                        ),
+                        const SizedBox(height: 14),
+                        Text.rich(TextSpan(
+                          text: 'Edit Email',
+                          style: TextStyle(
+                            color: const Color(0xFFBE94C6),
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Theme.of(context).colorScheme.primary,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pop(context);
+                            },
+                        )),
+                      ],
+                    ),
+                  ),
+                ],
+              ));
+        });
+  }
+
+  Future<void> _showEmailVerifiedDialog() async {
+    await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          // TODO: This is for DEMO
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.pop(context);
+            _goToSignInScreen();
+          });
+          return WillPopScope(
+              onWillPop: () => Future.value(false),
+              child: SimpleDialog(
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 42),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset("$_assetFolder/ic_verified.svg"),
+                        const SizedBox(height: 28),
+                        const Text(
+                          "Successfully verified",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ));
+        });
+  }
+
+  Widget _inputEmail(BuildContext context, AuthCubit bloc, String phone, AuthState state) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        const Text(
+          'Enter your Email ID',
+          textAlign: TextAlign.start,
+          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 22, fontWeight: FontWeight.w500),
+        ),
+        const Text(
+          "Please enter your Email ID to verify account",
+          textAlign: TextAlign.start,
+          style: TextStyle(color: Color(0xff7B7B7B), fontSize: 14, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 32),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: NativeTextField(
+              _emailController,
+              hintText: 'Email ID',
+              onChanged: (value) {
+                setState(() {
+                  _isInputCompleted = value.isValidEmail();
+                });
+              },
+            )),
+        const SizedBox(height: 30),
+        Container(
+          height: 56.0,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(6)),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x19616161),
+                  offset: Offset(10, 10),
+                  blurRadius: 10.0,
+                  spreadRadius: 1.0,
+                ),
+              ],
+              gradient: LinearGradient(
+                colors: [
+                  _isInputCompleted
+                      ? const Color(0xB2BE94C6)
+                      : const Color(0x55BE94C6),
+                  _isInputCompleted
+                      ? const Color(0xB2BE94C6)
+                      : const Color(0x55BE94C6),
+                  _isInputCompleted
+                      ? const Color(0xB27BC6CC)
+                      : const Color(0x557BC6CC),
+                ],
+              )),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.transparent,
+              disabledForegroundColor: Colors.transparent,
+              backgroundColor: Colors.transparent,
+              disabledBackgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+            ),
+            onPressed: !_isInputCompleted
+                ? null
+                : () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    bloc.verifyEmail(_emailController.text);
+                    // _showSentVerificationEmailDialog(_emailController.text);
+                  },
+            child: const Text(
+              'Verify Email',
+              style: TextStyle(
+                color: Color(0xffffffff),
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
         ),
       ],
     );

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/native_button.dart';
@@ -10,12 +11,6 @@ import 'package:native/widget/native_dropdown.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
-
-enum Gender {
-  male,
-  female,
-  others
-}
 
 @RoutePage()
 class BasicPrefrencesScreen extends StatefulWidget {
@@ -33,13 +28,6 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
   RangeValues minMaxAge = const RangeValues(22, 40);
   String? selectedLocation;
 
-  List<String> items = [
-    'Bengaluru',
-    'Mumbai',
-    'Delhi',
-    'Chennai',
-    'Pune'
-  ];
   @override
   void dispose() {
     locationSearchTextController.dispose();
@@ -134,7 +122,7 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
             },
             value: selectedLocation,
             searchController: locationSearchTextController,
-            items: items
+            items: locations
                 .map((item) => DropdownMenuItem(
                       value: item,
                       child: NativeMediumBodyText(item),

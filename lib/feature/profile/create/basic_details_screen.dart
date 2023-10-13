@@ -1,8 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/profile/create/create_profile_scaffold.dart';
+import 'package:native/feature/profile/cubit/profile_cubit.dart';
+import 'package:native/model/custom_claims.dart';
+import 'package:native/model/user.dart';
+import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/native_button.dart';
@@ -11,12 +18,6 @@ import 'package:native/widget/native_text_field.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
-
-enum Gender {
-  male,
-  female,
-  others
-}
 
 @RoutePage()
 class BasicDetailsScreen extends StatefulWidget {
@@ -28,30 +29,22 @@ class BasicDetailsScreen extends StatefulWidget {
 
 class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
   Gender _selectedGender = Gender.male;
-  String? selectedLocation;
-  final TextEditingController nameTextEditingController = TextEditingController();
-  final TextEditingController aboutYouTextEditingController = TextEditingController();
-  final TextEditingController locationSearchTextController = TextEditingController();
-
-  List<String> items = [
-    'Bengaluru',
-    'Mumbai',
-    'Delhi',
-    'Chennai',
-    'Pune'
-  ];
+  String? _selectedLocation;
+  final TextEditingController _nameTextEditingController = TextEditingController();
+  final TextEditingController _aboutYouTextEditingController = TextEditingController();
+  final TextEditingController _locationSearchTextController = TextEditingController();
 
   @override
   void dispose() {
-    nameTextEditingController.dispose();
-    aboutYouTextEditingController.dispose();
-    locationSearchTextController.dispose();
+    _nameTextEditingController.dispose();
+    _aboutYouTextEditingController.dispose();
+    _locationSearchTextController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget basicDetails() {
+    Widget basicDetails(ProfileCubit profileCubit) {
       return SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,13 +68,13 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
             const SizedBox(height: 20),
             const NativeSmallBodyText('Name'),
             NativeTextField(
-              nameTextEditingController,
+              _nameTextEditingController,
               hintText: 'Name',
             ),
             const SizedBox(height: 28),
             const NativeSmallBodyText('About you'),
             NativeTextField(
-              aboutYouTextEditingController,
+              _aboutYouTextEditingController,
               hintText: 'Tell us about your IKIGAI, when do you feel the most happiest? Eg: while playing with puppies',
               maxLength: 100,
               maxLines: 6,
@@ -91,12 +84,12 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
             NativeDropdown(
               onChanged: (value) {
                 setState(() {
-                  selectedLocation = value;
+                  _selectedLocation = value;
                 });
               },
-              value: selectedLocation,
-              searchController: locationSearchTextController,
-              items: items
+              value: _selectedLocation,
+              searchController: _locationSearchTextController,
+              items: locations
                   .map((item) => DropdownMenuItem(
                         value: item,
                         child: NativeMediumBodyText(item),
@@ -108,55 +101,76 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: Gender.values
-                  .map((e) => Container(
-                        height: 111,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          border: Border.all(color: _selectedGender == e ? ColorUtils.aquaGreen : ColorUtils.grey),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Radio(
-                                  value: e,
-                                  groupValue: _selectedGender,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      if (value != null) {
-                                        _selectedGender = value;
-                                      }
-                                    });
-                                  },
-                                  fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                    return ColorUtils.aquaGreen;
-                                  }),
-                                  visualDensity: const VisualDensity(horizontal: -4),
-                                ),
-                                NativeMediumBodyText(
-                                  e.name.capitalize(),
-                                  fontWeight: FontWeight.w600,
-                                )
-                              ],
-                            ),
-                            e != Gender.others
-                                ? SvgPicture.asset(
-                                    "assets/profile/${e.name}.svg",
-                                    height: 60,
+                  .map((e) => GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedGender = e;
+                          });
+                        },
+                        child: Container(
+                          height: 111,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(color: _selectedGender == e ? ColorUtils.aquaGreen : ColorUtils.grey),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Radio(
+                                    value: e,
+                                    groupValue: _selectedGender,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value != null) {
+                                          _selectedGender = value;
+                                        }
+                                      });
+                                    },
+                                    fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                      return ColorUtils.aquaGreen;
+                                    }),
+                                    visualDensity: const VisualDensity(horizontal: -4),
+                                  ),
+                                  NativeMediumBodyText(
+                                    e.name.capitalize(),
+                                    fontWeight: FontWeight.w600,
                                   )
-                                : const SizedBox(),
-                          ],
+                                ],
+                              ),
+                              e != Gender.others
+                                  ? SvgPicture.asset(
+                                      "assets/profile/${e.name}.svg",
+                                      height: 60,
+                                    )
+                                  : const SizedBox(),
+                            ],
+                          ),
                         ),
                       ))
                   .toList(),
             ),
             const SizedBox(height: 20),
             NativeButton(
-              isEnabled: true,
+              isEnabled: profileCubit.validateBasicDetails(
+                _nameTextEditingController.text,
+                _aboutYouTextEditingController.text,
+                _selectedLocation,
+              ),
               text: 'Next',
-              onPressed: () {
-                context.router.push(const PhotoUploadRoute());
+              onPressed: () async {
+                // final profileBloc = BlocProvider.of<ProfileCubit>(context);
+                final user = User(
+                  displayName: _nameTextEditingController.text.trim(),
+                  customClaims: CustomClaims(
+                    about: _aboutYouTextEditingController.text.trim(),
+                    location: _selectedLocation,
+                    gender: _selectedGender,
+                  ),
+                );
+                profileCubit.updateProfile(user);
+                // context.router.push(PhotoUploadRoute(gender: _selectedGender));
               },
             ),
             const SizedBox(height: 40),
@@ -165,11 +179,48 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
       );
     }
 
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          margin: const EdgeInsets.only(top: 15, left: 32, right: 32),
-          child: basicDetails(),
+    return SafeArea(
+      child: Scaffold(
+        body: BlocProvider(
+          create: (_) => getIt<ProfileCubit>(),
+          child: BlocConsumer<ProfileCubit, ProfileState>(
+            listener: (context, state) {
+              state.map(
+                initial: (_) {},
+                loading: (value) {
+                  if (!context.loaderOverlay.visible) {
+                    context.loaderOverlay.show();
+                  }
+                },
+                userDetails: (_) {
+                  // if (context.loaderOverlay.visible) {
+                  //   context.loaderOverlay.hide();
+                  // }
+                  // context.router.push(PhotoUploadRoute(gender: _selectedGender));
+                },
+                error: (value) {
+                  if (context.loaderOverlay.visible) {
+                    context.loaderOverlay.hide();
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
+                },
+                profileUpdated: (_) {
+                  if (context.loaderOverlay.visible) {
+                    context.loaderOverlay.hide();
+                  }
+                  context.router.push(PhotoUploadRoute(gender: _selectedGender));
+                },
+              );
+            },
+            builder: (context, state) {
+              final profileBloc = BlocProvider.of<ProfileCubit>(context);
+
+              return Container(
+                margin: const EdgeInsets.only(top: 15, left: 32, right: 32),
+                child: basicDetails(profileBloc),
+              );
+            },
+          ),
         ),
       ),
     );

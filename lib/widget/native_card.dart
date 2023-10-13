@@ -2,11 +2,15 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:native/model/native.dart';
+import 'package:native/util/color_utils.dart';
 import 'package:native/widget/images.dart';
+import 'package:native/widget/text/native_medium_body_text.dart';
+import 'package:native/widget/text/native_medium_title_text.dart';
+import 'package:native/widget/text/native_small_body_text.dart';
 
 class ExpandableNativeCard extends StatefulWidget {
-  ExpandableNativeCard({super.key, required this.native});
-  Native native;
+  const ExpandableNativeCard({super.key, required this.native});
+  final Native native;
   @override
   State<StatefulWidget> createState() => _ExpandableNativeCardState();
 }
@@ -102,9 +106,21 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
 
 class NativeEnergyWidget extends StatelessWidget {
   const NativeEnergyWidget(
-      {super.key, required this.energy, required this.radius});
+      {
+    super.key,
+    required this.energy,
+    required this.radius,
+    this.titleFontSize,
+    this.titleFontWeight,
+    this.valueFontSize,
+    this.valueFontWeight,
+  });
   final int energy;
   final double radius;
+  final double? titleFontSize;
+  final FontWeight? titleFontWeight;
+  final double? valueFontSize;
+  final FontWeight? valueFontWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -124,20 +140,22 @@ class NativeEnergyWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             "native. energy",
             style: TextStyle(
-                color: Color(0xffffffff),
-                fontSize: 6,
-                fontWeight: FontWeight.w600),
+              color: const Color(0xffffffff),
+              fontSize: titleFontSize ?? 4,
+              fontWeight: titleFontWeight ?? FontWeight.w600,
+            ),
             textAlign: TextAlign.center,
           ),
           Text(
             "$energy",
-            style: const TextStyle(
-                color: Color(0xffffffff),
-                fontSize: 16,
-                fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: const Color(0xffffffff),
+              fontSize: valueFontSize ?? 12,
+              fontWeight: valueFontWeight ?? FontWeight.w500,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -147,9 +165,11 @@ class NativeEnergyWidget extends StatelessWidget {
 }
 
 class NativeTypeWidget extends StatelessWidget {
-  const NativeTypeWidget({super.key, required this.type, required this.radius});
+  const NativeTypeWidget({super.key, required this.type, required this.radius, this.textStyle, this.isCaps});
   final NativeType type;
   final double radius;
+  final TextStyle? textStyle;
+  final bool? isCaps;
 
   @override
   Widget build(BuildContext context) {
@@ -161,15 +181,18 @@ class NativeTypeWidget extends StatelessWidget {
             height: radius * 2,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                image: DecorationImage(image: type.imageProvider))),
+            image: DecorationImage(image: type.imageProvider, fit: BoxFit.contain),
+          ),
+        ),
         Text(
-          type.name,
-          style: const TextStyle(
+          isCaps ?? false ? type.name.toUpperCase() : type.name,
+          style: textStyle ??
+              const TextStyle(
             color: Color(0xff1E1E1E),
             fontSize: 8,
             fontWeight: FontWeight.w500,
-            letterSpacing: 2,
-            height: 2,
+                letterSpacing: 1.6,
+                height: 22 / 8,
           ),
           textAlign: TextAlign.center,
         ),
@@ -231,9 +254,9 @@ class NativeGoodFitsWidget extends StatelessWidget {
 
 class NativeUserCard extends StatelessWidget {
   const NativeUserCard(
-      {super.key, required this.native, required this.userImage});
+      {super.key, required this.native});
   final Native native;
-  final Image userImage;
+  // final Image userImage;
 
   Widget _buildCard(BuildContext context) {
     return Container(
@@ -246,11 +269,13 @@ class NativeUserCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   NativeHeadImage(
-                    userImage,
+                    Image.asset(native.imageUrl),
+                    // userImage,
                     borderColor: Theme.of(context).colorScheme.primary,
-                    radius: 30,
+                    radius: 43,
                     borderRadius: 3,
                     isGradientBorder: true,
                   ),
@@ -259,18 +284,19 @@ class NativeUserCard extends StatelessWidget {
                   ),
                   Column(
                     children: [
-                      NativeEnergyWidget(energy: native.energy, radius: 15),
+                      NativeEnergyWidget(energy: native.energy, radius: 20),
                       const SizedBox(
                         height: 8,
                       ),
-                      NativeTypeWidget(type: native.type, radius: 15),
+                      NativeTypeWidget(type: native.type, radius: 20),
                     ],
                   )
                 ],
               ),
             ),
             SizedBox(
-              width: double.infinity,
+              // width: 250,
+              // width: double.infinity,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 width: double.infinity,
@@ -281,7 +307,7 @@ class NativeUserCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      native.user,
+                      '${native.user}, ${native.age}',
                       style: const TextStyle(
                         color: Color(0xffffffff),
                         fontSize: 10,
@@ -302,52 +328,220 @@ class NativeUserCard extends StatelessWidget {
               ),
             ),
             Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                child: Column(
-                  children: [
-                    const Text(
-                      "Good fit with",
-                      style: TextStyle(
-                        color: Color(0xff1E1E1E),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 2,
-                      ),
-                      textAlign: TextAlign.center,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Good fit with",
+                    style: TextStyle(
+                      color: Color(0xff1E1E1E),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 2,
                     ),
-                    const SizedBox(height: 12),
-                    // const DottedLine(),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: native.goodFits.asMap().entries.map((e) {
-                        return Container(
-                            margin: EdgeInsets.only(left: e.key > 0 ? 17 : 0),
-                            child: Column(
-                              children: [
-                                Row(children: [
-                                  SvgPicture.asset(
-                                      'assets/home/ic_native_badge.svg'),
-                                  Text(
-                                    "No.${e.key + 1}",
-                                    style: const TextStyle(
-                                      color: Color(0xff1E1E1E),
-                                      fontSize: 8,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  const DottedLine(),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: native.goodFits.asMap().entries.map((e) {
+                      return Container(
+                          margin: EdgeInsets.only(left: e.key > 0 ? 17 : 0),
+                          child: Column(
+                            children: [
+                              Row(children: [
+                                SvgPicture.asset('assets/home/ic_native_badge.svg'),
+                                Text(
+                                  "No.${e.key + 1}",
+                                  style: const TextStyle(
+                                    color: Color(0xff1E1E1E),
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ]),
-                                NativeTypeWidget(
-                                  type: e.value,
-                                  radius: 16,
+                                  textAlign: TextAlign.center,
                                 ),
-                              ],
-                            ));
-                      }).toList(),
+                              ]),
+                              NativeTypeWidget(
+                                type: e.value,
+                                radius: 16,
+                              ),
+                            ],
+                          ));
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        _buildCard(context),
+        Positioned(
+          right: 0,
+          top: 0,
+          child: Container(),
+        ),
+      ],
+    );
+  }
+}
+
+class BigNativeUserCard extends StatelessWidget {
+  const BigNativeUserCard({super.key, required this.native});
+  final Native native;
+  // final Image userImage;
+
+  Widget _buildCard(BuildContext context) {
+    return Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(color: ColorUtils.aquaGreen.withOpacity(0.6)),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      NativeMediumTitleText(
+                        '${native.user}, ${native.age}',
+                        color: ColorUtils.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      const NativeSmallBodyText(
+                        'Osaka, Japan',
+                        color: ColorUtils.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              color: ColorUtils.white,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  NativeHeadImage(
+                    Image.asset(native.imageUrl),
+                    // userImage,
+                    borderColor: Theme.of(context).colorScheme.primary,
+                    radius: 97,
+                    borderRadius: 6,
+                    isGradientBorder: true,
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    children: [
+                      NativeEnergyWidget(
+                        energy: native.energy,
+                        radius: 50,
+                        titleFontSize: 10,
+                        titleFontWeight: FontWeight.w500,
+                        valueFontSize: 30,
+                      ),
+                      const SizedBox(height: 8),
+                      NativeTypeWidget(
+                        type: native.type,
+                        radius: 50,
+                        isCaps: true,
+                        textStyle: const TextStyle(
+                          color: ColorUtils.textGrey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 2.8,
+                          height: 22 / 14,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Container(
+              color: ColorUtils.white,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Good fit with",
+                    style: TextStyle(
+                      color: ColorUtils.textGrey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      height: 22 / 16,
                     ),
-                  ],
-                )),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  const DottedLine(dashGapLength: 2, dashLength: 3),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: native.goodFits.asMap().entries.map((e) {
+                      return Container(
+                          margin: EdgeInsets.only(left: e.key > 0 ? 17 : 0),
+                          child: Column(
+                            children: [
+                              Row(children: [
+                                SvgPicture.asset(
+                                  'assets/home/ic_native_badge.svg',
+                                  height: 16,
+                                ),
+                                Text(
+                                  "No.${e.key + 1}",
+                                  style: const TextStyle(
+                                    color: Color(0xff1E1E1E),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    height: 22 / 12,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ]),
+                              NativeTypeWidget(
+                                type: e.value,
+                                radius: 31,
+                                textStyle: const TextStyle(
+                                  color: ColorUtils.textGrey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  height: 22 / 14,
+                                  letterSpacing: 2.8,
+                                ),
+                              ),
+                            ],
+                          ));
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              color: ColorUtils.purple.withOpacity(0.6),
+              child: const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: NativeMediumBodyText(
+                    'Honest, Responsible & Fair minded',
+                    color: ColorUtils.white,
+                  ),
+                ),
+              ),
+            )
           ],
         ));
   }

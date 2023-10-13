@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/common_scaffold.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
@@ -20,43 +21,8 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final Map<String, List<String>> items = {
-    'Christian': [
-      'Catholic',
-      'Russian',
-      'Syriac',
-    ],
-    'Hindu': [
-      'Bengali',
-      'Brahmin',
-      'Marwadi'
-    ],
-    'Buddhist': [
-      'Bengali',
-      'Brahmin',
-      'Marwadi'
-    ],
-    'Muslim': [
-      'Bengali',
-      'Brahmin',
-      'Marwadi'
-    ],
-    'Jain': [
-      'Bengali',
-      'Brahmin',
-      'Marwadi'
-    ],
-  };
   final TextEditingController locationSearchTextController = TextEditingController();
   String? selectedLocation;
-
-  List<String> locations = [
-    'Bengaluru',
-    'Mumbai',
-    'Delhi',
-    'Chennai',
-    'Pune'
-  ];
 
   String? selectedReligion;
   String? selectedCommunity;
@@ -164,7 +130,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             },
             value: selectedReligion,
             searchController: religionSearchController,
-            items: items.keys
+            items: religions.keys
                 .map((item) => DropdownMenuItem(
                       value: item,
                       child: NativeMediumBodyText(item),
@@ -183,7 +149,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               value: selectedCommunity,
               searchController: communitySearchController,
               items: selectedReligion != null
-                  ? items[selectedReligion]!
+                  ? religions[selectedReligion]!
                       .map((item) => DropdownMenuItem(
                             value: item,
                             child: NativeMediumBodyText(item),

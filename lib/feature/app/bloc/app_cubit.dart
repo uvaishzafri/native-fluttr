@@ -16,7 +16,7 @@ part 'app_state.dart';
 
 @lazySingleton
 class AppCubit extends HydratedCubit<AppState> {
-  AppCubit(this._firebaseAuth) : super(AppState(theme: ThemeModel.initial())) {
+  AppCubit() : super(AppState(theme: ThemeModel.initial())) {
     // Pretend initialization
     // Future.delayed(const Duration(milliseconds: 10),
     //     () => {changeStoryListType(type: StoryListType.top)});
@@ -24,7 +24,7 @@ class AppCubit extends HydratedCubit<AppState> {
     // checkAuth();
   }
 
-  final FirebaseAuth _firebaseAuth;
+  // final FirebaseAuth _firebaseAuth;
 
   Future<bool> _getStoreOnboardInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

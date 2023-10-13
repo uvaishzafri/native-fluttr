@@ -1,21 +1,28 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/profile/cubit/profile_cubit.dart';
+import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
+import 'package:native/widget/native_linear_progress_indicator.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 
 @RoutePage()
 class PhotoUploadScreen extends StatefulWidget {
-  const PhotoUploadScreen({super.key});
-
+  const PhotoUploadScreen({super.key, required this.gender});
+  final Gender gender;
   @override
   State<PhotoUploadScreen> createState() => _PhotoUploadScreenState();
 }
@@ -24,7 +31,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
   File? _imageFile;
   @override
   Widget build(BuildContext context) {
-    Widget photoUpload() {
+    Widget photoUpload(ProfileCubit profileCubit) {
       return Column(
         children: [
           const SizedBox(height: 32),
@@ -34,7 +41,12 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
             middle: NativeMediumTitleText('Create your profile'),
           ),
           const SizedBox(height: 8),
-          const LinearProgressIndicator(value: 1 / 3),
+          NativeLinearProgressIndicator(
+            progress: 1 / 3,
+            gradient: ColorUtils.nativeGradient,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          // const LinearProgressIndicator(value: 1 / 3),
           const SizedBox(height: 4),
           const NativeSmallBodyText(
             '1/3 done',
@@ -51,13 +63,18 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                 width: 231,
                 decoration: const BoxDecoration(shape: BoxShape.circle),
                 child: _imageFile != null
-                    ? Image.file(_imageFile!)
-                    : SvgPicture.asset(
-                        "assets/profile/male.svg",
-                        height: 256,
-                        width: 231,
-                        // colorFilter: ColorFilter.mode(ColorUtils.aquaGreen, BlendMode.srcIn),
-                      ),
+                    ? Image.file(
+                        _imageFile!,
+                        fit: BoxFit.cover,
+                      )
+                    : widget.gender != Gender.others
+                        ? SvgPicture.asset(
+                            "assets/profile/${widget.gender.name}.svg",
+                            height: 256,
+                            width: 231,
+                            // colorFilter: ColorFilter.mode(ColorUtils.aquaGreen, BlendMode.srcIn),
+                          )
+                        : const SizedBox(),
               ),
               Positioned(
                 right: 10,
@@ -81,10 +98,13 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
           ),
           const Spacer(),
           NativeButton(
-            isEnabled: true,
+            isEnabled: _imageFile != null,
             text: 'Next',
-            onPressed: () {
-              context.router.push(const OtherDetailsRoute());
+            onPressed: () async {
+              if (_imageFile != null) {
+                profileCubit.updateProfilePhoto(_imageFile!);
+                // context.router.push(const OtherDetailsRoute());
+              }
             },
           ),
           const SizedBox(height: 40),
@@ -92,11 +112,47 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       );
     }
 
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          margin: const EdgeInsets.only(top: 15, left: 32, right: 32),
-          child: photoUpload(),
+    return SafeArea(
+      child: Scaffold(
+        body: BlocProvider(
+          create: (_) => getIt<ProfileCubit>(),
+          child: BlocConsumer<ProfileCubit, ProfileState>(
+            listener: (context, state) {
+              state.map(
+                initial: (_) {},
+                loading: (value) {
+                  if (!context.loaderOverlay.visible) {
+                    context.loaderOverlay.show();
+                  }
+                },
+                userDetails: (_) {
+                  // if (context.loaderOverlay.visible) {
+                  //   context.loaderOverlay.hide();
+                  // }
+                  // context.router.push(PhotoUploadRoute(gender: _selectedGender));
+                },
+                error: (value) {
+                  if (context.loaderOverlay.visible) {
+                    context.loaderOverlay.hide();
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
+                },
+                profileUpdated: (_) {
+                  if (context.loaderOverlay.visible) {
+                    context.loaderOverlay.hide();
+                  }
+                  context.router.push(const OtherDetailsRoute());
+                },
+              );
+            },
+            builder: (context, state) {
+              final profileBloc = BlocProvider.of<ProfileCubit>(context);
+              return Container(
+                margin: const EdgeInsets.only(top: 15, left: 32, right: 32),
+                child: photoUpload(profileBloc),
+              );
+            },
+          ),
         ),
       ),
     );

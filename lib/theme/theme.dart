@@ -53,7 +53,8 @@ final _appThemeDataLight = FlexThemeData.light(
   useMaterial3: true,
   swapLegacyOnMaterial3: true,
   // To use the playground font, add GoogleFonts package and uncomment
-  fontFamily: GoogleFonts.poppins().fontFamily,
+  fontFamily: 'Poppins',
+  // fontFamily: GoogleFonts.poppins().fontFamily,
 ).copyWith(
   splashFactory: InkSplash.splashFactory,
   splashColor: const Color(0xffBE94C6),

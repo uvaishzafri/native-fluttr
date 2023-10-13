@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class NativeButton extends StatelessWidget {
   const NativeButton(
-      {super.key, required this.isEnabled, required this.text, this.onPressed});
+      {super.key, required this.isEnabled, required this.text, this.onPressed, this.fontSize});
   final bool isEnabled;
   final String text;
   final Function()? onPressed;
+  final double? fontSize;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,9 +44,9 @@ class NativeButton extends StatelessWidget {
         onPressed: !isEnabled ? null : onPressed,
         child: Text(
           text,
-          style: const TextStyle(
-            color: Color(0xffffffff),
-            fontSize: 18,
+          style: TextStyle(
+            color: const Color(0xffffffff),
+            fontSize: fontSize ?? 18,
             fontWeight: FontWeight.w600,
           ),
         ),

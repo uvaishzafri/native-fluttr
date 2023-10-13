@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
+import 'package:native/util/exceptions.dart';
 
 @lazySingleton
 class FirebaseRepository {
@@ -28,6 +29,36 @@ class FirebaseRepository {
 
   Future<UserCredential> signIn(PhoneAuthCredential credential) async {
     return await _auth.signInWithCredential(credential);
+  }
+
+  Future<void> verifyEmail(String email) async {
+    if (_auth.currentUser == null) {
+      throw CustomException('Could not get current user');
+    }
+    await _auth.currentUser?.updateEmail(email);
+    return await _auth.currentUser?.sendEmailVerification(
+      ActionCodeSettings(
+        url: 'https://dev.be-native.me/linking',
+        handleCodeInApp: false,
+        androidInstallApp: true,
+        androidPackageName: 'me.benative.mobile',
+        iOSBundleId: 'me.benative.mobile',
+        // dynamicLinkDomain: 'https://dev.be-native.me/linking',
+      ),
+    );
+    // return await _auth.currentUser!.verifyBeforeUpdateEmail(
+    //   email,
+    //   // ActionCodeSettings(
+    //   //   url: 'https://www.example.com',
+    //   //   androidPackageName: 'me.benative.mobile',
+    //   //   iOSBundleId: 'me.benative.mobile',
+    //   // ),
+    // );
+  }
+
+  bool isEmailVerified() {
+    _auth.currentUser?.reload();
+    return _auth.currentUser?.emailVerified ?? false;
   }
 
   Future<void> logOut() async {

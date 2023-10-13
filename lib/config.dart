@@ -73,7 +73,8 @@ class Config with _$Config {
       flavor: flavor,
       httpClientTimeout: httpClientTimeout,
       hacknewsBaseUrl: hacknewsBaseUrl,
-      debugShowCheckedModeBanner: build == Build.debug,
+      debugShowCheckedModeBanner: false,
+      // debugShowCheckedModeBanner: build == Build.debug,
       debugShowMaterialGrid: false,
     );
   }

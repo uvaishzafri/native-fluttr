@@ -1,14 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:native/dummy_data.dart';
 import 'package:native/di/di.dart';
+import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/home/bloc/home_cubit.dart';
 import 'package:native/feature/home/home_scaffold.dart';
 import 'package:native/model/native.dart';
 import 'package:native/widget/native_card.dart';
 import 'package:native/widget/native_text_field.dart';
 
-const _assetFolder = 'assets/home';
+// const _assetFolder = 'assets/home';
 
 @RoutePage()
 class HomeScreen extends StatefulWidget {
@@ -41,15 +43,37 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, state) {
             final bloc = BlocProvider.of<HomeCubit>(context);
 
-            return HomeScaffold(Container(
-              child: Column(children: [
-                _searchBar(),
-                const SizedBox(height: 13),
-                _nativeCard(),
-                const SizedBox(height: 13),
-                _recommendations(),
-              ]),
-            ));
+            return SafeArea(
+              child: Scaffold(
+                body: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: _searchBar(),
+                    ),
+                    // _searchBar(),
+                    // const SizedBox(height: 13),
+                    SliverPadding(padding: EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
+                    // const SizedBox(height: 13),
+                    SliverPadding(padding: EdgeInsets.all(12), sliver: _recommendations()),
+                  ],
+                ),
+              ),
+            );
+
+            // return HomeScaffold(
+            //   Column(
+            //     mainAxisSize: MainAxisSize.min,
+            //     children: [
+            //       _searchBar(),
+            //       const SizedBox(height: 13),
+            //       _nativeCard(),
+            //       const SizedBox(height: 13),
+            //       _recommendations(),
+            //       Divider(),
+            //       Flexible(child: _recommendations()),
+            //     ],
+            //   ),
+            // );
           },
           listener: (BuildContext context, HomeState state) {}),
     );
@@ -63,73 +87,85 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _nativeCard() {
     return ExpandableNativeCard(
-        native: Native(
-            user: "Sarah",
-            type: NativeType.field(),
-            energy: 33,
-            goodFits: [
-          NativeType.field(),
-          NativeType.field(),
-          NativeType.field()
-        ]));
-  }
-
-  Widget _recommendations() {
-    return Column(children: [
-      Row(
-        children: [
-          // NativeUserCard(
-          //   native: Native(
-          //       user: "Sarah",
-          //       type: NativeType.field(),
-          //       energy: 33,
-          //       goodFits: [
-          //         NativeType.field(),
-          //         NativeType.field(),
-          //         NativeType.field()
-          //       ]),
-          //   userImage: Image.asset("$_assetFolder/ic_test.png"),
-          // ),
-          // NativeUserCard(
-          //   native: Native(
-          //       user: "Sarah",
-          //       type: NativeType.field(),
-          //       energy: 33,
-          //       goodFits: [
-          //         NativeType.field(),
-          //         NativeType.field(),
-          //         NativeType.field()
-          //       ]),
-          //   userImage: Image.asset("$_assetFolder/ic_test.png"),
-          // )
-        ],
-      )
-    ]);
+      native: usersList.first,
+      //   native: Native(
+      //       user: "Sarah",
+      //   imageUrl: 'assets/home/ic_test.png',
+      //   age: '31 yrs',
+      //   type: NativeType.fields(),
+      //       energy: 33,
+      //       goodFits: [
+      //     NativeType.fields(),
+      //     NativeType.fields(),
+      //     NativeType.fields()
+      //   ],
+      // ),
+    );
   }
 
   // Widget _recommendations() {
-  //   return GridView.builder(
-  //     padding: const EdgeInsets.all(8),
-  //     itemCount: 6,
-  //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisSpacing: 10,
-  //       mainAxisSpacing: 10,
-  //       crossAxisCount: 2,
-  //     ),
-  //     itemBuilder: (context, index) {
-  //       return NativeUserCard(
-  //         native: Native(
-  //             user: "Sarah",
-  //             type: NativeType.field(),
-  //             energy: 33,
-  //             goodFits: [
-  //               NativeType.field(),
-  //               NativeType.field(),
-  //               NativeType.field()
-  //             ]),
-  //         userImage: Image.asset("$_assetFolder/ic_test.png"),
-  //       );
-  //     },
-  //   );
+  //   return Column(children: [
+  //     Row(
+  //       children: [
+  //         NativeUserCard(
+  //           native: Native(user: "Sarah", type: NativeType.field(), energy: 33, goodFits: [
+  //             NativeType.field(),
+  //             NativeType.field(),
+  //             NativeType.field()
+  //           ]),
+  //           userImage: Image.asset("$_assetFolder/ic_test.png"),
+  //         ),
+  //         NativeUserCard(
+  //           native: Native(user: "Sarah", type: NativeType.field(), energy: 33, goodFits: [
+  //             NativeType.field(),
+  //             NativeType.field(),
+  //             NativeType.field()
+  //           ]),
+  //           userImage: Image.asset("$_assetFolder/ic_test.png"),
+  //         )
+  //       ],
+  //     )
+  //   ]);
   // }
+
+  Widget _recommendations() {
+    return SliverGrid.builder(
+      // padding: const EdgeInsets.all(8),
+      itemCount: 6,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        crossAxisCount: 2,
+        childAspectRatio: 0.6,
+      ),
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            // var sarah = Native(
+            //   user: "Sarah Clay",
+            //   age: '31 yrs',
+            //   imageUrl: 'assets/home/ic_test.png',
+            //   type: NativeType.fields(),
+            //   energy: 33,
+            //   goodFits: [
+            //     NativeType.moon(),
+            //     NativeType.mist(),
+            //     NativeType.mineral(),
+            //   ],
+            // );
+            context.router.push(NativeCardDetailsRoute(nativeUser: usersList[index]));
+          },
+          child: NativeUserCard(
+            native: usersList[index],
+            // native: Native(user: "Sarah", imageUrl: 'assets/home/ic_test.png', age: '31 yrs', type: NativeType.fields(), energy: 33, goodFits: [
+            //   NativeType.moon(),
+            //   NativeType.mist(),
+            //   NativeType.mineral()
+            // ]),
+            // userImage: Image.asset("$_assetFolder/ic_test.png"),
+          ),
+        );
+      },
+    );
+  }
 }

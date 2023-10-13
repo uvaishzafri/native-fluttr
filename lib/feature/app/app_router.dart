@@ -25,6 +25,10 @@ class AppRouter extends $AppRouter {
         FadeCustomRoute(page: NotificationSettingsRoute.page),
         FadeCustomRoute(page: SocialAccountSettingsRoute.page),
         FadeCustomRoute(page: AccountPlansRoute.page),
+        FadeCustomRoute(page: NativeCardDetailsRoute.page),
+        FadeCustomRoute(page: NativeCardScaffold.page),
+        FadeCustomRoute(page: HowToChoosePartnerLoaderRoute.page),
+        FadeCustomRoute(page: ChoosePartnerRoute.page),
         CustomRoute(
           path: 'home',
           page: HomeWrapperRoute.page,
