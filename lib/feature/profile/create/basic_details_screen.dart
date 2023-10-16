@@ -181,8 +181,8 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        body: BlocProvider(
-          create: (_) => getIt<ProfileCubit>(),
+        body: BlocProvider<ProfileCubit>.value(
+          value: getIt<ProfileCubit>(),
           child: BlocConsumer<ProfileCubit, ProfileState>(
             listener: (context, state) {
               state.map(
@@ -210,6 +210,8 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
                   }
                   context.router.push(PhotoUploadRoute(gender: _selectedGender));
                 },
+                photoUpdated: (_) {},
+                otherDetailsUpdated: (_) {},
               );
             },
             builder: (context, state) {

@@ -6,7 +6,7 @@ import 'package:native/model/native.dart';
 @RoutePage()
 class NativeCardScaffold extends StatelessWidget {
   const NativeCardScaffold({super.key, required this.nativeUser, this.overlayItem});
-  final Native nativeUser;
+  final Native? nativeUser;
   final Widget? overlayItem;
 
   @override

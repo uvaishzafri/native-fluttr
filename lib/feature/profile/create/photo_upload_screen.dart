@@ -15,6 +15,7 @@ import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_linear_progress_indicator.dart';
+import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
@@ -46,7 +47,6 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
             gradient: ColorUtils.nativeGradient,
             borderRadius: BorderRadius.circular(10),
           ),
-          // const LinearProgressIndicator(value: 1 / 3),
           const SizedBox(height: 4),
           const NativeSmallBodyText(
             '1/3 done',
@@ -61,7 +61,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                 clipBehavior: Clip.antiAlias,
                 height: 256,
                 width: 231,
-                decoration: const BoxDecoration(shape: BoxShape.circle),
+                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: ColorUtils.aquaGreen, width: 2)),
                 child: _imageFile != null
                     ? Image.file(
                         _imageFile!,
@@ -114,8 +114,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
 
     return SafeArea(
       child: Scaffold(
-        body: BlocProvider(
-          create: (_) => getIt<ProfileCubit>(),
+        body: BlocProvider<ProfileCubit>.value(
+          value: getIt<ProfileCubit>(),
           child: BlocConsumer<ProfileCubit, ProfileState>(
             listener: (context, state) {
               state.map(
@@ -138,11 +138,18 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
                 },
                 profileUpdated: (_) {
+                  // if (context.loaderOverlay.visible) {
+                  //   context.loaderOverlay.hide();
+                  // }
+                  // context.router.push( PhotoRoute(photoUrl: ));
+                },
+                photoUpdated: (value) {
                   if (context.loaderOverlay.visible) {
                     context.loaderOverlay.hide();
                   }
-                  context.router.push(const OtherDetailsRoute());
+                  context.router.push(PhotoRoute(photoUrl: value.photoUrl));
                 },
+                otherDetailsUpdated: (value) {},
               );
             },
             builder: (context, state) {
@@ -166,6 +173,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
           const SizedBox(height: 20),
           ListTile(
             onTap: () async {
+              context.router.pop();
               final imagePicker = ImagePicker();
               final imageXFile = await imagePicker.pickImage(source: ImageSource.gallery);
               if (imageXFile != null) {
@@ -179,6 +187,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
           const SizedBox(height: 2),
           ListTile(
             onTap: () async {
+              context.router.pop();
               final imagePicker = ImagePicker();
               final imageXFile = await imagePicker.pickImage(source: ImageSource.camera);
               if (imageXFile != null) {

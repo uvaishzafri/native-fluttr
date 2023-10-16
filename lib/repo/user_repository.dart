@@ -4,8 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
 import 'package:native/model/custom_claims.dart';
+import 'package:native/model/native_card/native_card.dart';
 import 'package:native/model/update_user_req.dart';
 import 'package:native/model/user.dart';
+import 'package:native/model/user_prefs.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,6 +61,32 @@ class UserRepository {
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(User.fromJson(response.data));
+    } on DioException catch (e) {
+      return Left(CustomException(e.message));
+    } catch (e) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, NativeCard>> getCurrentUserNativeCardDetails() async {
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      final response = await _dioClient.get(
+        '/users/me/nativeCard',
+        options: Options(headers: headers),
+      );
+
+      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (response.data == null) return Left(NoResponseBody());
+
+      return Right(NativeCard.fromJson(response.data['nativeCard']));
     } on DioException catch (e) {
       return Left(CustomException(e.message));
     } catch (e) {
@@ -141,6 +169,31 @@ class UserRepository {
     }
   }
 
+  Future<Either<AppException, bool>> updateUserPrefs(UserPrefs userPrefs) async {
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      var data = jsonEncode(userPrefs.toJson());
+      final response = await _dioClient.patch('/users/me/preference', data: data, options: Options(headers: headers));
+
+      if (!isSuccess(response.statusCode)) {
+        return Left(RequestError(response.statusMessage ?? ''));
+      }
+      if (response.data == null) return Left(NoResponseBody());
+      return const Right(true);
+    } on DioException catch (error) {
+      return Left(CustomException(error.message));
+    } catch (error) {
+      return Left(CustomException());
+    }
+  }
+
   Future<Either<AppException, String>> updateUserPhoto(String img64) async {
     try {
       var token = await _getStoreUserIdToken();
@@ -154,7 +207,7 @@ class UserRepository {
       var data = jsonEncode({
         "photo": img64
       });
-      final response = await _dioClient.patch('/users/me/photo', data: data, options: Options(headers: headers));
+      final response = await _dioClient.post('/users/me/photo', data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));

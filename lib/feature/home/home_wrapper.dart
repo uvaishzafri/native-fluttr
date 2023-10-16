@@ -30,7 +30,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
         const HomeRoute(),
         OnboardingRoute(),
         const SignInRoute(),
-        const SignUpRoute(),
+        const ChatsRoute(),
         const AccountRoute(),
       ],
       bottomNavigationBuilder: (_, tabsRouter) {

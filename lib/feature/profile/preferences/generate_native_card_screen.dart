@@ -1,13 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_holo_date_picker/date_picker.dart';
 import 'package:flutter_holo_date_picker/date_picker_theme.dart';
 import 'package:flutter_holo_date_picker/widget/date_picker_widget.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:native/di/di.dart';
 import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/profile/cubit/profile_cubit.dart';
+import 'package:native/model/custom_claims.dart';
 import 'package:native/model/native.dart';
+import 'package:native/model/user.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_simple_button.dart';
@@ -24,9 +31,10 @@ class GenerateNativeCardScreen extends StatefulWidget {
 }
 
 class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
+  DateTime? _selectedDate;
   @override
   Widget build(BuildContext context) {
-    Widget photoUpload() {
+    Widget photoUpload(ProfileCubit profileCubit) {
       return Column(
         children: [
           const SizedBox(height: 32),
@@ -54,6 +62,11 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
           SizedBox(
               height: 200,
               child: DatePickerWidget(
+                onChange: (dateTime, selectedIndex) {
+                  setState(() {
+                    _selectedDate = dateTime;
+                  });
+                },
                 dateFormat: 'MMM/d/y',
                 pickerTheme: DateTimePickerTheme(
                   dividerColor: ColorUtils.textLightGrey.withOpacity(0.5),
@@ -68,7 +81,7 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
               showDialog(
                 context: context,
                 useRootNavigator: false,
-                builder: (context) => confirmationDialog(),
+                builder: (context) => confirmationDialog(profileCubit),
               );
             },
           ),
@@ -77,17 +90,65 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
       );
     }
 
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          margin: const EdgeInsets.only(top: 15, left: 32, right: 32),
-          child: photoUpload(),
+    return SafeArea(
+      child: Scaffold(
+        body: BlocProvider<ProfileCubit>.value(
+          value: getIt<ProfileCubit>(),
+          child: BlocConsumer<ProfileCubit, ProfileState>(
+            listener: (context, state) {
+              state.map(
+                initial: (_) {},
+                loading: (value) {
+                  if (!context.loaderOverlay.visible) {
+                    context.loaderOverlay.show();
+                  }
+                },
+                userDetails: (_) {
+                  // if (context.loaderOverlay.visible) {
+                  //   context.loaderOverlay.hide();
+                  // }
+                  // context.router.push(PhotoUploadRoute(gender: _selectedGender));
+                },
+                error: (value) {
+                  if (context.loaderOverlay.visible) {
+                    context.loaderOverlay.hide();
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
+                },
+                profileUpdated: (_) {
+                  if (context.loaderOverlay.visible) {
+                    context.loaderOverlay.hide();
+                  }
+                  context.router.pop();
+                  var overlayItem = Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: NativeButton(
+                      isEnabled: true,
+                      text: 'Next',
+                      onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
+                    ),
+                  );
+
+                  context.router.push(NativeCardScaffold(nativeUser: usersList.first, overlayItem: overlayItem));
+                },
+                photoUpdated: (_) {},
+                otherDetailsUpdated: (value) {},
+              );
+            },
+            builder: (context, state) {
+              final profileCubit = BlocProvider.of<ProfileCubit>(context);
+              return Container(
+                margin: const EdgeInsets.only(top: 15, left: 32, right: 32),
+                child: photoUpload(profileCubit),
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
-  Widget confirmationDialog() {
+  Widget confirmationDialog(ProfileCubit profileCubit) {
     return AlertDialog(
       backgroundColor: ColorUtils.white,
       surfaceTintColor: Colors.transparent,
@@ -123,33 +184,17 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: NativeButton(
-                isEnabled: true,
+                isEnabled: _selectedDate != null,
                 text: 'Yes, Generate',
                 fontSize: 14,
                 onPressed: () {
-                  context.router.pop();
-                  //     var sarah = Native(
-                  //       user: "Sarah Clay",
-                  //       age: '31 yrs',
-                  // imageUrl: 'assets/home/ic_test.png',
-                  //       type: NativeType.fields(),
-                  //       energy: 33,
-                  //       goodFits: [
-                  //         NativeType.moon(),
-                  //         NativeType.mist(),
-                  //         NativeType.mineral(),
-                  //       ],
-                  //     );
-                  var overlayItem = Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: NativeButton(
-                      isEnabled: true,
-                      text: 'Next',
-                      onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
+                  final user = User(
+                    customClaims: CustomClaims(
+                      birthday: DateFormat('yyyy-MM-dd').format(_selectedDate!),
+                      // birthday: _selectedDate!.toIso8601String(),
                     ),
                   );
-
-                  context.router.push(NativeCardScaffold(nativeUser: usersList.first, overlayItem: overlayItem));
+                  profileCubit.updateProfile(user);
                 },
               ),
             ),

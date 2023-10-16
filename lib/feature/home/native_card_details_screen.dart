@@ -2,8 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/model/native.dart';
+import 'package:native/model/native_card/native_card.dart';
+import 'package:native/repo/user_repository.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/images.dart';
 import 'package:native/widget/native_button.dart';
@@ -15,11 +18,39 @@ import 'package:native/widget/text/native_small_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 
 @RoutePage()
-class NativeCardDetailsScreen extends StatelessWidget {
+class NativeCardDetailsScreen extends StatefulWidget {
   const NativeCardDetailsScreen({super.key, required this.nativeUser});
 
-  final Native nativeUser;
+  final Native? nativeUser;
 
+  @override
+  State<NativeCardDetailsScreen> createState() => _NativeCardDetailsScreenState();
+}
+
+class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
+  Native? nativeUser;
+  // NativeCard? nativeUser;
+
+  @override
+  void initState() {
+    super.initState();
+    nativeUser = widget.nativeUser;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      initUser();
+    });
+  }
+
+  void initUser() async {
+    // if(widget.nativeUser != null) {
+    //   nativeUser = widget.nativeUser;
+    // } else {
+    UserRepository userRepository = getIt<UserRepository>();
+    var response = await userRepository.getCurrentUserNativeCardDetails();
+    if (response.isRight) {
+      // nativeUser = response.right;
+    }
+    // }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,7 +76,7 @@ class NativeCardDetailsScreen extends StatelessWidget {
                               color: ColorUtils.white,
                             ),
                             child: BigNativeUserCard(
-                              native: nativeUser,
+                              native: nativeUser!,
                               // userImage: Image.asset("assets/home/ic_test.png"),
                             ),
                           ),

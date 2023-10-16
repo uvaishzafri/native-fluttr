@@ -17,6 +17,7 @@ class AppRouter extends $AppRouter {
         FadeCustomRoute(page: SignUpRoute.page),
         FadeCustomRoute(page: BasicDetailsRoute.page),
         FadeCustomRoute(page: PhotoUploadRoute.page),
+        FadeCustomRoute(page: PhotoRoute.page),
         FadeCustomRoute(page: OtherDetailsRoute.page),
         FadeCustomRoute(page: BasicPrefrencesRoute.page),
         FadeCustomRoute(page: OtherPreferencesRoute.page),
@@ -29,6 +30,7 @@ class AppRouter extends $AppRouter {
         FadeCustomRoute(page: NativeCardScaffold.page),
         FadeCustomRoute(page: HowToChoosePartnerLoaderRoute.page),
         FadeCustomRoute(page: ChoosePartnerRoute.page),
+        FadeCustomRoute(page: ChatMessagesRoute.page),
         CustomRoute(
           path: 'home',
           page: HomeWrapperRoute.page,
@@ -40,6 +42,7 @@ class AppRouter extends $AppRouter {
             FadeCustomRoute(page: SignInRoute.page),
             FadeCustomRoute(page: SignUpRoute.page),
             FadeCustomRoute(page: AccountRoute.page),
+            FadeCustomRoute(page: ChatsRoute.page),
           ],
         ),
         RedirectRoute(path: '*', redirectTo: ''),

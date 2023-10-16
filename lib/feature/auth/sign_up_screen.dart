@@ -14,6 +14,7 @@ import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/native_text_field.dart';
+import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';

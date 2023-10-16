@@ -5,7 +5,7 @@ enum Gender {
   male,
   @JsonValue('FEMALE')
   female,
-  @JsonValue('OTHERS')
+  @JsonValue('OTHER')
   others
 }
 

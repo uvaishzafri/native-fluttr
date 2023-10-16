@@ -60,57 +60,79 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: Gender.values
-                .map((e) => Container(
-                      height: 111,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7),
-                        border: Border.all(color: _selectedGender == e ? ColorUtils.aquaGreen : ColorUtils.grey),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Radio(
-                                value: e,
-                                groupValue: _selectedGender,
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (value != null) {
-                                      _selectedGender = value;
-                                    }
-                                  });
-                                },
-                                fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                  return ColorUtils.aquaGreen;
-                                }),
-                                visualDensity: const VisualDensity(horizontal: -4),
-                              ),
-                              NativeMediumBodyText(
-                                e.name.capitalize(),
-                                fontWeight: FontWeight.w600,
-                              )
-                            ],
-                          ),
-                          e != Gender.others
-                              ? SvgPicture.asset(
-                                  "assets/profile/${e.name}.svg",
-                                  height: 60,
+                .map((e) => GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedGender = e;
+                        });
+                      },
+                      child: Container(
+                        height: 111,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          border: Border.all(color: _selectedGender == e ? ColorUtils.aquaGreen : ColorUtils.grey),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Radio(
+                                  value: e,
+                                  groupValue: _selectedGender,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        _selectedGender = value;
+                                      }
+                                    });
+                                  },
+                                  fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                    return ColorUtils.aquaGreen;
+                                  }),
+                                  visualDensity: const VisualDensity(horizontal: -4),
+                                ),
+                                NativeMediumBodyText(
+                                  e.name.capitalize(),
+                                  fontWeight: FontWeight.w600,
                                 )
-                              : const SizedBox(),
-                        ],
+                              ],
+                            ),
+                            e != Gender.others
+                                ? SvgPicture.asset(
+                                    "assets/profile/${e.name}.svg",
+                                    height: 60,
+                                  )
+                                : const SizedBox(),
+                          ],
+                        ),
                       ),
                     ))
                 .toList(),
           ),
           const SizedBox(height: 20),
           const NativeSmallBodyText('Age range'),
-          RangeSlider(
-            min: 18,
-            max: 60,
-            divisions: 60 - 18,
-            values: minMaxAge,
-            onChanged: (value) => minMaxAge = value,
+          
+          Theme(
+            data: ThemeData(
+              sliderTheme: SliderTheme.of(context).copyWith(
+                inactiveTickMarkColor: Colors.transparent,
+                activeTickMarkColor: Colors.transparent,
+                activeTrackColor: ColorUtils.aquaGreen,
+                showValueIndicator: ShowValueIndicator.always,
+              ),
+            ),
+            child: RangeSlider(
+              // labels: RangeLabels("18", "60"),
+              min: 18,
+              max: 50,
+              divisions: 50 - 18,
+              values: minMaxAge,
+              onChanged: (value) {
+                minMaxAge = value;
+                setState(() {});
+              },
+            ),
           ),
           const SizedBox(height: 20),
           const NativeSmallBodyText('Location'),
@@ -131,10 +153,13 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
           ),
           const Spacer(),
           NativeButton(
-            isEnabled: true,
+            isEnabled: selectedLocation?.isNotEmpty ?? false,
             text: 'Next',
             onPressed: () {
-              context.router.push(const OtherPreferencesRoute());
+              if (selectedLocation?.isEmpty ?? true) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Kindly select a location')));
+              }
+              context.router.push(OtherPreferencesRoute(gender: _selectedGender, minMaxAge: minMaxAge, location: selectedLocation!));
             },
           ),
           const SizedBox(height: 40),
