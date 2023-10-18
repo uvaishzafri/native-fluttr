@@ -9,6 +9,25 @@ enum Gender {
   others
 }
 
+enum NotificationType {
+  @JsonValue('LIKED')
+  liked,
+  @JsonValue('MATCHED')
+  matched,
+  @JsonValue('BLOCKED')
+  blocked
+}
+
+List<String> problems = [
+  'Nudity or sexual activity',
+  'Hate speech or symbols',
+  'Scam or Fraud',
+  'Violence or dangerous organisation',
+  'Bullying or harrasment',
+  'Others',
+];
+
+
 final Map<String, List<String>> religions = {
   'Christian': [
     'Catholic',

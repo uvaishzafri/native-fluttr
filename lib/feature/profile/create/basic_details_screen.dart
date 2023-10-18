@@ -5,6 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
+import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/feature/profile/create/create_profile_scaffold.dart';
 import 'package:native/feature/profile/cubit/profile_cubit.dart';
 import 'package:native/model/custom_claims.dart';
@@ -201,6 +203,9 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
                 error: (value) {
                   if (context.loaderOverlay.visible) {
                     context.loaderOverlay.hide();
+                  }
+                  if (value.exception.message == 'unauthorized') {
+                    BlocProvider.of<AppCubit>(context).logout();
                   }
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
                 },

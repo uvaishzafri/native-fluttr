@@ -18,14 +18,14 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   final UserRepository _userRepository;
 
-  void getProfile() async {
-    var user = await _userRepository.getCurrentUserDetails();
-    user.fold((left) {
-      emit(ProfileState.error(exception: left));
-    }, (right) {
-      emit(ProfileState.userDetails(user: right));
-    });
-  }
+  // void getProfile() async {
+  //   var user = await _userRepository.getCurrentUserDetails();
+  //   user.fold((left) {
+  //     emit(ProfileState.error(exception: left));
+  //   }, (right) {
+  //     emit(ProfileState.userDetails(user: right));
+  //   });
+  // }
 
   bool validateBasicDetails(String displayName, String about, String? location) {
     //validate info

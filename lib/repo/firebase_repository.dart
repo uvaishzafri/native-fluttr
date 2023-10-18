@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 import 'package:native/util/exceptions.dart';
@@ -7,19 +10,35 @@ class FirebaseRepository {
   FirebaseRepository(this._auth);
   final FirebaseAuth _auth;
 
-  Future<void> submitPhoneNumber(
+  // Stream<User?> get user {
+  //   return _auth.authStateChanges().map((firebaseUser) {
+  //     final user = firebaseUser;
+  //     // currentUser = user;
+  //     return user;
+  //   });
+  // }
+
+  Future<Either<AppException, void>> submitPhoneNumber(
       String phoneNumber,
       PhoneVerificationCompleted verificationCompleted,
       PhoneVerificationFailed verificationFailed,
+      int? forceResendingToken,
       PhoneCodeSent codeSent) async {
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      timeout: const Duration(seconds: 14),
-      verificationCompleted: verificationCompleted,
-      verificationFailed: verificationFailed,
-      codeSent: codeSent,
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        timeout: const Duration(seconds: 14),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        forceResendingToken: forceResendingToken,
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+      return Right(null);
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      return Left(CustomException(e.message));
+    }
   }
 
   PhoneAuthCredential submitOTP(String otpCode, String verificationId) {
@@ -61,7 +80,7 @@ class FirebaseRepository {
     return _auth.currentUser?.emailVerified ?? false;
   }
 
-  Future<void> logOut() async {
-    await _auth.signOut();
-  }
+  // Future<void> logOut() async {
+  //   await _auth.signOut();
+  // }
 }

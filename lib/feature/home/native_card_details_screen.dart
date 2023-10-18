@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
-import 'package:native/model/native.dart';
+import 'package:native/model/native_type.dart';
 import 'package:native/model/native_card/native_card.dart';
+import 'package:native/model/user.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/images.dart';
@@ -16,40 +19,46 @@ import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class NativeCardDetailsScreen extends StatefulWidget {
-  const NativeCardDetailsScreen({super.key, required this.nativeUser});
+  const NativeCardDetailsScreen({super.key, required this.nativeCard});
 
-  final Native? nativeUser;
+  final NativeCard? nativeCard;
 
   @override
   State<NativeCardDetailsScreen> createState() => _NativeCardDetailsScreenState();
 }
 
 class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
-  Native? nativeUser;
+  NativeCard? nativeUser;
+  User? user;
   // NativeCard? nativeUser;
 
   @override
   void initState() {
     super.initState();
-    nativeUser = widget.nativeUser;
+    nativeUser = widget.nativeCard;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initUser();
+      setState(() {});
     });
   }
 
   void initUser() async {
-    // if(widget.nativeUser != null) {
-    //   nativeUser = widget.nativeUser;
-    // } else {
+    var prefs = await SharedPreferences.getInstance();
+    user = User.fromJson(jsonDecode(prefs.getString('user')!));
+    if (widget.nativeCard != null) {
+      nativeUser = widget.nativeCard;
+    } else {
+
     UserRepository userRepository = getIt<UserRepository>();
     var response = await userRepository.getCurrentUserNativeCardDetails();
     if (response.isRight) {
-      // nativeUser = response.right;
+        nativeUser = response.right;
     }
-    // }
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -77,6 +86,7 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
                             ),
                             child: BigNativeUserCard(
                               native: nativeUser!,
+                              user: user!,
                               // userImage: Image.asset("assets/home/ic_test.png"),
                             ),
                           ),

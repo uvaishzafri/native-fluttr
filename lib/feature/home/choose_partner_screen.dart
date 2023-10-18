@@ -168,7 +168,7 @@ class ChoosePartnerScreen extends StatelessWidget {
                 //     )),
               ],
             );
-            context.router.push(NativeCardScaffold(nativeUser: usersList[index], overlayItem: overlayItem));
+            context.router.push(NativeCardScaffold(nativeUser: usersList2[index], overlayItem: overlayItem));
           },
           child: NativeUserCard(
             native: usersList[index],

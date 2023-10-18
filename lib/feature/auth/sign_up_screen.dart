@@ -9,6 +9,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:logger/logger.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/auth/auth_scaffold.dart';
 import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/util/exceptions.dart';
@@ -121,7 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 state is AuthErrorPincodeState) {
               return AuthScaffold(_inputPincode(
                   context, bloc, _number.phoneNumber ?? "", state));
-            } else if (state is AuthInputEmailState) {
+            } else if (state is AuthInputEmailState || state is AuthEmailSendFailedState || state is AuthEmailVerificationSentState || state is AuthEmailVerificationCompleteState) {
               return AuthScaffold(
                   _inputEmail(context, bloc, _number.phoneNumber ?? "", state));
             } else {
@@ -139,9 +140,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (state is AuthErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
             }
+            if (state is AuthEmailSendFailedState) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
+            }
             if (state is AuthEmailVerificationCompleteState) {
               _checkEmailVerifiedTimer?.cancel();
-              Navigator.pop(context);
+              // Navigator.pop(context);
               _showEmailVerifiedDialog();
             }
             if (state is AuthEmailVerificationSentState) {
@@ -376,6 +380,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     if (_start == 0) {
+                      bloc.submitPhoneNumber(_number.phoneNumber ?? '', true);
                       _startTimer();
                     }
                   },
@@ -565,13 +570,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _showSentVerificationEmailDialog(String email) async {
     await showDialog<void>(
         context: context,
+        useRootNavigator: false,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          Future.delayed(const Duration(seconds: 10), () {
-            // TODO: This is for DEMO
-            // Navigator.pop(context);
-            // _showEmailVerifiedDialog();
-          });
+          // Future.delayed(const Duration(seconds: 10), () {
+          //   // TODO: This is for DEMO
+          //   // Navigator.pop(context);
+          //   // _showEmailVerifiedDialog();
+          // });
 
           return WillPopScope(
               onWillPop: () => Future.value(false),
@@ -633,12 +639,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _showEmailVerifiedDialog() async {
     await showDialog<void>(
         context: context,
+        useRootNavigator: false,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          // TODO: This is for DEMO
           Future.delayed(const Duration(seconds: 3), () {
-            Navigator.pop(context);
-            _goToHomeScreen();
+            // Navigator.pop(context);
+            BlocProvider.of<AppCubit>(context).logout();
+            BlocProvider.of<AuthCubit>(context).initial();
+            // _goToHomeScreen();
           });
           return WillPopScope(
               onWillPop: () => Future.value(false),

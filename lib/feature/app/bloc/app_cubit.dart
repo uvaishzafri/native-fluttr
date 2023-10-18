@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -16,7 +18,8 @@ part 'app_state.dart';
 
 @lazySingleton
 class AppCubit extends HydratedCubit<AppState> {
-  AppCubit() : super(AppState(theme: ThemeModel.initial())) {
+  AppCubit(this._firebaseAuth) : super(AppState(theme: ThemeModel.initial())) {
+
     // Pretend initialization
     // Future.delayed(const Duration(milliseconds: 10),
     //     () => {changeStoryListType(type: StoryListType.top)});
@@ -24,7 +27,7 @@ class AppCubit extends HydratedCubit<AppState> {
     // checkAuth();
   }
 
-  // final FirebaseAuth _firebaseAuth;
+  final FirebaseAuth _firebaseAuth;
 
   Future<bool> _getStoreOnboardInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -40,6 +43,14 @@ class AppCubit extends HydratedCubit<AppState> {
     bool isSkipped = await _getStoreOnboardInfo();
     String? idToken = await _getStoreUserIdToken();
 
+    // _firebaseAuth.authStateChanges().listen((user) async {
+    //   if (user == null) {
+    //     SharedPreferences prefs = await SharedPreferences.getInstance();
+    //     prefs.clear();
+    //     emit(AppState.loggedOut(isSkipped));
+    //   }
+    // });
+    
     if (idToken != null) {
       emit(AppState.loggedIn(
           isSkipped,
@@ -56,6 +67,13 @@ class AppCubit extends HydratedCubit<AppState> {
     //   ));
 
     emit(AppState.loggedOut(isSkipped));
+  }
+
+  logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    _firebaseAuth.signOut();
+    emit(AppState.loggedOut(true));
   }
 
   Future<void> setThemeMode({required ThemeMode mode}) async {

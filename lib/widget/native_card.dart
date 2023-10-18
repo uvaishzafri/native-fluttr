@@ -1,16 +1,19 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:native/model/native.dart';
+import 'package:native/model/native_card/native_card.dart';
+import 'package:native/model/native_type.dart';
+import 'package:native/model/user.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/images.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
+import 'package:native/util/datetime_extension.dart';
 
 class ExpandableNativeCard extends StatefulWidget {
   const ExpandableNativeCard({super.key, required this.native});
-  final Native native;
+  final User native;
   @override
   State<StatefulWidget> createState() => _ExpandableNativeCardState();
 }
@@ -45,7 +48,7 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
           title: Container(
             child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               Text(
-                "Hello ${widget.native.user}!",
+                "Hello ${widget.native.displayName}!",
                 style: const TextStyle(
                   color: Color(0xffffffff),
                   fontSize: 16,
@@ -78,13 +81,14 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   NativeEnergyWidget(
-                    energy: widget.native.energy,
+                    energy: widget.native.native!.energyScore!,
                     radius: 27.5,
                   ),
                   const SizedBox(
                     width: 13,
                   ),
-                  NativeTypeWidget(type: widget.native.type, radius: 27.5),
+                  NativeTypeWidget(type: getNativeTypeDetail(widget.native.native!.type!), radius: 27.5),
+                  // NativeTypeWidget(type: getNativeTypeDetail(NativeTypeEnum.values.firstWhere((element) => element.name.toLowerCase() == widget.native.native!.type!.en!.toLowerCase() )), radius: 27.5),
                   const SizedBox(
                     width: 17,
                   ),
@@ -95,7 +99,7 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
                   const SizedBox(
                     width: 17,
                   ),
-                  NativeGoodFitsWidget(types: widget.native.goodFits),
+                  NativeGoodFitsWidget(types: widget.native.native!.matchTypes!.map((e) => getNativeTypeDetail(e!)).toList()),
                 ],
               ),
             )
@@ -255,7 +259,7 @@ class NativeGoodFitsWidget extends StatelessWidget {
 class NativeUserCard extends StatelessWidget {
   const NativeUserCard(
       {super.key, required this.native});
-  final Native native;
+  final User native;
   // final Image userImage;
 
   Widget _buildCard(BuildContext context) {
@@ -272,7 +276,8 @@ class NativeUserCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   NativeHeadImage(
-                    Image.asset(native.imageUrl),
+                    // Image.asset(native.imageUrl),
+                    Image.network(native.photoURL!),
                     // userImage,
                     borderColor: Theme.of(context).colorScheme.primary,
                     radius: 43,
@@ -284,11 +289,11 @@ class NativeUserCard extends StatelessWidget {
                   ),
                   Column(
                     children: [
-                      NativeEnergyWidget(energy: native.energy, radius: 20),
+                      NativeEnergyWidget(energy: native.native!.energyScore!, radius: 20),
                       const SizedBox(
                         height: 8,
                       ),
-                      NativeTypeWidget(type: native.type, radius: 20),
+                      NativeTypeWidget(type: getNativeTypeDetail(native.native!.type!), radius: 20),
                     ],
                   )
                 ],
@@ -307,7 +312,7 @@ class NativeUserCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${native.user}, ${native.age}',
+                      '${native.displayName}, ${DateTime.tryParse(native.customClaims!.birthday!)?.ageFromDate()}',
                       style: const TextStyle(
                         color: Color(0xffffffff),
                         fontSize: 10,
@@ -315,8 +320,8 @@ class NativeUserCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      "Osaka, Japan",
+                    Text(
+                      native.customClaims!.location!,
                       style: TextStyle(
                         color: Color(0xff787878),
                         fontSize: 8,
@@ -347,7 +352,7 @@ class NativeUserCard extends StatelessWidget {
                   const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: native.goodFits.asMap().entries.map((e) {
+                    children: native.native!.matchTypes!.asMap().entries.map((e) {
                       return Container(
                           margin: EdgeInsets.only(left: e.key > 0 ? 17 : 0),
                           child: Column(
@@ -365,7 +370,7 @@ class NativeUserCard extends StatelessWidget {
                                 ),
                               ]),
                               NativeTypeWidget(
-                                type: e.value,
+                                type: getNativeTypeDetail(e.value!),
                                 radius: 16,
                               ),
                             ],
@@ -395,8 +400,9 @@ class NativeUserCard extends StatelessWidget {
 }
 
 class BigNativeUserCard extends StatelessWidget {
-  const BigNativeUserCard({super.key, required this.native});
-  final Native native;
+  const BigNativeUserCard({super.key, required this.native, required this.user});
+  final NativeCard native;
+  final User user;
   // final Image userImage;
 
   Widget _buildCard(BuildContext context) {
@@ -414,12 +420,12 @@ class BigNativeUserCard extends StatelessWidget {
                   child: Column(
                     children: [
                       NativeMediumTitleText(
-                        '${native.user}, ${native.age}',
+                        '${user.displayName}, ${DateTime.tryParse(user.customClaims!.birthday!)?.ageFromDate()}',
                         color: ColorUtils.white,
                         fontWeight: FontWeight.w600,
                       ),
-                      const NativeSmallBodyText(
-                        'Osaka, Japan',
+                      NativeSmallBodyText(
+                        user.customClaims!.location!,
                         color: ColorUtils.white,
                         fontWeight: FontWeight.w500,
                       ),
@@ -435,7 +441,8 @@ class BigNativeUserCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   NativeHeadImage(
-                    Image.asset(native.imageUrl),
+                    // Image.asset(native.imageUrl),
+                    Image.network(user.photoURL!),
                     // userImage,
                     borderColor: Theme.of(context).colorScheme.primary,
                     radius: 97,
@@ -446,7 +453,7 @@ class BigNativeUserCard extends StatelessWidget {
                   Column(
                     children: [
                       NativeEnergyWidget(
-                        energy: native.energy,
+                        energy: native.meta!.energyScore!,
                         radius: 50,
                         titleFontSize: 10,
                         titleFontWeight: FontWeight.w500,
@@ -454,7 +461,7 @@ class BigNativeUserCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       NativeTypeWidget(
-                        type: native.type,
+                        type: getNativeTypeDetail(native.meta!.type!),
                         radius: 50,
                         isCaps: true,
                         textStyle: const TextStyle(
@@ -491,7 +498,8 @@ class BigNativeUserCard extends StatelessWidget {
                   const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: native.goodFits.asMap().entries.map((e) {
+                    // children: native.meta.matchTypes.
+                    children: native.meta!.matchTypes!.asMap().entries.map((e) {
                       return Container(
                           margin: EdgeInsets.only(left: e.key > 0 ? 17 : 0),
                           child: Column(
@@ -513,7 +521,7 @@ class BigNativeUserCard extends StatelessWidget {
                                 ),
                               ]),
                               NativeTypeWidget(
-                                type: e.value,
+                                type: getNativeTypeDetail(e.value!),
                                 radius: 31,
                                 textStyle: const TextStyle(
                                   color: ColorUtils.textGrey,

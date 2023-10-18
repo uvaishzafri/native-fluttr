@@ -31,6 +31,8 @@ class AppRouter extends $AppRouter {
         FadeCustomRoute(page: HowToChoosePartnerLoaderRoute.page),
         FadeCustomRoute(page: ChoosePartnerRoute.page),
         FadeCustomRoute(page: ChatMessagesRoute.page),
+        FadeCustomRoute(page: NotificationsRoute.page),
+        FadeCustomRoute(page: LikesRoute.page),
         CustomRoute(
           path: 'home',
           page: HomeWrapperRoute.page,
@@ -38,9 +40,8 @@ class AppRouter extends $AppRouter {
           durationInMilliseconds: 240,
           children: [
             FadeCustomRoute(page: HomeRoute.page),
-            FadeCustomRoute(page: OnboardingRoute.page),
-            FadeCustomRoute(page: SignInRoute.page),
-            FadeCustomRoute(page: SignUpRoute.page),
+            FadeCustomRoute(page: LikesRoute.page),
+            FadeCustomRoute(page: NotificationsRoute.page),
             FadeCustomRoute(page: AccountRoute.page),
             FadeCustomRoute(page: ChatsRoute.page),
           ],

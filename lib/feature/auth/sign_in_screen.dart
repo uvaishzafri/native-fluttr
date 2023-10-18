@@ -10,6 +10,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/auth/auth_scaffold.dart';
 import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/util/string_ext.dart';
@@ -111,7 +112,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 state is AuthErrorPincodeState) {
               return AuthScaffold(_inputPincode(
                   context, bloc, _number.phoneNumber ?? "", state));
-            } else if (state is AuthInputEmailState || state is AuthEmailSendFailedState) {
+            } else if (state is AuthInputEmailState || state is AuthEmailSendFailedState || state is AuthEmailVerificationSentState || state is AuthEmailVerificationCompleteState) {
               return AuthScaffold(_inputEmail(context, bloc, _number.phoneNumber ?? "", state));
             } else {
               return AuthScaffold(_inputPhone(context, bloc));
@@ -131,12 +132,9 @@ class _SignInScreenState extends State<SignInScreen> {
             if (state is AuthEmailSendFailedState) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
             }
-            if (state is AuthErrorPincodeState) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
-            }
             if (state is AuthEmailVerificationCompleteState) {
               _checkEmailVerifiedTimer?.cancel();
-              Navigator.pop(context);
+              // Navigator.pop(context);
               _showEmailVerifiedDialog();
             }
             if (state is AuthEmailVerificationSentState) {
@@ -385,6 +383,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     if (_start == 0) {
+                      bloc.submitPhoneNumber(_number.phoneNumber ?? '', false);
                       _startTimer();
                     }
                   },
@@ -497,58 +496,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   bloc.submitPhoneNumber(_number.phoneNumber ?? '', false);
                 },
         ),
-        // Container(
-        //   height: 56.0,
-        //   width: double.infinity,
-        //   decoration: BoxDecoration(
-        //       borderRadius: const BorderRadius.all(Radius.circular(6)),
-        //       boxShadow: const [
-        //         BoxShadow(
-        //           color: Color(0x19616161),
-        //           offset: Offset(10, 10),
-        //           blurRadius: 10.0,
-        //           spreadRadius: 1.0,
-        //         ),
-        //       ],
-        //       gradient: LinearGradient(
-        //         colors: [
-        //           _isEnabledSubmitPhoneButton
-        //               ? const Color(0xB2BE94C6)
-        //               : const Color(0x55BE94C6),
-        //           _isEnabledSubmitPhoneButton
-        //               ? const Color(0xB2BE94C6)
-        //               : const Color(0x55BE94C6),
-        //           _isEnabledSubmitPhoneButton
-        //               ? const Color(0xB27BC6CC)
-        //               : const Color(0x557BC6CC),
-        //         ],
-        //       )),
-        //   child: ElevatedButton(
-        //     style: ElevatedButton.styleFrom(
-        //       foregroundColor: Colors.transparent,
-        //       disabledForegroundColor: Colors.transparent,
-        //       backgroundColor: Colors.transparent,
-        //       disabledBackgroundColor: Colors.transparent,
-        //       shadowColor: Colors.transparent,
-        //       shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(6),
-        //       ),
-        //     ),
-        //     onPressed: !_isEnabledSubmitPhoneButton
-        //         ? null
-        //         : () {
-        //             bloc.submitPhoneNumber(_number.phoneNumber ?? '', false);
-        //           },
-        //     child: const Text(
-        //       'Get OTP',
-        //       style: TextStyle(
-        //         color: Color(0xffffffff),
-        //         fontSize: 18,
-        //         fontWeight: FontWeight.w600,
-        //       ),
-        //     ),
-        //   ),
-        // ),
+
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -580,13 +528,14 @@ class _SignInScreenState extends State<SignInScreen> {
   Future<void> _showSentVerificationEmailDialog(String email) async {
     await showDialog<void>(
         context: context,
+        useRootNavigator: false,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          Future.delayed(const Duration(seconds: 10), () {
-            // TODO: This is for DEMO
-            // Navigator.pop(context);
-            // _showEmailVerifiedDialog();
-          });
+          // Future.delayed(const Duration(seconds: 10), () {
+          //   // TODO: This is for DEMO
+          //   // Navigator.pop(context);
+          //   // _showEmailVerifiedDialog();
+          // });
 
           return WillPopScope(
               onWillPop: () => Future.value(false),
@@ -638,12 +587,14 @@ class _SignInScreenState extends State<SignInScreen> {
   Future<void> _showEmailVerifiedDialog() async {
     await showDialog<void>(
         context: context,
+        useRootNavigator: false,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          // TODO: This is for DEMO
           Future.delayed(const Duration(seconds: 3), () {
-            Navigator.pop(context);
-            _goToSignInScreen();
+            // Navigator.pop(context);
+            BlocProvider.of<AppCubit>(context).logout();
+            BlocProvider.of<AuthCubit>(context).initial();
+            // _goToSignInScreen();
           });
           return WillPopScope(
               onWillPop: () => Future.value(false),

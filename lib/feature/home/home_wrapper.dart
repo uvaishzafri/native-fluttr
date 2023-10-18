@@ -26,12 +26,12 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
   @override
   Widget build(BuildContext context) {
     return AutoTabsScaffold(
-      routes: [
-        const HomeRoute(),
-        OnboardingRoute(),
-        const SignInRoute(),
-        const ChatsRoute(),
-        const AccountRoute(),
+      routes: const [
+        HomeRoute(),
+        LikesRoute(),
+        NotificationsRoute(),
+        ChatsRoute(),
+        AccountRoute(),
       ],
       bottomNavigationBuilder: (_, tabsRouter) {
         return Container(

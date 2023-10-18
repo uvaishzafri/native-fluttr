@@ -9,8 +9,8 @@ import 'package:native/repo/model/message.dart';
 import 'package:native/util/exceptions.dart';
 
 @lazySingleton
-class ChatRepository {
-  ChatRepository(this._firestore);
+class FirestoreRepository {
+  FirestoreRepository(this._firestore);
   final FirebaseFirestore _firestore;
 
   Stream<List<ChatRoom>> getChatRooms(String userId) {
@@ -31,10 +31,8 @@ class ChatRepository {
           const Duration(seconds: 2),
           () => [
                 dummyChatList[0]
-                
               ]),
-      Future.delayed(
-          const Duration(seconds: 4), () => dummyChatList),
+      Future.delayed(const Duration(seconds: 4), () => dummyChatList),
     ]);
   }
 
@@ -78,7 +76,7 @@ class ChatRepository {
       ),
       Future.delayed(
         const Duration(seconds: 4),
-          () => [
+        () => [
           dummyMessages[0],
           dummyMessages[1],
         ],
@@ -91,25 +89,25 @@ class ChatRepository {
           dummyMessages[2],
         ],
       ),
-      Future.delayed(
-        const Duration(seconds: 20),
-        () => [
-          dummyMessages[0],
-          dummyMessages[1],
-          dummyMessages[2],
-          dummyMessages[3],
-        ],
-      ),
-      Future.delayed(
-        const Duration(seconds: 24),
-        () => [
-          dummyMessages[0],
-          dummyMessages[1],
-          dummyMessages[2],
-          dummyMessages[3],
-          dummyMessages[4],
-        ],
-      ),
+      // Future.delayed(
+      //   const Duration(seconds: 20),
+      //   () => [
+      //     dummyMessages[0],
+      //     dummyMessages[1],
+      //     dummyMessages[2],
+      //     dummyMessages[3],
+      //   ],
+      // ),
+      // Future.delayed(
+      //   const Duration(seconds: 24),
+      //   () => [
+      //     dummyMessages[0],
+      //     dummyMessages[1],
+      //     dummyMessages[2],
+      //     dummyMessages[3],
+      //     dummyMessages[4],
+      //   ],
+      // ),
     ]);
   }
 
@@ -126,6 +124,22 @@ class ChatRepository {
             toFirestore: (value, options) => value.toJson(),
           )
           .add(message);
+      return const Right(true);
+    } on Exception catch (_) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, bool>> updateUserDeviceToken(String userId, String deviceToken) async {
+    try {
+      await _firestore.collection('inAppUsers').doc(userId).collection('device').doc(deviceToken).set({});
+
+      // .set(
+      //   {
+      //     'deviceToken': deviceToken
+      //   },
+      //   SetOptions(merge: true),
+      // );
       return const Right(true);
     } on Exception catch (_) {
       return Left(CustomException());

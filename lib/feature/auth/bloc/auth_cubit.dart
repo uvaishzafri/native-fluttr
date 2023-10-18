@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native/repo/firebase_repository.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
+import 'package:native/repo/firestore_repository.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/exceptions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_cubit.freezed.dart';
@@ -14,12 +17,14 @@ part 'auth_state.dart';
 
 @lazySingleton
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this._firebaseRepository, this._logger, this._userRepository) : super(const AuthState.initial());
+  AuthCubit(this._firebaseRepository, this._logger, this._userRepository, this._firestoreRepository) : super(const AuthState.initial());
 
   final FirebaseRepository _firebaseRepository;
+  final FirestoreRepository _firestoreRepository;
   final UserRepository _userRepository;
   final Logger _logger;
   late String verificationId;
+  int? forceResendingToken;
   late bool isSignUp;
 
   void submitPhoneNumber(String phoneNumber, bool isSignUp) async {
@@ -37,7 +42,7 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
     }
-    _firebaseRepository.submitPhoneNumber(phoneNumber, verificationCompleted, verificationFailed, codeSent);
+    _firebaseRepository.submitPhoneNumber(phoneNumber, verificationCompleted, verificationFailed, forceResendingToken, codeSent);
     emit(const AuthState.inputPincode());
   }
 
@@ -54,6 +59,7 @@ class AuthCubit extends Cubit<AuthState> {
   void codeSent(String verificationId, int? resendToken) {
     _logger.d("verificationId : $verificationId");
     this.verificationId = verificationId;
+    forceResendingToken = resendToken;
     emit(const AuthState.inputPincode());
   }
 
@@ -82,7 +88,15 @@ class AuthCubit extends Cubit<AuthState> {
           (left) {
             emit(AuthState.errorPincode(exception: CustomException('Unable to get user details')));
           },
-          (user) {
+          (user) async {
+            var prefs = await SharedPreferences.getInstance();
+            prefs.setString('user', jsonEncode(user.toJson()));
+            if (user.emailVerified ?? false) {
+              var deviceToken = await FirebaseMessaging.instance.getToken();
+              if (user.uid != null && deviceToken != null) {
+                await _firestoreRepository.updateUserDeviceToken(user.uid!, deviceToken);
+              }
+            }
             user.emailVerified ?? false ? emit(AuthState.authorized(user: userCredentials.user!)) : emit(const AuthState.inputEmail());
           },
         );

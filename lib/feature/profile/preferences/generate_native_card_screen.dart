@@ -13,7 +13,7 @@ import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/profile/cubit/profile_cubit.dart';
 import 'package:native/model/custom_claims.dart';
-import 'package:native/model/native.dart';
+import 'package:native/model/native_type.dart';
 import 'package:native/model/user.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
@@ -129,7 +129,7 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
                     ),
                   );
 
-                  context.router.push(NativeCardScaffold(nativeUser: usersList.first, overlayItem: overlayItem));
+                  context.router.push(NativeCardScaffold(nativeUser: usersList2.first, overlayItem: overlayItem));
                 },
                 photoUpdated: (_) {},
                 otherDetailsUpdated: (value) {},

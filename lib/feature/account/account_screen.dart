@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/common_scaffold.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
@@ -101,7 +104,10 @@ class AccountScreen extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  // FirebaseAuth.instance.signOut();
+                  context.read<AppCubit>().logout();
+                },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: NativeLargeBodyText('Sign out'),

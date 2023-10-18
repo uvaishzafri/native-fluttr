@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:native/model/chat_room.dart';
-import 'package:native/repo/chat_repository.dart';
+import 'package:native/repo/firestore_repository.dart';
 import 'package:native/repo/model/message.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -20,7 +20,7 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  final ChatRepository _chatRepository;
+  final FirestoreRepository _chatRepository;
 
   void createSingleChatRoom(ChatRoom chat) async {
     emit(const ChatState.loading());

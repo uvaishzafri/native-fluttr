@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:native/util/app_constants.dart';
+import 'package:native/model/native_type.dart';
 
 class DatetimeSerializer implements JsonConverter<DateTime, dynamic> {
   const DatetimeSerializer();
@@ -25,14 +25,20 @@ class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
   Timestamp toJson(DateTime date) => Timestamp.fromDate(date);
 }
 
-// class GenderConverter implements JsonConverter<Gender?, String?> {
-//   const GenderConverter();
+class TypeConverter implements JsonConverter<NativeTypeEnum?, Map?> {
+  const TypeConverter();
 
-//   @override
-//   Gender? fromJson(String? gender) {
-//     return Gender.values.cast<Gender?>().firstWhere((e) => e?.name == gender?.toLowerCase(), orElse: () => null);
-//   }
+  @override
+  NativeTypeEnum? fromJson(Map? type) {
+    return NativeTypeEnum.values.cast<NativeTypeEnum?>().firstWhere(
+          (element) => element!.name.toLowerCase() == type?['en'].toLowerCase(),
+          orElse: () => null,
+        );
+    // return Gender.values.cast<Gender?>().firstWhere((e) => e?.name == gender?.toLowerCase(), orElse: () => null);
+  }
 
-//   @override
-//   String? toJson(Gender? gender) => gender?.name.toUpperCase();
-// }
+  @override
+  Map? toJson(NativeTypeEnum? nativeTypeEnum) => {
+        'en': nativeTypeEnum?.name
+      };
+}

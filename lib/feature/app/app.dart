@@ -105,7 +105,9 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
               (state.hasSkippedOnboarding == false)
                   ? context.router.replace(OnboardingRoute())
                   // : context.router.replace(const HomeWrapperRoute());
-                  : context.router.replace(const SignInRoute());
+                  : context.router.replaceAll([
+                      const SignInRoute()
+                    ]);
             }
           },
           child: RepaintBoundary(
