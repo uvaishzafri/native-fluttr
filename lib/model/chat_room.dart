@@ -11,10 +11,10 @@ part 'chat_room.g.dart';
 class ChatRoom with _$ChatRoom {
   factory ChatRoom({
     @JsonKey(includeIfNull: false) required Map<String, List<String>> participants,
-    @JsonKey(includeIfNull: false) @TimestampConverter() DateTime? lastMessageTime,
-    @JsonKey(includeIfNull: false) @TimestampConverter() required DateTime creationTime,
-    @JsonKey(includeIfNull: false) @TimestampConverter() required Map<String, DateTime> lastReadTime,
-    required String creatorId,
+    @JsonKey(includeIfNull: false) @DatetimeSerializer() DateTime? lastMessageTime,
+    @JsonKey(includeIfNull: false) @DatetimeSerializer() DateTime? creationTime,
+    @JsonKey(includeIfNull: false) @DatetimeSerializer() Map<String, DateTime>? lastReadTime,
+    String? creatorId,
     String? lastMessage,
     @JsonKey(includeToJson: false) String? firestoreDocId,
   }) = _ChatRoom;

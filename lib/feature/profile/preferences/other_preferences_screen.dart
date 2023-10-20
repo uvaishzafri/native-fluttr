@@ -72,7 +72,7 @@ class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
               onChanged: (value) {
                 setState(() {
                   selectedReligion = value;
-                  selectedCommunity = null;
+                  // selectedCommunity = null;
                 });
               },
               value: selectedReligion,
@@ -94,14 +94,13 @@ class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
               },
               value: selectedCommunity,
               searchController: communitySearchController,
-              items: selectedReligion != null
-                  ? religions[selectedReligion]!
+            items: languages
                       .map((item) => DropdownMenuItem(
                             value: item,
                             child: NativeMediumBodyText(item),
                           ))
-                      .toList()
-                  : null),
+                .toList(),
+          ),
           const Spacer(),
           NativeButton(
             isEnabled: profileCubit.validateOtherDetails(selectedReligion, selectedCommunity),

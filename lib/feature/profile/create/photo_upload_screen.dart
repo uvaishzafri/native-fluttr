@@ -15,6 +15,7 @@ import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_linear_progress_indicator.dart';
+import 'package:native/widget/photo_picker_widget.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
@@ -82,7 +83,13 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                 child: GestureDetector(
                   onTap: () => showModalBottomSheet(
                     context: context,
-                    builder: (context) => photoPickerBottomSheet(),
+                    builder: (context) => PhotoPickerWidget(
+                      onFilePicked: (file) {
+                        setState(() {
+                          _imageFile = file;
+                        });
+                      },
+                    ),
                   ),
                   child: Container(
                     padding: const EdgeInsets.all(9),
@@ -165,41 +172,4 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
     );
   }
 
-  Widget photoPickerBottomSheet() {
-    return SizedBox(
-      height: 150,
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          ListTile(
-            onTap: () async {
-              context.router.pop();
-              final imagePicker = ImagePicker();
-              final imageXFile = await imagePicker.pickImage(source: ImageSource.gallery);
-              if (imageXFile != null) {
-                _imageFile = File(imageXFile.path);
-                setState(() {});
-              }
-            },
-            leading: const Icon(Icons.file_upload_outlined),
-            title: const NativeSmallTitleText('Upload from your device'),
-          ),
-          const SizedBox(height: 2),
-          ListTile(
-            onTap: () async {
-              context.router.pop();
-              final imagePicker = ImagePicker();
-              final imageXFile = await imagePicker.pickImage(source: ImageSource.camera);
-              if (imageXFile != null) {
-                _imageFile = File(imageXFile.path);
-                setState(() {});
-              }
-            },
-            leading: const Icon(Icons.camera_alt_outlined),
-            title: const NativeSmallTitleText('Click a picture'),
-          )
-        ],
-      ),
-    );
-  }
 }

@@ -63,9 +63,10 @@ class _LikesScreenState extends State<LikesScreen> {
                 content: Text(value.appException.message),
               ));
             },
-            chatCreated: (value) {},
+            // chatCreated: (value) {},
             chatRoomsFetched: (_) {},
-            chatMessagesFetched: (_) {},
+            // chatMessagesFetched: (_) {},
+            // chatMessageCreated: (value) {},
           );
         },
         builder: (context, state) {

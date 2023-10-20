@@ -12,12 +12,9 @@ import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/auth/auth_scaffold.dart';
 import 'package:native/feature/auth/bloc/auth_cubit.dart';
-import 'package:native/util/exceptions.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/native_text_field.dart';
-import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 
 const _assetFolder = 'assets/auth';
@@ -97,17 +94,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     context.router.replace(const SignInRoute());
   }
 
-  // TODO: This is for DEMO
   // void _storeUserIdToken() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   await prefs.setString('userIdToken', "DEMO_ID_TOKEN");
   // }
 
-  void _goToHomeScreen() {
-    // _storeUserIdToken();
-    context.router.push(const BasicDetailsRoute());
-    // context.router.replace(const HomeWrapperRoute());
-  }
+  // void _goToHomeScreen() {
+  //   // _storeUserIdToken();
+  //   context.router.push(const BasicDetailsRoute());
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -643,7 +638,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           Future.delayed(const Duration(seconds: 3), () {
-            // Navigator.pop(context);
+            Navigator.pop(context);
             BlocProvider.of<AppCubit>(context).logout();
             BlocProvider.of<AuthCubit>(context).initial();
             // _goToHomeScreen();

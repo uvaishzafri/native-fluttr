@@ -21,6 +21,8 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   final FirestoreRepository _chatRepository;
+  List<types.TextMessage> chatMessages = [];
+  List<ChatRoom> chatRooms = [];
 
   void createSingleChatRoom(ChatRoom chat) async {
     emit(const ChatState.loading());
@@ -30,7 +32,7 @@ class ChatCubit extends Cubit<ChatState> {
     response.fold((left) {
       emit(ChatState.error(appException: left));
     }, (right) {
-      emit(const ChatState.chatCreated());
+      // emit(const ChatState.chatCreated());
     });
   }
 
@@ -38,7 +40,8 @@ class ChatCubit extends Cubit<ChatState> {
     emit(const ChatState.loading());
 
     _chatRepository.getChatRooms(userId).listen((event) {
-      emit(ChatState.chatRoomsFetched(chatRooms: event));
+      chatRooms.addAll(event);
+      emit(ChatState.chatRoomsFetched(chatRooms: chatRooms));
     }, onError: (err) {
       emit(ChatState.error(appException: CustomException()));
     });
@@ -50,35 +53,4 @@ class ChatCubit extends Cubit<ChatState> {
     // });
   }
 
-  void createChatMessage(String chatRoomDocId, Message message) async {
-    emit(const ChatState.loading());
-
-    var response = await _chatRepository.createChatMessage(chatRoomDocId, message);
-
-    ///TODO also update chat room details
-    response.fold((left) {
-      emit(ChatState.error(appException: left));
-    }, (right) {
-      emit(const ChatState.chatCreated());
-    });
-  }
-
-  void getChatMessages(String chatRoomDocId) async {
-    // emit(const ChatState.loading());
-
-    _chatRepository.getChatMessages(chatRoomDocId).listen(
-      (event) {
-        emit(ChatState.chatMessagesFetched(chatMessages: event.map((e) => e.toTextMessage()).toList()));
-      },
-      onError: (_) {
-        emit(ChatState.error(appException: CustomException()));
-      },
-    );
-
-    // response.fold((left) {
-    //   emit(ChatState.error(appException: left));
-    // }, (right) {
-    //   emit(const ChatState.chatCreated());
-    // });
-  }
 }

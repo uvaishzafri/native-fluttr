@@ -81,7 +81,7 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   NativeEnergyWidget(
-                    energy: widget.native.native!.energyScore!,
+                    energy: widget.native.native!.energyScore ?? 0,
                     radius: 27.5,
                   ),
                   const SizedBox(
@@ -245,7 +245,7 @@ class NativeGoodFitsWidget extends StatelessWidget {
                     ]),
                     NativeTypeWidget(
                       type: e.value,
-                      radius: 16,
+                      radius: 15,
                     ),
                   ],
                 ));
@@ -540,11 +540,11 @@ class BigNativeUserCard extends StatelessWidget {
             ),
             Container(
               color: ColorUtils.purple.withOpacity(0.6),
-              child: const Center(
+              child: Center(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: NativeMediumBodyText(
-                    'Honest, Responsible & Fair minded',
+                    native.meta?.slogan ?? "",
                     color: ColorUtils.white,
                   ),
                 ),

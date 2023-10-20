@@ -4,28 +4,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
-import 'package:native/feature/chat/cubit/chat_cubit.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart' as flutterchat;
+import 'package:native/feature/chat/cubit/chat_messages_cubit.dart';
 import 'package:native/feature/chat/report_user_bottom_sheet.dart';
 import 'package:native/repo/model/message.dart';
-import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
-import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_simple_button.dart';
-import 'package:native/widget/native_text_field.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
 import 'package:native/widget/text/native_large_title_text.dart';
-import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:native/widget/text/native_small_body_text.dart';
-import 'package:native/widget/text/native_small_title_text.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 @RoutePage()
 class ChatMessagesScreen extends StatefulWidget {
@@ -41,8 +33,8 @@ class ChatMessagesScreen extends StatefulWidget {
 class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
   // List<Chat> _chats = [];
   TextEditingController? _otherReasonTextController;
-  static DateFormat simpleTimeFormat = DateFormat('hh:mm a');
-  String? _selectedProblem;
+  // static DateFormat simpleTimeFormat = DateFormat('hh:mm a');
+  // String? _selectedProblem;
 
   @override
   void initState() {
@@ -60,7 +52,7 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
     super.dispose();
   }
 
-  void _handleSendPressed(types.PartialText message) {
+  void _handleSendPressed(types.PartialText message, ChatMessagesCubit chatMessageCubit) {
     final textMessage = types.TextMessage(
       author: types.User(id: FirebaseAuth.instance.currentUser!.uid),
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -68,12 +60,13 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
       text: message.text,
     );
 
-    _addMessage(textMessage);
+    _addMessage(textMessage, chatMessageCubit);
   }
 
-  void _addMessage(types.TextMessage message) {
-    final chatCubit = BlocProvider.of<ChatCubit>(context);
-    chatCubit.createChatMessage(widget.chatRoomDocId, Message.fromTextMessage(message));
+  void _addMessage(types.TextMessage message, ChatMessagesCubit chatMessagesCubit) {
+    // final chatCubit = context.read<ChatCubit>();
+    // final chatCubit = BlocProvider.of<ChatCubit>(context);
+    chatMessagesCubit.createChatMessage(widget.chatRoomDocId, Message.fromTextMessage(message));
     // setState(() {
     //   _messages.insert(0, message);
     // });
@@ -82,18 +75,10 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
   @override
   Widget build(BuildContext context) {
 
-Widget bubbleBuilder(Widget child, {required types.Message message, nextMessageInGroup}) {
-      return Column(
-        children: [
-          child,
-          Text(simpleTimeFormat.format(DateTime.fromMillisecondsSinceEpoch(message.createdAt!)))
-        ],
-      );
-    }
 
-    Widget content = BlocProvider<ChatCubit>.value(
-        value: getIt<ChatCubit>()..getChatMessages(widget.chatRoomDocId),
-        child: BlocConsumer<ChatCubit, ChatState>(
+    Widget content = BlocProvider<ChatMessagesCubit>.value(
+      value: getIt<ChatMessagesCubit>()..getChatMessages(widget.chatRoomDocId),
+      child: BlocConsumer<ChatMessagesCubit, ChatMessagesState>(
           listener: (context, state) {
             state.map(
               initial: (value) {},
@@ -102,7 +87,7 @@ Widget bubbleBuilder(Widget child, {required types.Message message, nextMessageI
                 //   context.loaderOverlay.show();
                 // }
               },
-              error: (value) {
+            errorState: (value) {
                 if (context.loaderOverlay.visible) {
                   context.loaderOverlay.hide();
                 }
@@ -110,19 +95,24 @@ Widget bubbleBuilder(Widget child, {required types.Message message, nextMessageI
                   content: Text(value.appException.message),
                 ));
               },
-              chatCreated: (value) {},
-              chatRoomsFetched: (_) {},
-              chatMessagesFetched: (_) {},
+            chatMessagesFetched: (_) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
+            },
             );
           },
           builder: (context, state) {
             if (state is ChatMessagesFetched) {
+            final chatMessageCubit = BlocProvider.of<ChatMessagesCubit>(context);
             // return _renderMessageList();
               return flutterchat.Chat(
+                
               showUserAvatars: true,
               inputOptions: const flutterchat.InputOptions(
                 sendButtonVisibilityMode: flutterchat.SendButtonVisibilityMode.always,
               ),
+              dateIsUtc: true,
               dateHeaderBuilder: (p0) {
                 return Center(
                   child: Container(
@@ -134,7 +124,8 @@ Widget bubbleBuilder(Widget child, {required types.Message message, nextMessageI
                       color: ColorUtils.aquaGreen,
                     ),
                     child: NativeSmallBodyText(
-                      timeago.format(p0.dateTime),
+                      // timeago.format(p0.dateTime),
+                      p0.text,
                       color: ColorUtils.white,
                       // height: 22 / 12,
                     ),
@@ -190,7 +181,9 @@ Widget bubbleBuilder(Widget child, {required types.Message message, nextMessageI
                 );
               },
                 messages: state.chatMessages,
-                onSendPressed: _handleSendPressed,
+              onSendPressed: (message) {
+                _handleSendPressed(message, chatMessageCubit);
+              },
                 user: types.User(id: FirebaseAuth.instance.currentUser!.uid),
               );
             } else {

@@ -1,18 +1,19 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/util/color_utils.dart';
-import 'package:native/widget/common_scaffold.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 
 @RoutePage()
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+  const AccountScreen({super.key, required this.imageUrl, required this.displayName});
+  final String imageUrl;
+  final String displayName;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +32,14 @@ class AccountScreen extends StatelessWidget {
         Container(
           height: 125,
           width: 125,
-          decoration: const BoxDecoration(shape: BoxShape.circle, color: ColorUtils.grey),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: ColorUtils.grey,
+              image: DecorationImage(image: CachedNetworkImageProvider(imageUrl), fit: BoxFit.cover)),
         ),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: NativeSmallTitleText('Sarah Clay'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: NativeSmallTitleText(displayName),
         ),
         const Spacer(),
         Align(

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -93,11 +95,27 @@ class AuthCubit extends Cubit<AuthState> {
             prefs.setString('user', jsonEncode(user.toJson()));
             if (user.emailVerified ?? false) {
               var deviceToken = await FirebaseMessaging.instance.getToken();
-              if (user.uid != null && deviceToken != null) {
-                await _firestoreRepository.updateUserDeviceToken(user.uid!, deviceToken);
+              String? deviceId;
+              var deviceInfoPlugin = DeviceInfoPlugin();
+              if (Platform.isAndroid) {
+                var deviceInfo = await deviceInfoPlugin.androidInfo;
+                deviceId = deviceInfo.id;
+              } else if (Platform.isIOS) {
+                var deviceInfo = await deviceInfoPlugin.iosInfo;
+                deviceId = deviceInfo.identifierForVendor;
+              }
+              if (user.uid != null && deviceToken != null && deviceId != null) {
+                await _firestoreRepository.updateUserDeviceToken(user.uid!, deviceId, deviceToken);
               }
             }
-            user.emailVerified ?? false ? emit(AuthState.authorized(user: userCredentials.user!)) : emit(const AuthState.inputEmail());
+            if (!(user.emailVerified ?? false)) {
+              emit(const AuthState.inputEmail());
+            } else if (user.customClaims?.birthday == null) {
+              emit(const AuthState.createProfile());
+            } else {
+              emit(AuthState.authorized(user: userCredentials.user!));
+            }
+            // user.emailVerified ?? false ? emit(AuthState.authorized(user: userCredentials.user!)) : emit(const AuthState.inputEmail());
           },
         );
         // if (isSignUp) {

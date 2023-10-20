@@ -40,18 +40,19 @@ class ChoosePartnerScreen extends StatelessWidget {
                     content: Text(value.appException.message),
                   ));
                 },
-                chatCreated: (value) {
-                  if (context.loaderOverlay.visible) {
-                    context.loaderOverlay.hide();
-                  }
-                  context.router.push(HomeWrapperRoute());
-                },
+                // chatCreated: (value) {
+                //   if (context.loaderOverlay.visible) {
+                //     context.loaderOverlay.hide();
+                //   }
+                //   context.router.push(const HomeWrapperRoute());
+                // },
                 chatRoomsFetched: (_) {},
-                chatMessagesFetched: (_) {},
+                // chatMessagesFetched: (_) {},
+                // chatMessageCreated: (value) {},
               );
             },
             builder: (context, state) {
-              final chatCubit = BlocProvider.of<ChatCubit>(context);
+              // final chatCubit = BlocProvider.of<ChatCubit>(context);
               return Stack(
                 children: [
                   Padding(
@@ -85,21 +86,21 @@ class ChoosePartnerScreen extends StatelessWidget {
                         Expanded(
                             child: CustomScrollView(
                           slivers: [
-                            _recommendations(chatCubit)
+                            _recommendations(/*chatCubit*/),
                           ],
                         )),
                         // _recommendations(),
                       ],
                     ),
                   ),
-                  // Positioned(
-                  //   bottom: 100,
-                  //   left: 100,
-                  //   child: Icon(
-                  //     Icons.touch_app_outlined,
-                  //     size: 80,
-                  //   ),
-                  // ),
+                  const Positioned(
+                    bottom: 100,
+                    left: 100,
+                    child: Icon(
+                      Icons.touch_app_outlined,
+                      size: 80,
+                    ),
+                  ),
                 ],
               );
             },
@@ -109,7 +110,7 @@ class ChoosePartnerScreen extends StatelessWidget {
     );
   }
 
-  Widget _recommendations(ChatCubit chatCubit) {
+  Widget _recommendations(/*ChatCubit chatCubit*/) {
     return SliverGrid.builder(
       // padding: const EdgeInsets.all(8),
       itemCount: 6,
@@ -147,7 +148,7 @@ class ChoosePartnerScreen extends StatelessWidget {
                         FloatingActionButton(
                           onPressed: () => showDialog(
                             context: context,
-                            builder: (context) => likeDialog(context, chatCubit),
+                            builder: (context) => likeDialog(context /*chatCubit*/),
                           ),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                           child: const Icon(
@@ -159,13 +160,13 @@ class ChoosePartnerScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Positioned(
-                //     bottom: -30,
-                //     right: 90,
-                //     child: Icon(
-                //       Icons.touch_app_outlined,
-                //       size: 80,
-                //     )),
+                const Positioned(
+                    bottom: -30,
+                    right: 90,
+                    child: Icon(
+                      Icons.touch_app_outlined,
+                      size: 80,
+                    )),
               ],
             );
             context.router.push(NativeCardScaffold(nativeUser: usersList2[index], overlayItem: overlayItem));
@@ -178,7 +179,7 @@ class ChoosePartnerScreen extends StatelessWidget {
     );
   }
 
-  Widget likeDialog(BuildContext context, ChatCubit chatCubit) {
+  Widget likeDialog(BuildContext context /*, ChatCubit chatCubit*/) {
     return AlertDialog(
       backgroundColor: ColorUtils.white,
       surfaceTintColor: Colors.transparent,
@@ -271,8 +272,8 @@ class ChoosePartnerScreen extends StatelessWidget {
           onPressed: () {
             context.router.pop();
             //TODO update this
-            var chat = dummyChatList[0];
-            chatCubit.createSingleChatRoom(chat);
+            // var chat = dummyChatList[0];
+            // chatCubit.createSingleChatRoom(chat);
           },
           text: "Let's go",
         )

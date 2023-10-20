@@ -8,6 +8,7 @@ import 'package:native/model/user.dart';
 import 'package:native/model/user_prefs.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/exceptions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'profile_state.dart';
 part 'profile_cubit.freezed.dart';
@@ -57,7 +58,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     var response = await _userRepository.updateUser(user);
     response.fold((left) {
       emit(ProfileState.error(exception: left));
-    }, (right) {
+    }, (right) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('user', jsonEncode(right.toJson()));
       emit(const ProfileState.profileUpdated());
     });
   }

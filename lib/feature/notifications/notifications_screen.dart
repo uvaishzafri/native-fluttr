@@ -8,14 +8,21 @@ import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/dummy_data.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/chat/cubit/chat_cubit.dart';
+import 'package:native/feature/notifications/cubit/notification_cubit.dart';
 import 'package:native/feature/notifications/filter_by_bottom_sheet.dart';
+import 'package:native/model/app_notification.dart';
 import 'package:native/model/native_type.dart';
 import 'package:native/model/user.dart';
+import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
+import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
 import 'package:native/util/datetime_extension.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 @RoutePage()
 class NotificationsScreen extends StatefulWidget {
@@ -45,9 +52,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = BlocProvider<ChatCubit>.value(
-      value: getIt<ChatCubit>(),
-      child: BlocConsumer<ChatCubit, ChatState>(
+    Widget content = BlocProvider<NotificationCubit>.value(
+      value: getIt<NotificationCubit>()..fetchNotifications(),
+      child: BlocConsumer<NotificationCubit, NotificationState>(
         listener: (context, state) {
           state.map(
             initial: (value) {},
@@ -56,21 +63,44 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 context.loaderOverlay.show();
               }
             },
-            error: (value) {
+            errorState: (value) {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
+              }
+              if (value.appException is UnauthorizedException) {
+                BlocProvider.of<AppCubit>(context).logout();
+                return;
               }
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(value.appException.message),
               ));
             },
-            chatCreated: (value) {},
-            chatRoomsFetched: (_) {},
-            chatMessagesFetched: (_) {},
+            successState: (value) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
+            },
           );
         },
         builder: (context, state) {
           // final chatCubit = BlocProvider.of<ChatCubit>(context);
+          if (state is SuccessState) {
+            List<AppNotification> notificationList = [];
+            if (!isChatsSelected && !isLikesSelected) {
+              notificationList = state.notifications;
+            } else if (isChatsSelected && isLikesSelected) {
+              notificationList = state.notifications
+                  .where(
+                      (element) => element.type == NotificationType.liked || element.type == NotificationType.matched)
+                  .toList();
+            } else if (isChatsSelected) {
+              notificationList =
+                  state.notifications.where((element) => element.type == NotificationType.matched).toList();
+            } else if (isLikesSelected) {
+              notificationList =
+                  state.notifications.where((element) => element.type == NotificationType.liked).toList();
+            }
+
           return Column(
             children: [
               // CupertinoSlidingSegmentedControl(
@@ -82,36 +112,45 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               // ),
               SizedBox(height: 12),
               Expanded(
-                child: GroupedListView<User, DateTime>(
-                  elements: [
-                    usersList[0],
-                    usersList[1],
-                    usersList[2]
-                  ],
-                  groupBy: (element) => likes.fromYou.firstWhere((ele) => element.uid == ele.userId).likedDate,
-                  groupSeparatorBuilder: (value) => Text(DateFormat('dd-MMM-yyyy').format(value)),
+                  child: GroupedListView<AppNotification, DateTime>(
+                    elements: notificationList,
+                    // elements: [
+                    //   usersList[0],
+                    //   usersList[1],
+                    //   usersList[2]
+                    // ],
+                    reverse: false,
+                    groupBy: (element) => element.timestamp!,
+                    // groupBy: (element) => likes.fromYou.firstWhere((ele) => element.uid == ele.userId).likedDate,
+                    groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                   itemBuilder: (context, element) => ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: CircleAvatar(
                       // backgroundImage: AssetImage(element.imageUrl),
-                      backgroundImage: CachedNetworkImageProvider(element.photoURL!),
+                          // backgroundImage: CachedNetworkImageProvider(element.photoURL!),
                     ),
                     title: Row(
                       children: [
                         NativeSmallBodyText(
-                          '${element.displayName}, ${DateTime.tryParse(element.customClaims!.birthday!)?.ageFromDate()}',
+                            '${element.id}',
                           fontWeight: FontWeight.w500,
                           height: 22 / 12,
                         ),
                         Spacer(),
                         NativeSmallBodyText(
-                          '2hrs',
+                            timeago.format(element.timestamp!),
                           height: 22 / 12,
                         )
                       ],
                     ),
                     subtitle: NativeSmallBodyText(
-                      'Liked your profile',
+                        element.type == NotificationType.liked
+                            ? 'Liked your profile'
+                            : element.type == NotificationType.blocked
+                                ? "Blocked you"
+                                : element.type == NotificationType.matched
+                                    ? "Profile matched"
+                                    : "Requested chat",
                       height: 22 / 12,
                     ),
                   ),
@@ -119,6 +158,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
             ],
           );
+          } else {
+            return SizedBox.expand();
+          }
         },
       ),
     );

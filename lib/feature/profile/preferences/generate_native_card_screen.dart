@@ -129,7 +129,7 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
                     ),
                   );
 
-                  context.router.push(NativeCardScaffold(nativeUser: usersList2.first, overlayItem: overlayItem));
+                  context.router.push(NativeCardScaffold(overlayItem: overlayItem));
                 },
                 photoUpdated: (_) {},
                 otherDetailsUpdated: (value) {},

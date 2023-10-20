@@ -13,7 +13,7 @@ class Message with _$Message {
   
   factory Message({
     required String senderId,
-    @DatetimeSerializer() required DateTime creationDate,
+    @DatetimeSerializer() required DateTime? creationDate,
     @JsonKey(includeToJson: false) String? firestoreDocId,
     required String text,
   }) = _Message;
@@ -31,9 +31,9 @@ class Message with _$Message {
   types.TextMessage toTextMessage() {
     return types.TextMessage(
       author: types.User(id: senderId),
-      id: senderId,
+      id: firestoreDocId!,
       text: text,
-      createdAt: creationDate.millisecondsSinceEpoch,
+      createdAt: creationDate?.millisecondsSinceEpoch,
     );
   }
 }

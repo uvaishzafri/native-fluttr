@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native/di/di.dart';
 import 'package:native/model/auth_result.dart';
+import 'package:native/model/user.dart' as user;
 import 'package:native/theme/theme.dart';
 import 'package:native/theme/theme_model.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -38,6 +40,10 @@ class AppCubit extends HydratedCubit<AppState> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('userIdToken');
   }
+  Future<String?> _getStoredUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user');
+  }
 
   checkAuth() async {
     bool isSkipped = await _getStoreOnboardInfo();
@@ -52,14 +58,17 @@ class AppCubit extends HydratedCubit<AppState> {
     // });
     
     if (idToken != null) {
-      emit(AppState.loggedIn(
-          isSkipped,
-          const AuthResult(
-            name: "DEMO",
-            isExpired: false,
-            expiry: 10000,
-          )));
-      return;
+      String? userJson = await _getStoredUser();
+      if (userJson != null) {
+        emit(AppState.loggedIn(
+            isSkipped,
+            AuthResult(
+              user: user.User.fromJson(jsonDecode(userJson)),
+              isExpired: false,
+              expiry: 10000,
+            )));
+        return;
+      }
     }
     // _firebaseAuth.
     // emit(state.copyWith(

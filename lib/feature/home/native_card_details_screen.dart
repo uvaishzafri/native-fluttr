@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:native/di/di.dart';
+import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/model/native_type.dart';
 import 'package:native/model/native_card/native_card.dart';
@@ -23,7 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class NativeCardDetailsScreen extends StatefulWidget {
-  const NativeCardDetailsScreen({super.key, required this.nativeCard});
+  const NativeCardDetailsScreen({super.key, this.nativeCard});
 
   final NativeCard? nativeCard;
 
@@ -47,19 +49,20 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
   }
 
   void initUser() async {
-    var prefs = await SharedPreferences.getInstance();
-    user = User.fromJson(jsonDecode(prefs.getString('user')!));
     if (widget.nativeCard != null) {
       nativeUser = widget.nativeCard;
+      user = usersList[0];
     } else {
-
-    UserRepository userRepository = getIt<UserRepository>();
-    var response = await userRepository.getCurrentUserNativeCardDetails();
-    if (response.isRight) {
+      var prefs = await SharedPreferences.getInstance();
+      user = User.fromJson(jsonDecode(prefs.getString('user')!));
+      UserRepository userRepository = getIt<UserRepository>();
+      var response = await userRepository.getCurrentUserNativeCardDetails();
+      if (response.isRight) {
         nativeUser = response.right;
-    }
+      }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -99,6 +102,8 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
                           const SizedBox(height: 10),
                           loveCard(),
                           const SizedBox(height: 10),
+                          idealDatePlanCard(),
+                          const SizedBox(height: 10),
                           idealPartnerCard(),
                           const SizedBox(height: 10),
                           adviceCard(),
@@ -137,11 +142,16 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
             spacing: 25,
             runSpacing: 40,
             children: [
-              needsParameterItem('assets/native_card/payments.svg', 10, 'Financial'),
-              needsParameterItem('assets/native_card/paintbrush.svg', 10, 'Expression'),
-              needsParameterItem('assets/native_card/neurology.svg', 30, 'Curiosity'),
-              needsParameterItem('assets/native_card/accessibility.svg', 40, 'Independence'),
-              needsParameterItem('assets/native_card/running.svg', 10, 'Activity'),
+              needsParameterItem('assets/native_card/payments.svg',
+                  ((nativeUser?.meta?.parameter?.finance ?? 0) * 100).toInt(), 'Financial'),
+              needsParameterItem('assets/native_card/paintbrush.svg',
+                  ((nativeUser?.meta?.parameter?.fun ?? 0) * 100).toInt(), 'Expression'),
+              needsParameterItem('assets/native_card/neurology.svg',
+                  ((nativeUser?.meta?.parameter?.knowledge ?? 0) * 100).toInt(), 'Curiosity'),
+              needsParameterItem('assets/native_card/accessibility.svg',
+                  ((nativeUser?.meta?.parameter?.independence ?? 0) * 100).toInt(), 'Independence'),
+              needsParameterItem('assets/native_card/running.svg',
+                  ((nativeUser?.meta?.parameter?.active ?? 0) * 100).toInt(), 'Activity'),
             ],
           ),
         ],
@@ -150,64 +160,96 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
   }
 
   Widget celebsCard() {
+    final celebList = nativeUser!.personality!.sameKindCelebrity!.split(", ");
+    if (celebList.length > 3) {
+      celebList.removeRange(3, celebList.length);
+    }
     return Container(
       decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          cardHeader('assets/native_card/community.svg', 'Celebs with same personality traits'),
+          cardHeader('assets/native_card/community.svg', 'Celebs with same personality'),
           const SizedBox(height: 12),
           const DottedLine(),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  NativeHeadImage(
-                    Image.asset("assets/native_card/ariana.png"),
-                    borderColor: ColorUtils.aquaGreen,
-                    radius: 29,
-                    borderRadius: 1,
-                    isGradientBorder: false,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: celebList
+                .map(
+                  (e) => SizedBox(
+                    width: 100,
+                    child: Column(
+                      children: [
+                  
+                        NativeHeadImage(
+                          Image.asset("assets/native_card/ariana.png"),
+                          borderColor: ColorUtils.aquaGreen,
+                          radius: 29,
+                          borderRadius: 1,
+                          isGradientBorder: false,
+                        ),
+                        SizedBox(height: 4),
+                        NativeMediumBodyText(
+                          e,
+                          textAlign: TextAlign.center,
+                          letterSpacing: 2.8,
+                        )
+                      ],
+                    ),
                   ),
-                  const NativeMediumBodyText(
-                    'Ariana',
-                    letterSpacing: 2.8,
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  NativeHeadImage(
-                    Image.asset("assets/native_card/adele.png"),
-                    borderColor: ColorUtils.aquaGreen,
-                    radius: 29,
-                    borderRadius: 1,
-                    isGradientBorder: false,
-                  ),
-                  const NativeMediumBodyText(
-                    'Adele',
-                    letterSpacing: 2.8,
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  NativeHeadImage(
-                    Image.asset("assets/native_card/zendaya.png"),
-                    borderColor: ColorUtils.aquaGreen,
-                    radius: 29,
-                    borderRadius: 1,
-                    isGradientBorder: false,
-                  ),
-                  const NativeMediumBodyText(
-                    'Zendaya',
-                    letterSpacing: 2.8,
-                  )
-                ],
-              ),
-            ],
+)
+                .toList(),
+
+            // [
+            //   Column(
+            //     children: [
+
+            //       NativeHeadImage(
+            //         Image.asset("assets/native_card/ariana.png"),
+            //         borderColor: ColorUtils.aquaGreen,
+            //         radius: 29,
+            //         borderRadius: 1,
+            //         isGradientBorder: false,
+            //       ),
+            //       const NativeMediumBodyText(
+            //         'Ariana',
+            //         letterSpacing: 2.8,
+            //       )
+            //     ],
+            //   ),
+            //   Column(
+            //     children: [
+            //       NativeHeadImage(
+            //         Image.asset("assets/native_card/adele.png"),
+            //         borderColor: ColorUtils.aquaGreen,
+            //         radius: 29,
+            //         borderRadius: 1,
+            //         isGradientBorder: false,
+            //       ),
+            //       const NativeMediumBodyText(
+            //         'Adele',
+            //         letterSpacing: 2.8,
+            //       )
+            //     ],
+            //   ),
+            //   Column(
+            //     children: [
+            //       NativeHeadImage(
+            //         Image.asset("assets/native_card/zendaya.png"),
+            //         borderColor: ColorUtils.aquaGreen,
+            //         radius: 29,
+            //         borderRadius: 1,
+            //         isGradientBorder: false,
+            //       ),
+            //       const NativeMediumBodyText(
+            //         'Zendaya',
+            //         letterSpacing: 2.8,
+            //       )
+            //     ],
+            //   ),
+            // ],
           )
         ],
       ),
@@ -225,10 +267,27 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
           const SizedBox(height: 12),
           const DottedLine(),
           const SizedBox(height: 20),
-          personalityItems('Leadership', 'Resilient and spirited for challenges'),
-          personalityItems('Adventurous', 'Willing to try out new experiences'),
-          personalityItems('Caring', 'Devoted and kind hearted'),
-          personalityItems('Ambitious', 'Strong desire to achieve set gols'),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: nativeUser!.personality!.hashTags!
+                .split("#")
+                .where((element) => element.isNotEmpty)
+                .map((ele) => idealPartnerChip(text: ele))
+                .toList(),
+          ),
+          // NativeMediumTitleText(nativeUser!.personality!.hashTags!),
+          const SizedBox(height: 12),
+          ...nativeUser!.personality!.descriptions!.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: NativeMediumBodyText(e),
+            ),
+          ),
+          // personalityItems('Leadership', 'Resilient and spirited for challenges'),
+          // personalityItems('Adventurous', 'Willing to try out new experiences'),
+          // personalityItems('Caring', 'Devoted and kind hearted'),
+          // personalityItems('Ambitious', 'Strong desire to achieve set gols'),
         ],
       ),
     );
@@ -244,20 +303,74 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
           const SizedBox(height: 12),
           const DottedLine(),
           const SizedBox(height: 20),
-          const NativeMediumBodyText(
-            'Gets bored easily and seeks simulation due to being versatile but lacking constancy',
-            height: 24 / 14,
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: nativeUser!.love!.hashTags!
+                .split("#")
+                .where((element) => element.isNotEmpty)
+                .map((ele) => idealPartnerChip(text: ele))
+                .toList(),
           ),
-          const SizedBox(height: 20),
-          const NativeMediumBodyText(
-            'Can meet the trust and expectations from others',
-            height: 24 / 14,
+          // NativeMediumTitleText(nativeUser!.love!.hashTags!),
+          ...nativeUser!.love!.descriptions!.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: NativeMediumBodyText(e),
+            ),
           ),
-          const SizedBox(height: 20),
-          const NativeMediumBodyText(
-            'Seen as assertive because of speaking their mind cleraly',
-            height: 24 / 14,
+          //   const SizedBox(height: 12),
+          // const NativeMediumBodyText(
+          //     'Gets bored easily and seeks simulation due to being versatile but lacking constancy',
+          //     height: 24 / 14,
+          //   ),
+          //   const SizedBox(height: 20),
+          //   const NativeMediumBodyText(
+          //     'Can meet the trust and expectations from others',
+          //     height: 24 / 14,
+          //   ),
+          //   const SizedBox(height: 20),
+          //   const NativeMediumBodyText(
+          //     'Seen as assertive because of speaking their mind cleraly',
+          //     height: 24 / 14,
+          //   ),
+        ],
+      ),
+    );
+  }
+
+  Widget idealDatePlanCard() {
+    return Container(
+      decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          cardHeader('assets/native_card/couple_with_heart.svg', 'Ideal Date Plan'),
+          const SizedBox(height: 12),
+          const DottedLine(),
+          ...nativeUser!.ideasPlan!.descriptions!.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: NativeMediumBodyText(e),
+            ),
           ),
+          // Wrap(
+          //   // alignment: WrapAlignment.spaceEvenly,
+          //   spacing: 10,
+          //   runSpacing: 25,
+          //   children: [
+          //     idealPartnerChip(svgAssetPath: 'assets/native_card/child_care.svg', text: 'Child care', chipColor: ColorUtils.purple),
+          //     idealPartnerChip(svgAssetPath: 'assets/native_card/laptop.svg', text: 'UI/UX Designer', chipColor: ColorUtils.aquaGreen),
+          //     idealPartnerChip(svgAssetPath: 'assets/native_card/support.svg', text: 'Customer support', chipColor: ColorUtils.lightBlue),
+          //   ],
+          // ),
+          // const SizedBox(height: 20),
+          // const NativeMediumBodyText('Provides a sense of Security and is trustworthy'),
+          // const SizedBox(height: 20),
+          // const NativeMediumBodyText('Possess strong leadership'),
+          // const SizedBox(height: 20),
+          // const NativeMediumBodyText('Can grow and enjoy changes together'),
         ],
       ),
     );
@@ -273,23 +386,29 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
           cardHeader('assets/native_card/couple_with_heart.svg', 'Ideal Partner'),
           const SizedBox(height: 12),
           const DottedLine(),
-          const SizedBox(height: 20),
-          Wrap(
-            // alignment: WrapAlignment.spaceEvenly,
-            spacing: 10,
-            runSpacing: 25,
-            children: [
-              idealPartnerChip(svgAssetPath: 'assets/native_card/child_care.svg', text: 'Child care', chipColor: ColorUtils.purple),
-              idealPartnerChip(svgAssetPath: 'assets/native_card/laptop.svg', text: 'UI/UX Designer', chipColor: ColorUtils.aquaGreen),
-              idealPartnerChip(svgAssetPath: 'assets/native_card/support.svg', text: 'Customer support', chipColor: ColorUtils.lightBlue),
-            ],
+          ...nativeUser!.partner!.descriptions!.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: NativeMediumBodyText(e),
+            ),
           ),
-          const SizedBox(height: 20),
-          const NativeMediumBodyText('Provides a sense of Security and is trustworthy'),
-          const SizedBox(height: 20),
-          const NativeMediumBodyText('Possess strong leadership'),
-          const SizedBox(height: 20),
-          const NativeMediumBodyText('Can grow and enjoy changes together'),
+          // const SizedBox(height: 20),
+          // Wrap(
+          //   // alignment: WrapAlignment.spaceEvenly,
+          //   spacing: 10,
+          //   runSpacing: 25,
+          //   children: [
+          //     idealPartnerChip(svgAssetPath: 'assets/native_card/child_care.svg', text: 'Child care', chipColor: ColorUtils.purple),
+          //     idealPartnerChip(svgAssetPath: 'assets/native_card/laptop.svg', text: 'UI/UX Designer', chipColor: ColorUtils.aquaGreen),
+          //     idealPartnerChip(svgAssetPath: 'assets/native_card/support.svg', text: 'Customer support', chipColor: ColorUtils.lightBlue),
+          //   ],
+          // ),
+          // const SizedBox(height: 20),
+          // const NativeMediumBodyText('Provides a sense of Security and is trustworthy'),
+          // const SizedBox(height: 20),
+          // const NativeMediumBodyText('Possess strong leadership'),
+          // const SizedBox(height: 20),
+          // const NativeMediumBodyText('Can grow and enjoy changes together'),
         ],
       ),
     );
@@ -304,48 +423,57 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
           cardHeader('assets/native_card/hand_with_heart.svg', 'Advice'),
           const SizedBox(height: 12),
           const DottedLine(),
-          const SizedBox(height: 20),
-          const NativeMediumBodyText(
-            'Take others view point and not assert your own opinions',
-            height: 24 / 14,
+          ...nativeUser!.advice!.descriptions!.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: NativeMediumBodyText(e),
+            ),
           ),
-          const SizedBox(height: 20),
-          const NativeMediumBodyText(
-            'Continuously work on improving yourself and provide fresh appeal to your partner ',
-            height: 24 / 14,
-          ),
-          const SizedBox(height: 20),
-          const NativeMediumBodyText(
-            'Value communication with your partner and cherish the relationship',
-            height: 24 / 14,
-          ),
+          // const SizedBox(height: 20),
+          // const NativeMediumBodyText(
+          //   'Take others view point and not assert your own opinions',
+          //   height: 24 / 14,
+          // ),
+          // const SizedBox(height: 20),
+          // const NativeMediumBodyText(
+          //   'Continuously work on improving yourself and provide fresh appeal to your partner ',
+          //   height: 24 / 14,
+          // ),
+          // const SizedBox(height: 20),
+          // const NativeMediumBodyText(
+          //   'Value communication with your partner and cherish the relationship',
+          //   height: 24 / 14,
+          // ),
         ],
       ),
     );
   }
 
-  Widget personalityItems(String header, String body) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          NativeSmallTitleText(header),
-          const SizedBox(height: 10),
-          NativeMediumBodyText(body),
-        ],
-      ),
-    );
-  }
+  // Widget personalityItems(String header, String body) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 10.0),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         NativeSmallTitleText(header),
+  //         const SizedBox(height: 10),
+  //         NativeMediumBodyText(body),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Widget cardHeader(String assetPath, String title) {
+  Widget cardHeader(String assetPath, String title, {Color? color}) {
     return Row(
       children: [
-        SvgPicture.asset(assetPath),
+        SvgPicture.asset(
+          assetPath,
+          colorFilter: color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
+        ),
         const SizedBox(width: 10),
         NativeMediumTitleText(
           title,
-          color: ColorUtils.purple,
+          color: color,
           height: 22 / 16,
         )
       ],
@@ -360,7 +488,11 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
           children: [
             SvgPicture.asset(svgAssetPath),
             const SizedBox(width: 4),
-            NativeMediumTitleText('$value%', fontSize: 28),
+            NativeMediumTitleText(
+              '$value%',
+              fontSize: 28,
+              color: ColorUtils.purple,
+            ),
           ],
         ),
         NativeMediumTitleText(title),
@@ -368,18 +500,18 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
     );
   }
 
-  Widget idealPartnerChip({required String svgAssetPath, required String text, Color? chipColor}) {
+  Widget idealPartnerChip({required String text}) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: chipColor,
+        color: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.asset(svgAssetPath),
-          const SizedBox(width: 10),
+          // SvgPicture.asset(svgAssetPath),
+          // const SizedBox(width: 10),
           NativeSmallBodyText(
             text,
             fontSize: 10,

@@ -39,7 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   initUser() async {
     var prefs = await SharedPreferences.getInstance();
-    _user = User.fromJson(jsonDecode(prefs.getString('user')!));
+    var user = prefs.getString('user');
+    if (user != null) {
+      _user = User.fromJson(jsonDecode(user));
+    }
   }
 
   @override
@@ -82,20 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
 
-            // return HomeScaffold(
-            //   Column(
-            //     mainAxisSize: MainAxisSize.min,
-            //     children: [
-            //       _searchBar(),
-            //       const SizedBox(height: 13),
-            //       _nativeCard(),
-            //       const SizedBox(height: 13),
-            //       _recommendations(),
-            //       Divider(),
-            //       Flexible(child: _recommendations()),
-            //     ],
-            //   ),
-            // );
           },
           listener: (BuildContext context, HomeState state) {}),
     );
@@ -111,82 +100,28 @@ class _HomeScreenState extends State<HomeScreen> {
     return _user != null
         ? ExpandableNativeCard(
             native: _user!,
-      //   native: Native(
-      //       user: "Sarah",
-      //   imageUrl: 'assets/home/ic_test.png',
-      //   age: '31 yrs',
-      //   type: NativeType.fields(),
-      //       energy: 33,
-      //       goodFits: [
-      //     NativeType.fields(),
-      //     NativeType.fields(),
-      //     NativeType.fields()
-      //   ],
-      // ),
           )
         : SizedBox();
   }
 
-  // Widget _recommendations() {
-  //   return Column(children: [
-  //     Row(
-  //       children: [
-  //         NativeUserCard(
-  //           native: Native(user: "Sarah", type: NativeType.field(), energy: 33, goodFits: [
-  //             NativeType.field(),
-  //             NativeType.field(),
-  //             NativeType.field()
-  //           ]),
-  //           userImage: Image.asset("$_assetFolder/ic_test.png"),
-  //         ),
-  //         NativeUserCard(
-  //           native: Native(user: "Sarah", type: NativeType.field(), energy: 33, goodFits: [
-  //             NativeType.field(),
-  //             NativeType.field(),
-  //             NativeType.field()
-  //           ]),
-  //           userImage: Image.asset("$_assetFolder/ic_test.png"),
-  //         )
-  //       ],
-  //     )
-  //   ]);
-  // }
-
   Widget _recommendations() {
     return SliverGrid.builder(
       // padding: const EdgeInsets.all(8),
-      itemCount: usersList.length,
+      itemCount: usersList2.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         crossAxisCount: 2,
-        childAspectRatio: 0.6,
+        // childAspectRatio: 0.6,
+        mainAxisExtent: 300,
       ),
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            // var sarah = Native(
-            //   user: "Sarah Clay",
-            //   age: '31 yrs',
-            //   imageUrl: 'assets/home/ic_test.png',
-            //   type: NativeType.fields(),
-            //   energy: 33,
-            //   goodFits: [
-            //     NativeType.moon(),
-            //     NativeType.mist(),
-            //     NativeType.mineral(),
-            //   ],
-            // );
-            context.router.push(NativeCardDetailsRoute(nativeCard: usersList2[index]));
+            context.router.push(NativeCardScaffold(nativeUser: usersList2[index]));
           },
           child: NativeUserCard(
             native: usersList[index],
-            // native: Native(user: "Sarah", imageUrl: 'assets/home/ic_test.png', age: '31 yrs', type: NativeType.fields(), energy: 33, goodFits: [
-            //   NativeType.moon(),
-            //   NativeType.mist(),
-            //   NativeType.mineral()
-            // ]),
-            // userImage: Image.asset("$_assetFolder/ic_test.png"),
           ),
         );
       },

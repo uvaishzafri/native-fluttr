@@ -99,15 +99,16 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
             FlutterNativeSplash.remove();
             // context.router.replace(const BasicDetailsRoute());
             if (state.authResult != null) {
-              // context.router.replace(const BasicDetailsRoute());
-              context.router.replace(const HomeWrapperRoute());
+              if (state.authResult!.user.customClaims?.birthday == null) {
+                context.router.replace(const BasicDetailsRoute());
+              } else {
+                context.router.replace(const HomeWrapperRoute());
+              }
             } else {
               (state.hasSkippedOnboarding == false)
                   ? context.router.replace(OnboardingRoute())
                   // : context.router.replace(const HomeWrapperRoute());
-                  : context.router.replaceAll([
-                      const SignInRoute()
-                    ]);
+                  : context.router.replaceAll([const SignInRoute()]);
             }
           },
           child: RepaintBoundary(

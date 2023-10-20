@@ -29,37 +29,43 @@ List<String> problems = [
 
 
 final Map<String, List<String>> religions = {
-  'Christian': [
-    'Catholic',
-    'Russian',
-    'Syriac',
-  ],
-  'Hindu': [
-    'Bengali',
-    'Brahmin',
-    'Marwadi'
-  ],
-  'Buddhist': [
-    'Bengali',
-    'Brahmin',
-    'Marwadi'
-  ],
-  'Muslim': [
-    'Bengali',
-    'Brahmin',
-    'Marwadi'
-  ],
-  'Jain': [
-    'Bengali',
-    'Brahmin',
-    'Marwadi'
-  ],
+"Hindu": [],
+  "Muslim": [],
+  "Christian": [],
+  "Sikh": [],
+  "Buddhist": [],
+  "Jain": [],
+  "Others": [],
 };
 
+List<String> languages = [
+  "Hindi",
+  "English",
+  "Marathi",
+  "Telugu",
+  "Tamil",
+  "Bengali",
+  "Gujarati",
+  "Kannada",
+  "Punjabi",
+  "Urdu",
+  "Odia",
+  "Assamese",
+  "Kashmiri",
+  "Nepali",
+  "Marwari",
+  "Others",
+];
+
+
 List<String> locations = [
-  'Bengaluru',
-  'Mumbai',
+  'Bangalore',
   'Delhi',
+  'Gurgaon',
   'Chennai',
-  'Pune'
+  'Hyderabad',
+  'Mumbai',
+  'Pune',
+  'Kolkata',
+  'Ahmedabad'
 ];

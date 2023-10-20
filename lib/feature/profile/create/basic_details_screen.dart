@@ -206,6 +206,7 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
                   }
                   if (value.exception.message == 'unauthorized') {
                     BlocProvider.of<AppCubit>(context).logout();
+                    return;
                   }
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
                 },

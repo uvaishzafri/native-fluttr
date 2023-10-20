@@ -135,13 +135,13 @@ List<Message> dummyMessages = [
 ];
 
 LikesModel likes = LikesModel(fromYou: [
-  UserLikes(userId: 'Sarah Clay', likedDate: DateTime(2023, 10, 14)),
-  UserLikes(userId: 'Angelina', likedDate: DateTime(2023, 10, 14)),
-  UserLikes(userId: 'Smith', likedDate: DateTime(2023, 10, 14)),
+  UserLikes(userId: '1', likedDate: DateTime(2023, 10, 14)),
+  UserLikes(userId: '2', likedDate: DateTime(2023, 10, 14)),
+  UserLikes(userId: '3', likedDate: DateTime(2023, 10, 14)),
 ], fromOthers: [
-  UserLikes(userId: 'Sarah Clay', likedDate: DateTime(2023, 10, 14)),
-  UserLikes(userId: 'Angelina', likedDate: DateTime(2023, 10, 14)),
-  UserLikes(userId: 'Smith', likedDate: DateTime(2023, 10, 14)),
+  UserLikes(userId: '1', likedDate: DateTime(2023, 10, 14)),
+  UserLikes(userId: '2', likedDate: DateTime(2023, 10, 14)),
+  UserLikes(userId: '3', likedDate: DateTime(2023, 10, 14)),
 ]);
 
 final usersList2 = [
@@ -230,6 +230,281 @@ final usersList2 = [
       ]
     }
   }),
+  NativeCard.fromJson({
+    "birthday": {"month": 10, "year": 2000, "day": 14},
+    "love": {
+      "hashTags": "#Comfortable #Conservative #Kind",
+      "descriptions": [
+        "First impressions convey kindness. Revealing gentle vibe",
+        "People prefer free relationship not bound and shilly-shally.",
+        "Serious and nervous. Cannot approach from you. Going out lasts longer."
+      ]
+    },
+    "gender": "MALE",
+    "partner": {
+      "descriptions": [
+        "Tends to be stressed out by caring outside. Calm together.",
+        "Honest person make active attack without hurting your high pride."
+      ]
+    },
+    "personality": {
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
+      "descriptions": [
+        "Shy, not a risk taker, glue person, weave relationships",
+        "Seeker pursues a theme through steady effort and perseverance.",
+        "Lively, full of action, and thinks that it is important to act first."
+      ]
+    },
+    "advice": {
+      "descriptions": [
+        "Swayed by indecision because of kindness. Follow your will!",
+        "Be honest without being passive for fear that pride will be hurt."
+      ]
+    },
+    "meta": {
+      "matchTypes": [
+        {"ja": "霧", "en": "Mist"},
+        {"ja": "太陽", "en": "Sun"},
+        {"ja": "鉱物", "en": "Mineral"}
+      ],
+      "energyScore": 22,
+      "color": {
+        "hex": "#F2C9D3",
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "rgb": {"b": 211, "r": 242, "g": 201}
+      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "type": {"ja": "草花", "en": "Flower"},
+      "slogan": "Healing Classy Free person"
+    },
+    "ideasPlan": {
+      "descriptions": [
+        "Luxurious international travel dates to experience gorgeous arts.",
+        "Experience of traditional culture that values ​​forms and rules."
+      ]
+    }
+  }),
+  NativeCard.fromJson({
+    "birthday": {"month": 10, "year": 2000, "day": 14},
+    "love": {
+      "hashTags": "#Comfortable #Conservative #Kind",
+      "descriptions": [
+        "First impressions convey kindness. Revealing gentle vibe",
+        "People prefer free relationship not bound and shilly-shally.",
+        "Serious and nervous. Cannot approach from you. Going out lasts longer."
+      ]
+    },
+    "gender": "MALE",
+    "partner": {
+      "descriptions": [
+        "Tends to be stressed out by caring outside. Calm together.",
+        "Honest person make active attack without hurting your high pride."
+      ]
+    },
+    "personality": {
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
+      "descriptions": [
+        "Shy, not a risk taker, glue person, weave relationships",
+        "Seeker pursues a theme through steady effort and perseverance.",
+        "Lively, full of action, and thinks that it is important to act first."
+      ]
+    },
+    "advice": {
+      "descriptions": [
+        "Swayed by indecision because of kindness. Follow your will!",
+        "Be honest without being passive for fear that pride will be hurt."
+      ]
+    },
+    "meta": {
+      "matchTypes": [
+        {"ja": "霧", "en": "Mist"},
+        {"ja": "太陽", "en": "Sun"},
+        {"ja": "鉱物", "en": "Mineral"}
+      ],
+      "energyScore": 22,
+      "color": {
+        "hex": "#F2C9D3",
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "rgb": {"b": 211, "r": 242, "g": 201}
+      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "type": {"ja": "草花", "en": "Flower"},
+      "slogan": "Healing Classy Free person"
+    },
+    "ideasPlan": {
+      "descriptions": [
+        "Luxurious international travel dates to experience gorgeous arts.",
+        "Experience of traditional culture that values ​​forms and rules."
+      ]
+    }
+  }),
+  NativeCard.fromJson({
+    "birthday": {"month": 10, "year": 2000, "day": 14},
+    "love": {
+      "hashTags": "#Comfortable #Conservative #Kind",
+      "descriptions": [
+        "First impressions convey kindness. Revealing gentle vibe",
+        "People prefer free relationship not bound and shilly-shally.",
+        "Serious and nervous. Cannot approach from you. Going out lasts longer."
+      ]
+    },
+    "gender": "MALE",
+    "partner": {
+      "descriptions": [
+        "Tends to be stressed out by caring outside. Calm together.",
+        "Honest person make active attack without hurting your high pride."
+      ]
+    },
+    "personality": {
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
+      "descriptions": [
+        "Shy, not a risk taker, glue person, weave relationships",
+        "Seeker pursues a theme through steady effort and perseverance.",
+        "Lively, full of action, and thinks that it is important to act first."
+      ]
+    },
+    "advice": {
+      "descriptions": [
+        "Swayed by indecision because of kindness. Follow your will!",
+        "Be honest without being passive for fear that pride will be hurt."
+      ]
+    },
+    "meta": {
+      "matchTypes": [
+        {"ja": "霧", "en": "Mist"},
+        {"ja": "太陽", "en": "Sun"},
+        {"ja": "鉱物", "en": "Mineral"}
+      ],
+      "energyScore": 22,
+      "color": {
+        "hex": "#F2C9D3",
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "rgb": {"b": 211, "r": 242, "g": 201}
+      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "type": {"ja": "草花", "en": "Flower"},
+      "slogan": "Healing Classy Free person"
+    },
+    "ideasPlan": {
+      "descriptions": [
+        "Luxurious international travel dates to experience gorgeous arts.",
+        "Experience of traditional culture that values ​​forms and rules."
+      ]
+    }
+  }),
+  NativeCard.fromJson({
+    "birthday": {"month": 10, "year": 2000, "day": 14},
+    "love": {
+      "hashTags": "#Comfortable #Conservative #Kind",
+      "descriptions": [
+        "First impressions convey kindness. Revealing gentle vibe",
+        "People prefer free relationship not bound and shilly-shally.",
+        "Serious and nervous. Cannot approach from you. Going out lasts longer."
+      ]
+    },
+    "gender": "MALE",
+    "partner": {
+      "descriptions": [
+        "Tends to be stressed out by caring outside. Calm together.",
+        "Honest person make active attack without hurting your high pride."
+      ]
+    },
+    "personality": {
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
+      "descriptions": [
+        "Shy, not a risk taker, glue person, weave relationships",
+        "Seeker pursues a theme through steady effort and perseverance.",
+        "Lively, full of action, and thinks that it is important to act first."
+      ]
+    },
+    "advice": {
+      "descriptions": [
+        "Swayed by indecision because of kindness. Follow your will!",
+        "Be honest without being passive for fear that pride will be hurt."
+      ]
+    },
+    "meta": {
+      "matchTypes": [
+        {"ja": "霧", "en": "Mist"},
+        {"ja": "太陽", "en": "Sun"},
+        {"ja": "鉱物", "en": "Mineral"}
+      ],
+      "energyScore": 22,
+      "color": {
+        "hex": "#F2C9D3",
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "rgb": {"b": 211, "r": 242, "g": 201}
+      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "type": {"ja": "草花", "en": "Flower"},
+      "slogan": "Healing Classy Free person"
+    },
+    "ideasPlan": {
+      "descriptions": [
+        "Luxurious international travel dates to experience gorgeous arts.",
+        "Experience of traditional culture that values ​​forms and rules."
+      ]
+    }
+  }),
+  NativeCard.fromJson({
+    "birthday": {"month": 10, "year": 2000, "day": 14},
+    "love": {
+      "hashTags": "#Comfortable #Conservative #Kind",
+      "descriptions": [
+        "First impressions convey kindness. Revealing gentle vibe",
+        "People prefer free relationship not bound and shilly-shally.",
+        "Serious and nervous. Cannot approach from you. Going out lasts longer."
+      ]
+    },
+    "gender": "MALE",
+    "partner": {
+      "descriptions": [
+        "Tends to be stressed out by caring outside. Calm together.",
+        "Honest person make active attack without hurting your high pride."
+      ]
+    },
+    "personality": {
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
+      "descriptions": [
+        "Shy, not a risk taker, glue person, weave relationships",
+        "Seeker pursues a theme through steady effort and perseverance.",
+        "Lively, full of action, and thinks that it is important to act first."
+      ]
+    },
+    "advice": {
+      "descriptions": [
+        "Swayed by indecision because of kindness. Follow your will!",
+        "Be honest without being passive for fear that pride will be hurt."
+      ]
+    },
+    "meta": {
+      "matchTypes": [
+        {"ja": "霧", "en": "Mist"},
+        {"ja": "太陽", "en": "Sun"},
+        {"ja": "鉱物", "en": "Mineral"}
+      ],
+      "energyScore": 22,
+      "color": {
+        "hex": "#F2C9D3",
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "rgb": {"b": 211, "r": 242, "g": 201}
+      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "type": {"ja": "草花", "en": "Flower"},
+      "slogan": "Healing Classy Free person"
+    },
+    "ideasPlan": {
+      "descriptions": [
+        "Luxurious international travel dates to experience gorgeous arts.",
+        "Experience of traditional culture that values ​​forms and rules."
+      ]
+    }
+  }),
 ];
 
 final usersList = [
@@ -243,32 +518,146 @@ final usersList = [
     phoneNumberVerified: true,
     native: Meta(
       type: NativeTypeEnum.fields,
-      // type: NativeType(
-      //   en: 'Mist',
-      //   ja: '1234',
-      // ),
       matchTypes: [
         NativeTypeEnum.mineral,
         NativeTypeEnum.mist,
         NativeTypeEnum.moon,
-        // NativeType(
-        //   en: 'Mist',
-        //   ja: '1234',
-        // ),
-        // NativeType(
-        //   en: 'Moon',
-        //   ja: '1235',
-        // ),
-        // NativeType(
-        //   en: 'Light',
-        //   ja: '1236',
-        // ),
       ],
       energyScore: 33,
     ),
     customClaims: CustomClaims(
       gender: Gender.male,
-      birthday: '12-10-2001',
+      birthday: '2001-10-12',
+      religion: 'Hindu',
+      community: 'Marwadi',
+      location: 'Pune',
+      about: 'about me',
+    ),
+  ),
+  User(
+    uid: '2',
+    displayName: 'Sarah clay',
+    photoURL: 'https://picsum.photos/id/232/200/300',
+    email: 'testuser@gmail.com',
+    emailVerified: true,
+    phoneNumber: '+919999898989',
+    phoneNumberVerified: true,
+    native: Meta(
+      type: NativeTypeEnum.fields,
+      matchTypes: [
+        NativeTypeEnum.mineral,
+        NativeTypeEnum.mist,
+        NativeTypeEnum.moon,
+      ],
+      energyScore: 33,
+    ),
+    customClaims: CustomClaims(
+      gender: Gender.male,
+      birthday: '2005-10-12',
+      religion: 'Hindu',
+      community: 'Marwadi',
+      location: 'Pune',
+      about: 'about me',
+    ),
+  ),
+  User(
+    uid: '3',
+    displayName: 'Sarah clay',
+    photoURL: 'https://picsum.photos/id/233/200/300',
+    email: 'testuser@gmail.com',
+    emailVerified: true,
+    phoneNumber: '+919999898989',
+    phoneNumberVerified: true,
+    native: Meta(
+      type: NativeTypeEnum.fields,
+      matchTypes: [
+        NativeTypeEnum.mineral,
+        NativeTypeEnum.mist,
+        NativeTypeEnum.moon,
+      ],
+      energyScore: 33,
+    ),
+    customClaims: CustomClaims(
+      gender: Gender.male,
+      birthday: '2002-10-12',
+      religion: 'Hindu',
+      community: 'Marwadi',
+      location: 'Pune',
+      about: 'about me',
+    ),
+  ),
+  User(
+    uid: '4',
+    displayName: 'Sarah clay',
+    photoURL: 'https://picsum.photos/id/234/200/300',
+    email: 'testuser@gmail.com',
+    emailVerified: true,
+    phoneNumber: '+919999898989',
+    phoneNumberVerified: true,
+    native: Meta(
+      type: NativeTypeEnum.fields,
+      matchTypes: [
+        NativeTypeEnum.mineral,
+        NativeTypeEnum.mist,
+        NativeTypeEnum.moon,
+      ],
+      energyScore: 33,
+    ),
+    customClaims: CustomClaims(
+      gender: Gender.male,
+      birthday: '2003-10-12',
+      religion: 'Hindu',
+      community: 'Marwadi',
+      location: 'Pune',
+      about: 'about me',
+    ),
+  ),
+  User(
+    uid: '5',
+    displayName: 'Sarah clay',
+    photoURL: 'https://picsum.photos/id/235/200/300',
+    email: 'testuser@gmail.com',
+    emailVerified: true,
+    phoneNumber: '+919999898989',
+    phoneNumberVerified: true,
+    native: Meta(
+      type: NativeTypeEnum.fields,
+      matchTypes: [
+        NativeTypeEnum.mineral,
+        NativeTypeEnum.mist,
+        NativeTypeEnum.moon,
+      ],
+      energyScore: 33,
+    ),
+    customClaims: CustomClaims(
+      gender: Gender.male,
+      birthday: '2004-10-12',
+      religion: 'Hindu',
+      community: 'Marwadi',
+      location: 'Pune',
+      about: 'about me',
+    ),
+  ),
+  User(
+    uid: '6',
+    displayName: 'Sarah clay',
+    photoURL: 'https://picsum.photos/id/231/200/300',
+    email: 'testuser@gmail.com',
+    emailVerified: true,
+    phoneNumber: '+919999898989',
+    phoneNumberVerified: true,
+    native: Meta(
+      type: NativeTypeEnum.fields,
+      matchTypes: [
+        NativeTypeEnum.mineral,
+        NativeTypeEnum.mist,
+        NativeTypeEnum.moon,
+      ],
+      energyScore: 33,
+    ),
+    customClaims: CustomClaims(
+      gender: Gender.male,
+      birthday: '2005-10-12',
       religion: 'Hindu',
       community: 'Marwadi',
       location: 'Pune',

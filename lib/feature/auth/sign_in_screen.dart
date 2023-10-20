@@ -112,7 +112,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 state is AuthErrorPincodeState) {
               return AuthScaffold(_inputPincode(
                   context, bloc, _number.phoneNumber ?? "", state));
-            } else if (state is AuthInputEmailState || state is AuthEmailSendFailedState || state is AuthEmailVerificationSentState || state is AuthEmailVerificationCompleteState) {
+            } else if (state is AuthInputEmailState ||
+                state is AuthEmailSendFailedState ||
+                state is AuthEmailVerificationSentState ||
+                state is AuthEmailVerificationCompleteState) {
               return AuthScaffold(_inputEmail(context, bloc, _number.phoneNumber ?? "", state));
             } else {
               return AuthScaffold(_inputPhone(context, bloc));
@@ -143,6 +146,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 bloc.checkIfEmailVerified();
               });
               _showSentVerificationEmailDialog(_emailController.text);
+            }
+            if (state is AuthCreateProfileState) {
+              context.router.replaceAll([const BasicDetailsRoute()]);
             }
             if (state is AuthAuthorizedState) {
               context.router.replaceAll([

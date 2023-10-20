@@ -24,6 +24,10 @@ class UserDoesNotExistException implements AppException {
   @override
   String get message => 'User does not exists. Sign up first.';
 }
+class UnauthorizedException implements AppException {
+  @override
+  String get message => 'Unauthorized';
+}
 
 class CustomException implements AppException {
   final String? _message;

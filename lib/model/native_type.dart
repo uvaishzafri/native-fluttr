@@ -30,6 +30,8 @@ enum NativeTypeEnum {
   tree,
   sun,
   flower,
+  ocean,
+  mountain,
 }
 
 NativeType getNativeTypeDetail(NativeTypeEnum nativeType) {
@@ -50,6 +52,10 @@ NativeType getNativeTypeDetail(NativeTypeEnum nativeType) {
       return NativeType.flower();
     case NativeTypeEnum.tree:
       return NativeType.tree();
+    case NativeTypeEnum.ocean:
+      return NativeType.ocean();
+    case NativeTypeEnum.mountain:
+      return NativeType.mountain();
   }
 }
 
@@ -100,5 +106,15 @@ class NativeType with _$NativeType {
         name: "Flower",
         color: Colors.pink,
         imageProvider: Image.asset('assets/home/ic_native_flower.png').image,
+      );
+  factory NativeType.mountain() => _NativeType(
+        name: "Mountain",
+        color: Colors.pink,
+        imageProvider: Image.asset('assets/home/ic_native_mountain.png').image,
+      );
+  factory NativeType.ocean() => _NativeType(
+        name: "Ocean",
+        color: Colors.pink,
+        imageProvider: Image.asset('assets/home/ic_native_ocean.png').image,
       );
 }

@@ -71,7 +71,7 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
             onChanged: (value) {
               setState(() {
                 selectedReligion = value;
-                selectedCommunity = null;
+                // selectedCommunity = null;
               });
             },
             value: selectedReligion,
@@ -84,7 +84,7 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
                 .toList(),
           ),
           const SizedBox(height: 24),
-          const NativeSmallBodyText('Community'),
+          const NativeSmallBodyText('Language'),
           const SizedBox(height: 8),
           NativeDropdown(
               onChanged: (value) {
@@ -94,14 +94,13 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
               },
               value: selectedCommunity,
               searchController: communitySearchController,
-              items: selectedReligion != null
-                  ? religions[selectedReligion]!
+            items: languages
                       .map((item) => DropdownMenuItem(
                             value: item,
                             child: NativeMediumBodyText(item),
                           ))
-                      .toList()
-                  : null),
+                .toList(),
+          ),
           const Spacer(),
           NativeButton(
             isEnabled: profileCubit.validateOtherDetails(

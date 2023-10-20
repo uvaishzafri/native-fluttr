@@ -3,13 +3,10 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
-import 'package:native/model/custom_claims.dart';
+import 'package:native/model/app_notification.dart';
 import 'package:native/model/native_card/native_card.dart';
-import 'package:native/model/notification.dart';
-import 'package:native/model/update_user_req.dart';
 import 'package:native/model/user.dart';
 import 'package:native/model/user_prefs.dart';
-import 'package:native/util/app_constants.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -145,7 +142,7 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, bool>> updateUser(User user) async {
+  Future<Either<AppException, User>> updateUser(User user) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
@@ -162,8 +159,12 @@ class UserRepository {
         return Left(RequestError(response.statusMessage ?? ''));
       }
       if (response.data == null) return Left(NoResponseBody());
-      return const Right(true);
+      return Right(User.fromJson(response.data));
+      // return const Right(true);
     } on DioException catch (error) {
+      if (error.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
       return Left(CustomException(error.message));
     } catch (error) {
       return Left(CustomException());
@@ -227,7 +228,7 @@ class UserRepository {
     return prefs.getString('userIdToken');
   }
 
-  Future<Either<AppException, List<Notification>>> getCurrentUserNotifications() async {
+  Future<Either<AppException, List<AppNotification>>> getCurrentUserNotifications() async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
@@ -245,8 +246,11 @@ class UserRepository {
       if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
-      return Right((response.data as List).map((e) => Notification.fromJson(e)).toList());
+      return Right((response.data as List).map((e) => AppNotification.fromJson(e)).toList());
     } on DioException catch (e) {
+      if (e.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
       return Left(CustomException(e.message));
     } catch (e) {
       return Left(CustomException());

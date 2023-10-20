@@ -13,6 +13,7 @@ class AuthState with _$AuthState {
       AuthErrorState;
   const factory AuthState.emailSendFailed({required AppException exception}) = AuthEmailSendFailedState;
   const factory AuthState.unauthorized() = AuthUnauthorizedState;
+  const factory AuthState.createProfile() = AuthCreateProfileState;
   const factory AuthState.authorized({required User user}) =
       AuthAuthorizedState;
 }

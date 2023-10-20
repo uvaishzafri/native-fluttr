@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native/model/native_type.dart';
 
-class DatetimeSerializer implements JsonConverter<DateTime, dynamic> {
+class DatetimeSerializer implements JsonConverter<DateTime?, dynamic> {
   const DatetimeSerializer();
 
   @override
-  DateTime fromJson(dynamic timestamp) =>
-      DateTime.fromMillisecondsSinceEpoch((timestamp as int) * 1000);
+  DateTime? fromJson(dynamic timestamp) =>
+      timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((timestamp as int));
 
   @override
-  int toJson(DateTime date) => (date.millisecondsSinceEpoch / 1000) as int;
+  int? toJson(DateTime? date) => date == null ? null : (date.millisecondsSinceEpoch);
 }
 
 class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
@@ -38,7 +38,5 @@ class TypeConverter implements JsonConverter<NativeTypeEnum?, Map?> {
   }
 
   @override
-  Map? toJson(NativeTypeEnum? nativeTypeEnum) => {
-        'en': nativeTypeEnum?.name
-      };
+  Map? toJson(NativeTypeEnum? nativeTypeEnum) => nativeTypeEnum == null ? null : {'en': nativeTypeEnum.name};
 }

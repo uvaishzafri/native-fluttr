@@ -98,9 +98,10 @@ class _ChatsScreenState extends State<ChatsScreen> {
                 content: Text(value.appException.message),
               ));
             },
-            chatCreated: (value) {},
+            // chatCreated: (value) {},
             chatRoomsFetched: (_) {},
-            chatMessagesFetched: (_) {},
+            // chatMessagesFetched: (_) {},
+            // chatMessageCreated: (value) {},
           );
         },
         builder: (context, state) {
@@ -127,7 +128,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                 ),
                               );
                             },
-                            contentPadding: EdgeInsets.only(right: 10),
+                            contentPadding: const EdgeInsets.only(right: 10),
                             leading: CircleAvatar(
                               backgroundImage: CachedNetworkImageProvider(_chats[index].participants[_chats[index].participants.keys.firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![1]),
                             ),
@@ -135,13 +136,13 @@ class _ChatsScreenState extends State<ChatsScreen> {
                             subtitle: Row(
                               children: [
                                 NativeMediumBodyText(_chats[index].lastMessage ?? "No conversation yet"),
-                                Spacer(),
+                                const Spacer(),
                                 _chats[index].lastMessageTime != null
                                     ? NativeMediumBodyText(timeago.format(_chats[index].lastMessageTime!))
                                     : Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                                         decoration: BoxDecoration(color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
-                                        child: NativeSmallBodyText(
+                                        child: const NativeSmallBodyText(
                                           'Start now',
                                           color: ColorUtils.white,
                                           fontSize: 10,
