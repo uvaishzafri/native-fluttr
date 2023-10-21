@@ -9,6 +9,7 @@ import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/chat/cubit/chat_cubit.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/widget/like_overlay.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_card.dart';
 
@@ -113,7 +114,7 @@ class ChoosePartnerScreen extends StatelessWidget {
   Widget _recommendations(/*ChatCubit chatCubit*/) {
     return SliverGrid.builder(
       // padding: const EdgeInsets.all(8),
-      itemCount: 6,
+      itemCount: usersList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
@@ -123,53 +124,16 @@ class ChoosePartnerScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            var overlayItem = Stack(
-              alignment: AlignmentDirectional.center,
-              clipBehavior: Clip.none,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      // color: ColorUtils.textLightGrey.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FloatingActionButton(
-                          // radius: 30,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-                          onPressed: () {},
-                          child: const Icon(Icons.undo_rounded),
-                        ),
-                        const SizedBox(width: 48),
-                        FloatingActionButton(
-                          onPressed: () => showDialog(
+            var overlayItem = LikeOverlay(
+              onPressedLike: () {
+                showDialog(
                             context: context,
                             builder: (context) => likeDialog(context /*chatCubit*/),
-                          ),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-                          child: const Icon(
-                            Icons.thumb_up_alt_outlined,
-                            color: ColorUtils.purple,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Positioned(
-                    bottom: -30,
-                    right: 90,
-                    child: Icon(
-                      Icons.touch_app_outlined,
-                      size: 80,
-                    )),
-              ],
+                );
+              },
+              isTutorial: true,
             );
-            context.router.push(NativeCardScaffold(nativeUser: usersList2[index], overlayItem: overlayItem));
+            context.router.push(NativeCardScaffold(user: usersList[index], overlayItem: overlayItem, isDemoUser: true));
           },
           child: NativeUserCard(
             native: usersList[index],

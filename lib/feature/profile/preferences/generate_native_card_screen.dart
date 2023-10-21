@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_simple_button.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 @RoutePage()
@@ -115,7 +118,7 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
                   }
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
                 },
-                profileUpdated: (_) {
+                profileUpdated: (_) async {
                   if (context.loaderOverlay.visible) {
                     context.loaderOverlay.hide();
                   }
@@ -128,8 +131,14 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
                       onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
                     ),
                   );
-
-                  context.router.push(NativeCardScaffold(overlayItem: overlayItem));
+                  final prefs = await SharedPreferences.getInstance();
+                  final userJson = prefs.getString('user');
+                  if (userJson != null) {
+                    if (context.mounted) {
+                      var user = User.fromJson(jsonDecode(userJson));
+                      context.router.push(NativeCardScaffold(user: user, overlayItem: overlayItem));
+                    }
+                  }
                 },
                 photoUpdated: (_) {},
                 otherDetailsUpdated: (value) {},

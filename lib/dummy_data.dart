@@ -134,15 +134,15 @@ List<Message> dummyMessages = [
   Message(senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2', creationDate: DateTime(2023, 10, 15, 16, 50, 20), text: 'tonight?'),
 ];
 
-LikesModel likes = LikesModel(fromYou: [
-  UserLikes(userId: '1', likedDate: DateTime(2023, 10, 14)),
-  UserLikes(userId: '2', likedDate: DateTime(2023, 10, 14)),
-  UserLikes(userId: '3', likedDate: DateTime(2023, 10, 14)),
-], fromOthers: [
-  UserLikes(userId: '1', likedDate: DateTime(2023, 10, 14)),
-  UserLikes(userId: '2', likedDate: DateTime(2023, 10, 14)),
-  UserLikes(userId: '3', likedDate: DateTime(2023, 10, 14)),
-]);
+// LikesModel likes = LikesModel(fromYou: [
+//   UserLikes(userId: '1', likedDate: DateTime(2023, 10, 14)),
+//   UserLikes(userId: '2', likedDate: DateTime(2023, 10, 14)),
+//   UserLikes(userId: '3', likedDate: DateTime(2023, 10, 14)),
+// ], fromOthers: [
+//   UserLikes(userId: '1', likedDate: DateTime(2023, 10, 14)),
+//   UserLikes(userId: '2', likedDate: DateTime(2023, 10, 14)),
+//   UserLikes(userId: '3', likedDate: DateTime(2023, 10, 14)),
+// ]);
 
 final usersList2 = [
   NativeCard.fromJson({

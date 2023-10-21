@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
 import 'package:native/model/app_notification.dart';
+import 'package:native/model/likes_model.dart';
 import 'package:native/model/native_card/native_card.dart';
 import 'package:native/model/user.dart';
 import 'package:native/model/user_prefs.dart';
@@ -59,8 +60,11 @@ class UserRepository {
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(User.fromJson(response.data));
-    } on DioException catch (e) {
-      return Left(CustomException(e.message));
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(err.message));
     } catch (e) {
       return Left(CustomException());
     }
@@ -85,31 +89,66 @@ class UserRepository {
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(NativeCard.fromJson(response.data['nativeCard']));
-    } on DioException catch (e) {
-      return Left(CustomException(e.message));
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(err.message));
+    } catch (e) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, NativeCard>> getUserNativeCardDetails({required String userId}) async {
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      final response = await _dioClient.get(
+        '/users/$userId/nativeCard',
+        options: Options(headers: headers),
+      );
+
+      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (response.data == null) return Left(NoResponseBody());
+
+      return Right(NativeCard.fromJson(response.data['nativeCard']));
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(err.message));
     } catch (e) {
       return Left(CustomException());
     }
   }
 
   Future<Either<AppException, User>> getUserDetails(String userId) async {
-    var token = await _getStoreUserIdToken();
-    if (token == null) {
-      return Left(CustomException('Token not found'));
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      final response = await _dioClient.get(
+        '/users/$userId',
+        options: Options(headers: headers),
+      );
+
+      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (response.data == null) return Left(NoResponseBody());
+
+      return Right(User.fromJson(response.data));
+    } on DioException catch (err) {
+      if (err.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(err.message));
+    } catch (e) {
+      return Left(CustomException());
     }
-    var headers = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    final response = await _dioClient.get(
-      '/users/$userId',
-      options: Options(headers: headers),
-    );
-
-    if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
-    if (response.data == null) return Left(NoResponseBody());
-
-    return Right(User.fromJson(response.data));
   }
 
   Future<Either<AppException, bool>> checkUser(String phoneNumber) async {
@@ -190,6 +229,9 @@ class UserRepository {
       if (response.data == null) return Left(NoResponseBody());
       return const Right(true);
     } on DioException catch (error) {
+      if (error.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
       return Left(CustomException(error.message));
     } catch (error) {
       return Left(CustomException());
@@ -217,6 +259,9 @@ class UserRepository {
       if (response.data == null) return Left(NoResponseBody());
       return Right(response.data['photoUrl']);
     } on DioException catch (error) {
+      if (error.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
       return Left(CustomException(error.message));
     } catch (error) {
       return Left(CustomException());
@@ -253,6 +298,108 @@ class UserRepository {
       }
       return Left(CustomException(e.message));
     } catch (e) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, LikesModel>> getLikesReport() async {
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      final response = await _dioClient.get(
+        '/users/me/likes',
+        options: Options(headers: headers),
+      );
+
+      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (response.data == null) return Left(NoResponseBody());
+
+      return Right(LikesModel.fromJson(response.data));
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(error.message));
+    } catch (e) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, bool>> reportUser(String userId, String reason) async {
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var data = jsonEncode({'reason': reason});
+      final response =
+          await _dioClient.post('/chat/users/$userId/issue', data: data, options: Options(headers: headers));
+
+      if (!isSuccess(response.statusCode)) {
+        return Left(RequestError(response.statusMessage ?? ''));
+      }
+      if (response.data == null) return Left(NoResponseBody());
+      return const Right(true);
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(error.message));
+    } catch (error) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, List<User>>> getRecommendations() async {
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      final response = await _dioClient.get(
+        '/matches/recommendation',
+        options: Options(headers: headers),
+      );
+
+      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (response.data == null) return Left(NoResponseBody());
+
+      return Right((response.data as List).map((e) => User.fromJson(e)).toList());
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(error.message));
+    } catch (e) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, bool>> requestMatch(String userId) async {
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      final response = await _dioClient.post('/matches/users/$userId/request', options: Options(headers: headers));
+
+      if (!isSuccess(response.statusCode)) {
+        return Left(RequestError(response.statusMessage ?? ''));
+      }
+      if (response.data == null) return Left(NoResponseBody());
+      return const Right(true);
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(error.message));
+    } catch (error) {
       return Left(CustomException());
     }
   }

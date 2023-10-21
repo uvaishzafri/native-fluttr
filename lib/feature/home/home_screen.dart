@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/dummy_data.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
@@ -11,6 +12,7 @@ import 'package:native/feature/home/bloc/home_cubit.dart';
 import 'package:native/feature/home/home_scaffold.dart';
 import 'package:native/model/native_type.dart';
 import 'package:native/model/user.dart';
+import 'package:native/widget/like_overlay.dart';
 import 'package:native/widget/native_card.dart';
 import 'package:native/widget/native_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<HomeCubit>(),
+      create: (_) => getIt<HomeCubit>()..fetchRecommendations(),
       child: BlocConsumer<HomeCubit, HomeState>(
           buildWhen: (p, c) => p != c,
           builder: (context, state) {
@@ -79,14 +81,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     // const SizedBox(height: 13),
                     SliverPadding(padding: EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
                     // const SizedBox(height: 13),
-                    SliverPadding(padding: EdgeInsets.all(12), sliver: _recommendations()),
+                    if (state is HomeSuccessState)
+                      SliverPadding(padding: EdgeInsets.all(12), sliver: _recommendations(state.users, bloc)),
                   ],
                 ),
               ),
             );
 
           },
-          listener: (BuildContext context, HomeState state) {}),
+          listener: (BuildContext context, HomeState state) {
+            state.map(
+              initial: (value) {},
+              loading: (value) {
+                if (!context.loaderOverlay.visible) {
+                  context.loaderOverlay.show();
+                }
+              },
+              error: (value) {},
+              success: (value) {},
+              requestMatchSuccess: (value) {
+                if (context.loaderOverlay.visible) {
+                  context.loaderOverlay.hide();
+                }
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Like Sent')));
+              },
+            );
+          }),
     );
   }
 
@@ -104,10 +124,10 @@ class _HomeScreenState extends State<HomeScreen> {
         : SizedBox();
   }
 
-  Widget _recommendations() {
+  Widget _recommendations(List<User> users, HomeCubit bloc) {
     return SliverGrid.builder(
       // padding: const EdgeInsets.all(8),
-      itemCount: usersList2.length,
+      itemCount: users.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
@@ -118,10 +138,15 @@ class _HomeScreenState extends State<HomeScreen> {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            context.router.push(NativeCardScaffold(nativeUser: usersList2[index]));
+            var overlayItem = LikeOverlay(
+              onPressedLike: () {
+                bloc.requestMatch(users[index].uid!);
+              },
+            );
+            context.router.push(NativeCardScaffold(user: users[index], overlayItem: overlayItem));
           },
           child: NativeUserCard(
-            native: usersList[index],
+            native: users[index],
           ),
         );
       },

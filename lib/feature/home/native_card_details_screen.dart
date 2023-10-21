@@ -25,9 +25,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class NativeCardDetailsScreen extends StatefulWidget {
-  const NativeCardDetailsScreen({super.key, this.nativeCard});
+  const NativeCardDetailsScreen({super.key, required this.user, this.isDemoUser = false});
 
-  final NativeCard? nativeCard;
+  final User user;
+  final bool isDemoUser;
 
   @override
   State<NativeCardDetailsScreen> createState() => _NativeCardDetailsScreenState();
@@ -41,22 +42,23 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    nativeUser = widget.nativeCard;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      initUser();
+    // nativeUser = widget.nativeCard;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await initUser();
       setState(() {});
     });
   }
 
-  void initUser() async {
-    if (widget.nativeCard != null) {
-      nativeUser = widget.nativeCard;
-      user = usersList[0];
+  Future initUser() async {
+    user = widget.user;
+    if (widget.isDemoUser) {
+      nativeUser = usersList2[0];
+      // user = usersList[0];
     } else {
-      var prefs = await SharedPreferences.getInstance();
-      user = User.fromJson(jsonDecode(prefs.getString('user')!));
+      // var prefs = await SharedPreferences.getInstance();
+      // user = User.fromJson(jsonDecode(prefs.getString('user')!));
       UserRepository userRepository = getIt<UserRepository>();
-      var response = await userRepository.getCurrentUserNativeCardDetails();
+      var response = await userRepository.getUserNativeCardDetails(userId: widget.user.uid!);
       if (response.isRight) {
         nativeUser = response.right;
       }

@@ -21,10 +21,12 @@ import 'package:native/widget/text/native_small_body_text.dart';
 
 @RoutePage()
 class ChatMessagesScreen extends StatefulWidget {
-  const ChatMessagesScreen({super.key, required this.chatRoomDocId, required this.name, required this.imageUrl});
+  const ChatMessagesScreen(
+      {super.key, required this.chatRoomDocId, required this.name, required this.imageUrl, required this.userId});
   final String chatRoomDocId;
   final String name;
   final String imageUrl;
+  final String userId;
 
   @override
   State<ChatMessagesScreen> createState() => _ChatMessagesScreenState();
@@ -240,7 +242,7 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        builder: (context) => const ReportUserBottomSheet(),
+                        builder: (context) => ReportUserBottomSheet(userId: widget.userId),
                       );
                     }
                   },

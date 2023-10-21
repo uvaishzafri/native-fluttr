@@ -123,6 +123,10 @@ class _ChatsScreenState extends State<ChatsScreen> {
                               context.router.push(
                                 ChatMessagesRoute(
                                   chatRoomDocId: _chats[index].firestoreDocId!,
+                                  userId: _chats[index]
+                                      .participants
+                                      .keys
+                                      .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid),
                                   name: _chats[index].participants[_chats[index].participants.keys.firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![0],
                                   imageUrl: _chats[index].participants[_chats[index].participants.keys.firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![1],
                                 ),

@@ -1,16 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
-import 'package:native/dummy_data.dart';
-import 'package:native/feature/chat/cubit/chat_cubit.dart';
-import 'package:native/model/native_type.dart';
+import 'package:native/feature/likes/cubit/likes_cubit.dart';
 import 'package:native/model/user.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
@@ -44,9 +41,9 @@ class _LikesScreenState extends State<LikesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = BlocProvider<ChatCubit>.value(
-      value: getIt<ChatCubit>(),
-      child: BlocConsumer<ChatCubit, ChatState>(
+    Widget content = BlocProvider<LikesCubit>.value(
+      value: getIt<LikesCubit>()..fetchLikesReport(),
+      child: BlocConsumer<LikesCubit, LikesState>(
         listener: (context, state) {
           state.map(
             initial: (value) {},
@@ -55,7 +52,7 @@ class _LikesScreenState extends State<LikesScreen> {
                 context.loaderOverlay.show();
               }
             },
-            error: (value) {
+            errorState: (value) {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
               }
@@ -63,26 +60,24 @@ class _LikesScreenState extends State<LikesScreen> {
                 content: Text(value.appException.message),
               ));
             },
-            // chatCreated: (value) {},
-            chatRoomsFetched: (_) {},
-            // chatMessagesFetched: (_) {},
-            // chatMessageCreated: (value) {},
+            successState: (_) {},
           );
         },
         builder: (context, state) {
           // final chatCubit = BlocProvider.of<ChatCubit>(context);
+          if (state is SuccessState) {
           return DefaultTabController(
               length: 2,
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       color: ColorUtils.textLightGrey.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(40),
                     ),
                     child: ButtonsTabBar(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                       backgroundColor: ColorUtils.purple,
                       unselectedBackgroundColor: Colors.transparent,
                       labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -107,14 +102,11 @@ class _LikesScreenState extends State<LikesScreen> {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        GroupedListView<User, DateTime>(
-                          elements: [
-                            usersList[0],
-                            // usersList[1],
-                            // usersList[2],
-                          ],
+                          (state.likes.fromMe?.length ?? 0) > 0
+                              ? GroupedListView<User, DateTime>(
+                                  elements: state.likes.fromMe!,
                           groupBy: (element) {
-                            var temp = likes.fromYou.firstWhere((ele) => element.uid == ele.userId).likedDate;
+                                    var temp = DateFormat('yyyy-MM-dd').parse(element.customClaims!.birthday!);
                             return temp;
                           },
                           // padding: EdgeInsets.only(right: 4),
@@ -132,7 +124,7 @@ class _LikesScreenState extends State<LikesScreen> {
                                   fontWeight: FontWeight.w500,
                                   height: 22 / 12,
                                 ),
-                                Spacer(),
+                                        const Spacer(),
                                 NativeSmallBodyText(
                                   '⚡️ ${element.native!.energyScore} native score',
                                   height: 22 / 12,
@@ -144,15 +136,13 @@ class _LikesScreenState extends State<LikesScreen> {
                               height: 22 / 12,
                             ),
                           ),
-                        ),
-                        GroupedListView<User, DateTime>(
-                          elements: [
-                            usersList[0],
-                            usersList[1],
-                            usersList[2],
-                          ],
+                                )
+                              : const SizedBox.expand(),
+                          (state.likes.toMe?.length ?? 0) > 0
+                              ? GroupedListView<User, DateTime>(
+                                  elements: state.likes.toMe!,
                           groupBy: (element) {
-                            var temp = likes.fromYou.firstWhere((ele) => element.uid == ele.userId).likedDate;
+                                    var temp = DateFormat('yyyy-MM-dd').parse(element.customClaims!.birthday!);
                             return temp;
                           },
                           // padding: EdgeInsets.only(right: 4),
@@ -170,7 +160,7 @@ class _LikesScreenState extends State<LikesScreen> {
                                   fontWeight: FontWeight.w500,
                                   height: 22 / 12,
                                 ),
-                                Spacer(),
+                                        const Spacer(),
                                 NativeSmallBodyText(
                                   '⚡️ ${element.native!.energyScore} native score',
                                   height: 22 / 12,
@@ -182,12 +172,16 @@ class _LikesScreenState extends State<LikesScreen> {
                               height: 22 / 12,
                             ),
                           ),
-                        ),
+                                )
+                              : const SizedBox.expand(),
                       ],
                     ),
                   ),
                 ],
               ));
+          } else {
+            return const SizedBox.expand();
+          }
         },
       ),
     );
