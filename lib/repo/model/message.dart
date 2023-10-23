@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native/util/datetime_serializer.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 
 part 'message.freezed.dart';
 part 'message.g.dart';
@@ -10,7 +10,7 @@ part 'message.g.dart';
 @freezed
 class Message with _$Message {
   const Message._();
-  
+
   factory Message({
     required String senderId,
     @DatetimeSerializer() required DateTime? creationDate,
@@ -18,9 +18,10 @@ class Message with _$Message {
     required String text,
   }) = _Message;
 
-  factory Message.fromJson(String id, Map<String, dynamic> json) => _$MessageFromJson(json).copyWith(firestoreDocId: id);
+  factory Message.fromJson(String id, Map<String, dynamic> json) =>
+      _$MessageFromJson(json).copyWith(firestoreDocId: id);
 
-  factory Message.fromTextMessage(types.TextMessage textMessage) {
+  factory Message.fromTextMessage(TextMessage textMessage) {
     return Message(
       senderId: textMessage.author.id,
       creationDate: DateTime.fromMillisecondsSinceEpoch(textMessage.createdAt!),
@@ -28,9 +29,9 @@ class Message with _$Message {
     );
   }
 
-  types.TextMessage toTextMessage() {
-    return types.TextMessage(
-      author: types.User(id: senderId),
+  TextMessage toTextMessage() {
+    return TextMessage(
+      author: User(id: senderId),
       id: firestoreDocId!,
       text: text,
       createdAt: creationDate?.millisecondsSinceEpoch,
