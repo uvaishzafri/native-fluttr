@@ -1,13 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:loader_overlay/loader_overlay.dart';
-import 'package:native/di/di.dart';
 import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/app_router.gr.dart';
-import 'package:native/feature/chat/cubit/chat_cubit.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/like_overlay.dart';
 import 'package:native/widget/native_button.dart';
@@ -22,96 +18,61 @@ class ChoosePartnerScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorUtils.white,
-        body: BlocProvider<ChatCubit>.value(
-          value: getIt<ChatCubit>(),
-          child: BlocConsumer<ChatCubit, ChatState>(
-            listener: (context, state) {
-              state.map(
-                initial: (value) {},
-                loading: (value) {
-                  if (!context.loaderOverlay.visible) {
-                    context.loaderOverlay.show();
-                  }
-                },
-                error: (value) {
-                  if (context.loaderOverlay.visible) {
-                    context.loaderOverlay.hide();
-                  }
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(value.appException.message),
-                  ));
-                },
-                // chatCreated: (value) {
-                //   if (context.loaderOverlay.visible) {
-                //     context.loaderOverlay.hide();
-                //   }
-                //   context.router.push(const HomeWrapperRoute());
-                // },
-                chatRoomsFetched: (_) {},
-                // chatMessagesFetched: (_) {},
-                // chatMessageCreated: (value) {},
-              );
-            },
-            builder: (context, state) {
-              // final chatCubit = BlocProvider.of<ChatCubit>(context);
-              return Stack(
+        body: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
+              child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/home/ic_logo_black.svg',
-                        ),
-                        // Image.asset('assets/ic_logo_light.png'),
-                        const SizedBox(height: 20),
-                        RichText(
-                          text: TextSpan(
-                            text: 'Choose a partner to view and ',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: ColorUtils.textGrey,
-                                  height: 30 / 16,
-                                ),
-                            children: [
-                              TextSpan(
-                                text: 'LIKE',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      color: ColorUtils.purple,
-                                      height: 30 / 16,
-                                    ),
-                              ),
-                            ],
+                  SvgPicture.asset(
+                    'assets/home/ic_logo_black.svg',
+                  ),
+                  // Image.asset('assets/ic_logo_light.png'),
+                  const SizedBox(height: 20),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Choose a partner to view and ',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: ColorUtils.textGrey,
+                            height: 30 / 16,
                           ),
+                      children: [
+                        TextSpan(
+                          text: 'LIKE',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: ColorUtils.purple,
+                                height: 30 / 16,
+                              ),
                         ),
-                        const SizedBox(height: 10),
-                        Expanded(
-                            child: CustomScrollView(
-                          slivers: [
-                            _recommendations(/*chatCubit*/),
-                          ],
-                        )),
-                        // _recommendations(),
                       ],
                     ),
                   ),
-                  const Positioned(
-                    bottom: 100,
-                    left: 100,
-                    child: Icon(
-                      Icons.touch_app_outlined,
-                      size: 80,
-                    ),
-                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                      child: CustomScrollView(
+                    slivers: [
+                      _recommendations(),
+                    ],
+                  )),
+                  // _recommendations(),
                 ],
-              );
-            },
-          ),
+              ),
+            ),
+            const Positioned(
+              bottom: 100,
+              left: 100,
+              child: Icon(
+                Icons.touch_app_outlined,
+                size: 80,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _recommendations(/*ChatCubit chatCubit*/) {
+  Widget _recommendations() {
     return SliverGrid.builder(
       // padding: const EdgeInsets.all(8),
       itemCount: usersList.length,
@@ -128,7 +89,7 @@ class ChoosePartnerScreen extends StatelessWidget {
               onPressedLike: () {
                 showDialog(
                             context: context,
-                            builder: (context) => likeDialog(context /*chatCubit*/),
+                  builder: (context) => likeDialog(context),
                 );
               },
               isTutorial: true,
@@ -143,7 +104,7 @@ class ChoosePartnerScreen extends StatelessWidget {
     );
   }
 
-  Widget likeDialog(BuildContext context /*, ChatCubit chatCubit*/) {
+  Widget likeDialog(BuildContext context) {
     return AlertDialog(
       backgroundColor: ColorUtils.white,
       surfaceTintColor: Colors.transparent,
@@ -235,9 +196,6 @@ class ChoosePartnerScreen extends StatelessWidget {
           isEnabled: true,
           onPressed: () {
             context.router.pop();
-            //TODO update this
-            // var chat = dummyChatList[0];
-            // chatCubit.createSingleChatRoom(chat);
           },
           text: "Let's go",
         )

@@ -85,7 +85,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       value: getIt<EditProfileCubit>(),
       child: BlocConsumer<EditProfileCubit, EditProfileState>(
         listener: (context, state) {
-          // TODO: implement listener
           state.map(
             initial: (_) {},
             loading: (value) {

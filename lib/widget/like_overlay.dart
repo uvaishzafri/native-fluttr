@@ -35,10 +35,6 @@ class LikeOverlay extends StatelessWidget {
                 const SizedBox(width: 48),
                 FloatingActionButton(
                   onPressed: onPressedLike,
-                  // onPressed: () => showDialog(
-                  //   context: context,
-                  //   builder: (context) => likeDialog(context /*chatCubit*/),
-                  // ),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                   child: const Icon(
                     Icons.thumb_up_alt_outlined,

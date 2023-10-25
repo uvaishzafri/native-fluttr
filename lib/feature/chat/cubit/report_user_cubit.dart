@@ -13,10 +13,10 @@ class ReportUserCubit extends Cubit<ReportUserState> {
 
   final UserRepository _userRepository;
 
-  reportUser(String userId, String reason) async {
+  reportUser(String userId, String reasonCategory, String? reasonDesc) async {
     emit(const ReportUserState.loading());
 
-    var notificationsList = await _userRepository.reportUser(userId, reason);
+    var notificationsList = await _userRepository.reportUser(userId, reasonCategory, reasonDesc);
     notificationsList.fold(
       (left) => emit(ReportUserState.errorState(appException: left)),
       (right) => emit(ReportUserState.successState()),

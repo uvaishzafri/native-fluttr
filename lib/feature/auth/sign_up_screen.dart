@@ -99,11 +99,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //   await prefs.setString('userIdToken', "DEMO_ID_TOKEN");
   // }
 
-  // void _goToHomeScreen() {
-  //   // _storeUserIdToken();
-  //   context.router.push(const BasicDetailsRoute());
-  // }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -641,7 +636,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Navigator.pop(context);
             BlocProvider.of<AppCubit>(context).logout();
             BlocProvider.of<AuthCubit>(context).initial();
-            // _goToHomeScreen();
           });
           return WillPopScope(
               onWillPop: () => Future.value(false),

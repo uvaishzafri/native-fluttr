@@ -68,6 +68,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
             return CircularProgressIndicator();
           }
           return AutoTabsScaffold(
+            // inheritNavigatorObservers: false,
             routes: [
               HomeRoute(),
               LikesRoute(),

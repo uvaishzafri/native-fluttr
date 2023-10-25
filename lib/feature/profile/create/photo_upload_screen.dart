@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -6,20 +5,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/profile/cubit/profile_cubit.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_linear_progress_indicator.dart';
 import 'package:native/widget/photo_picker_widget.dart';
-import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
-import 'package:native/widget/text/native_small_title_text.dart';
 
 @RoutePage()
 class PhotoUploadScreen extends StatefulWidget {
@@ -142,7 +140,13 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                   if (context.loaderOverlay.visible) {
                     context.loaderOverlay.hide();
                   }
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
+                  if (value.exception is UnauthorizedException) {
+                    BlocProvider.of<AppCubit>(context).logout();
+                    return;
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(value.exception.message),
+                  ));
                 },
                 profileUpdated: (_) {
                   // if (context.loaderOverlay.visible) {

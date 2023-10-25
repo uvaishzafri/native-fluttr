@@ -45,8 +45,11 @@ class App extends StatelessWidget {
                 debugShowMaterialGrid: config.debugShowMaterialGrid,
 
                 /// AutoRouter configuration.
-                routerDelegate: appRouter.delegate(),
-                routeInformationParser: appRouter.defaultRouteParser(),
+                // routerDelegate: appRouter.delegate(),
+                // routeInformationParser: appRouter.defaultRouteParser(),
+                routerConfig: appRouter.config(
+                  navigatorObservers: () => [AutoRouteObserver()],
+                ),
 
                 /// EasyLocalization configuration.
                 locale: TranslationProvider.of(context).flutterLocale,

@@ -6,11 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/profile/cubit/profile_cubit.dart';
 import 'package:native/model/custom_claims.dart';
 import 'package:native/model/user.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_dropdown.dart';
 import 'package:native/widget/native_linear_progress_indicator.dart';
@@ -149,7 +151,13 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
                   if (context.loaderOverlay.visible) {
                     context.loaderOverlay.hide();
                   }
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
+                  if (value.exception is UnauthorizedException) {
+                    BlocProvider.of<AppCubit>(context).logout();
+                    return;
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(value.exception.message),
+                  ));
                 },
                 profileUpdated: (_) {},
                 photoUpdated: (_) {},

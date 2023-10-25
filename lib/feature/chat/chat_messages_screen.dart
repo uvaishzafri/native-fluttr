@@ -7,10 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart' as flutterchat;
+import 'package:native/feature/app/bloc/app_cubit.dart';
+import 'package:native/feature/chat/cubit/block_user_cubit.dart';
 import 'package:native/feature/chat/cubit/chat_messages_cubit.dart';
 import 'package:native/feature/chat/report_user_bottom_sheet.dart';
 import 'package:native/repo/model/message.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_simple_button.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
@@ -42,10 +45,6 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
   void initState() {
     super.initState();
     _otherReasonTextController = TextEditingController();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   final chatCubit = BlocProvider<ChatCubit>.value(value: getIt<ChatCubit>());
-    //   chatCubit.getChatMessages(widget.chatRoomDocId);
-    // });
   }
 
   @override
@@ -66,12 +65,7 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
   }
 
   void _addMessage(types.TextMessage message, ChatMessagesCubit chatMessagesCubit) {
-    // final chatCubit = context.read<ChatCubit>();
-    // final chatCubit = BlocProvider.of<ChatCubit>(context);
     chatMessagesCubit.createChatMessage(widget.chatRoomDocId, Message.fromTextMessage(message));
-    // setState(() {
-    //   _messages.insert(0, message);
-    // });
   }
 
   @override
@@ -90,12 +84,16 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
                 // }
               },
             errorState: (value) {
-                if (context.loaderOverlay.visible) {
-                  context.loaderOverlay.hide();
-                }
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(value.appException.message),
-                ));
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
+              if (value.appException is UnauthorizedException) {
+                BlocProvider.of<AppCubit>(context).logout();
+                return;
+              }
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(value.appException.message),
+              ));
               },
             chatMessagesFetched: (_) {
               if (context.loaderOverlay.visible) {
@@ -373,7 +371,7 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
       surfaceTintColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      title: Center(child: NativeMediumTitleText('Are you sure?')),
+      title: const Center(child: NativeMediumTitleText('Are you sure?')),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -402,20 +400,17 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
               ),
             ),
             const SizedBox(width: 10),
-            Expanded(
-              child: NativeButton(
-                isEnabled: true,
-                text: 'Yes, Block',
-                fontSize: 14,
-                onPressed: () {
-                  // final user = User(
-                  //   customClaims: CustomClaims(
-                  //     birthday: DateFormat('yyyy-MM-dd').format(_selectedDate!),
-                  //     // birthday: _selectedDate!.toIso8601String(),
-                  //   ),
-                  // );
-                  // profileCubit.updateProfile(user);
-                },
+            BlocProvider<BlockUserCubit>.value(
+              value: getIt<BlockUserCubit>(),
+              child: Expanded(
+                child: NativeButton(
+                  isEnabled: true,
+                  text: 'Yes, Block',
+                  fontSize: 14,
+                  onPressed: () {
+                    return BlocProvider.of<BlockUserCubit>(context).blockUser(widget.chatRoomDocId);
+                  },
+                ),
               ),
             ),
           ],

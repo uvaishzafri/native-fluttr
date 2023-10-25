@@ -7,9 +7,12 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/likes/cubit/likes_cubit.dart';
+import 'package:native/model/liked_user.dart';
 import 'package:native/model/user.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
@@ -56,6 +59,10 @@ class _LikesScreenState extends State<LikesScreen> {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
               }
+              if (value.appException is UnauthorizedException) {
+                BlocProvider.of<AppCubit>(context).logout();
+                return;
+              }
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(value.appException.message),
               ));
@@ -64,7 +71,6 @@ class _LikesScreenState extends State<LikesScreen> {
           );
         },
         builder: (context, state) {
-          // final chatCubit = BlocProvider.of<ChatCubit>(context);
           if (state is SuccessState) {
           return DefaultTabController(
               length: 2,
@@ -103,11 +109,12 @@ class _LikesScreenState extends State<LikesScreen> {
                     child: TabBarView(
                       children: [
                           (state.likes.fromMe?.length ?? 0) > 0
-                              ? GroupedListView<User, DateTime>(
+                              ? GroupedListView<LikedUser, DateTime>(
                                   elements: state.likes.fromMe!,
                           groupBy: (element) {
-                                    var temp = DateFormat('yyyy-MM-dd').parse(element.customClaims!.birthday!);
-                            return temp;
+                                    return element.updatedAt!;
+                                    //         var temp = DateFormat('yyyy-MM-dd').format(element.updatedAt!);
+                                    // return temp;
                           },
                           // padding: EdgeInsets.only(right: 4),
                           groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
@@ -115,35 +122,36 @@ class _LikesScreenState extends State<LikesScreen> {
                             contentPadding: EdgeInsets.zero,
                             leading: CircleAvatar(
                               // backgroundImage: AssetImage(element.photoURL),
-                              backgroundImage: CachedNetworkImageProvider(element.photoURL!),
+                                      backgroundImage: CachedNetworkImageProvider(element.user!.photoURL!),
                             ),
                             title: Row(
                               children: [
                                 NativeSmallBodyText(
-                                  '${element.displayName}, ${DateTime.tryParse(element.customClaims!.birthday!)?.ageFromDate()}',
+                                          '${element.user!.displayName}, ${DateTime.tryParse(element.user!.customClaims!.birthday!)?.ageFromDate()}',
                                   fontWeight: FontWeight.w500,
                                   height: 22 / 12,
                                 ),
                                         const Spacer(),
                                 NativeSmallBodyText(
-                                  '⚡️ ${element.native!.energyScore} native score',
+                                          '⚡️ ${element.user!.native!.energyScore} native score',
                                   height: 22 / 12,
                                 )
                               ],
                             ),
                             subtitle: NativeSmallBodyText(
-                              element.customClaims!.location!,
+                                      element.user!.customClaims!.location!,
                               height: 22 / 12,
                             ),
                           ),
                                 )
                               : const SizedBox.expand(),
                           (state.likes.toMe?.length ?? 0) > 0
-                              ? GroupedListView<User, DateTime>(
+                              ? GroupedListView<LikedUser, DateTime>(
                                   elements: state.likes.toMe!,
                           groupBy: (element) {
-                                    var temp = DateFormat('yyyy-MM-dd').parse(element.customClaims!.birthday!);
-                            return temp;
+                                    return element.updatedAt!;
+                                    //         var temp = DateFormat('yyyy-MM-dd').parse(element.customClaims!.birthday!);
+                                    // return temp;
                           },
                           // padding: EdgeInsets.only(right: 4),
                           groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
@@ -151,24 +159,24 @@ class _LikesScreenState extends State<LikesScreen> {
                             contentPadding: EdgeInsets.zero,
                             leading: CircleAvatar(
                               // backgroundImage: AssetImage(element.imageUrl),
-                              backgroundImage: CachedNetworkImageProvider(element.photoURL!),
+                                      backgroundImage: CachedNetworkImageProvider(element.user!.photoURL!),
                             ),
                             title: Row(
                               children: [
                                 NativeSmallBodyText(
-                                  '${element.displayName}, ${DateTime.tryParse(element.customClaims!.birthday!)?.ageFromDate()}',
+                                          '${element.user!.displayName}, ${DateTime.tryParse(element.user!.customClaims!.birthday!)?.ageFromDate()}',
                                   fontWeight: FontWeight.w500,
                                   height: 22 / 12,
                                 ),
                                         const Spacer(),
                                 NativeSmallBodyText(
-                                  '⚡️ ${element.native!.energyScore} native score',
+                                          '⚡️ ${element.user!.native!.energyScore} native score',
                                   height: 22 / 12,
                                 )
                               ],
                             ),
                             subtitle: NativeSmallBodyText(
-                              element.customClaims!.location!,
+                                      element.user!.customClaims!.location!,
                               height: 22 / 12,
                             ),
                           ),

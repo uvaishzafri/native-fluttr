@@ -1,12 +1,13 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/chat/cubit/report_user_cubit.dart';
 import 'package:native/feature/chat/other_problem_bottom_sheet.dart';
 import 'package:native/feature/chat/problem_submitted_bottom_sheet.dart';
 import 'package:native/util/app_constants.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
@@ -39,11 +40,13 @@ class _ReportUserBottomSheetState extends State<ReportUserBottomSheet> {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
               }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(value.appException.message),
-                ),
-              );
+              if (value.appException is UnauthorizedException) {
+                BlocProvider.of<AppCubit>(context).logout();
+                return;
+              }
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(value.appException.message),
+              ));
             },
             successState: (value) {
               if (context.loaderOverlay.visible) {
@@ -91,7 +94,7 @@ class _ReportUserBottomSheetState extends State<ReportUserBottomSheet> {
                     onPressed: () {
                       if (problems.indexOf(_selectedProblem!) < 5) {
                         // context.router.pop();
-                        bloc.reportUser(widget.userId, _selectedProblem!);
+                        bloc.reportUser(widget.userId, _selectedProblem!, null);
                         // Navigator.pop(context);
                         // showModalBottomSheet(
                         //   context: context,

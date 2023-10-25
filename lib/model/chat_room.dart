@@ -17,6 +17,7 @@ class ChatRoom with _$ChatRoom {
     String? creatorId,
     String? lastMessage,
     @JsonKey(includeToJson: false) String? firestoreDocId,
+    @JsonKey(includeToJson: false) bool? blocked,
   }) = _ChatRoom;
 
   factory ChatRoom.fromJson(String docId, Map<String, dynamic> json) => _$ChatRoomFromJson(json).copyWith(firestoreDocId: docId);

@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,21 +6,16 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
-import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
-import 'package:native/feature/chat/cubit/chat_cubit.dart';
 import 'package:native/feature/notifications/cubit/notification_cubit.dart';
 import 'package:native/feature/notifications/filter_by_bottom_sheet.dart';
 import 'package:native/model/app_notification.dart';
-import 'package:native/model/native_type.dart';
-import 'package:native/model/user.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
-import 'package:native/util/datetime_extension.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 @RoutePage()
@@ -83,7 +77,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           );
         },
         builder: (context, state) {
-          // final chatCubit = BlocProvider.of<ChatCubit>(context);
           if (state is SuccessState) {
             List<AppNotification> notificationList = [];
             if (!isChatsSelected && !isLikesSelected) {
@@ -110,7 +103,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               //   },
               //   onValueChanged: (value) {},
               // ),
-              SizedBox(height: 12),
+                const SizedBox(height: 12),
               Expanded(
                   child: GroupedListView<AppNotification, DateTime>(
                     elements: notificationList,
@@ -125,7 +118,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                   itemBuilder: (context, element) => ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: CircleAvatar(
+                      leading: const CircleAvatar(
                       // backgroundImage: AssetImage(element.imageUrl),
                           // backgroundImage: CachedNetworkImageProvider(element.photoURL!),
                     ),
@@ -136,7 +129,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           fontWeight: FontWeight.w500,
                           height: 22 / 12,
                         ),
-                        Spacer(),
+                          const Spacer(),
                         NativeSmallBodyText(
                             timeago.format(element.timestamp!),
                           height: 22 / 12,
@@ -159,7 +152,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ],
           );
           } else {
-            return SizedBox.expand();
+            return const SizedBox.expand();
           }
         },
       ),

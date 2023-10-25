@@ -7,9 +7,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/chat/cubit/chat_cubit.dart';
 import 'package:native/model/chat_room.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_text_field.dart';
@@ -76,7 +78,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
     }
 
     Widget searchBar() {
-      return NativeTextField(_searchController, hintText: 'Search', prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E)));
+      return NativeTextField(_searchController,
+          hintText: 'Search', prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E)));
     }
 
     Widget content = BlocProvider<ChatCubit>.value(
@@ -93,6 +96,10 @@ class _ChatsScreenState extends State<ChatsScreen> {
             error: (value) {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
+              }
+              if (value.appException is UnauthorizedException) {
+                BlocProvider.of<AppCubit>(context).logout();
+                return;
               }
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(value.appException.message),
@@ -120,39 +127,64 @@ class _ChatsScreenState extends State<ChatsScreen> {
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: () {
-                              context.router.push(
-                                ChatMessagesRoute(
-                                  chatRoomDocId: _chats[index].firestoreDocId!,
-                                  userId: _chats[index]
-                                      .participants
-                                      .keys
-                                      .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid),
-                                  name: _chats[index].participants[_chats[index].participants.keys.firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![0],
-                                  imageUrl: _chats[index].participants[_chats[index].participants.keys.firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![1],
-                                ),
-                              );
+                              if (!(_chats[index].blocked ?? false)) {
+                                context.router.push(
+                                  ChatMessagesRoute(
+                                    chatRoomDocId: _chats[index].firestoreDocId!,
+                                    userId: _chats[index]
+                                        .participants
+                                        .keys
+                                        .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid),
+                                    name: _chats[index].participants[_chats[index].participants.keys.firstWhere(
+                                        (element) => element != FirebaseAuth.instance.currentUser?.uid)]![0],
+                                    imageUrl: _chats[index].participants[_chats[index].participants.keys.firstWhere(
+                                        (element) => element != FirebaseAuth.instance.currentUser?.uid)]![1],
+                                  ),
+                                );
+                              }
                             },
                             contentPadding: const EdgeInsets.only(right: 10),
                             leading: CircleAvatar(
-                              backgroundImage: CachedNetworkImageProvider(_chats[index].participants[_chats[index].participants.keys.firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![1]),
+                              backgroundImage: CachedNetworkImageProvider(_chats[index].participants[_chats[index]
+                                          .participants
+                                          .keys
+                                          .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]
+                                      ?[1] ??
+                                  ''),
                             ),
-                            title: NativeMediumTitleText(_chats[index].participants[_chats[index].participants.keys.firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![0]),
+                            title: NativeMediumTitleText(_chats[index].participants[_chats[index]
+                                .participants
+                                .keys
+                                .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![0]),
                             subtitle: Row(
                               children: [
                                 NativeMediumBodyText(_chats[index].lastMessage ?? "No conversation yet"),
                                 const Spacer(),
-                                _chats[index].lastMessageTime != null
-                                    ? NativeMediumBodyText(timeago.format(_chats[index].lastMessageTime!))
-                                    : Container(
+                                _chats[index].blocked ?? false
+                                    ? Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                        decoration: BoxDecoration(color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
+                                        decoration: BoxDecoration(
+                                            color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
                                         child: const NativeSmallBodyText(
-                                          'Start now',
+                                          'Blocked',
                                           color: ColorUtils.white,
                                           fontSize: 10,
                                           height: 14 / 10,
                                         ),
-                                      ),
+                                      )
+                                    : _chats[index].lastMessageTime != null
+                                        ? NativeMediumBodyText(timeago.format(_chats[index].lastMessageTime!))
+                                        : Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                            decoration: BoxDecoration(
+                                                color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
+                                            child: const NativeSmallBodyText(
+                                              'Start now',
+                                              color: ColorUtils.white,
+                                              fontSize: 10,
+                                              height: 14 / 10,
+                                            ),
+                                          ),
                               ],
                             ),
                           );

@@ -39,11 +39,6 @@ class _PhotoScreenState extends State<PhotoScreen> {
             text: 'Next',
             onPressed: () async {
               context.router.push(const OtherDetailsRoute());
-
-              // if (_imageFile != null) {
-              //   profileCubit.updateProfilePhoto(_imageFile!);
-              //   context.router.push(const OtherDetailsRoute());
-              // }
             },
           ),
           const SizedBox(height: 40),

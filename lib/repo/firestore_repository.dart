@@ -150,4 +150,21 @@ class FirestoreRepository {
       return Left(CustomException());
     }
   }
+  Future<Either<AppException, bool>> markChatRoomBlocked(String chatRoomDocId) async {
+    try {
+      await _firestore
+          .collection('inAppUsers')
+          .doc('chats')
+          .collection('chat_rooms')
+          .doc(chatRoomDocId)
+          // .withConverter<ChatRoom>(
+          //   fromFirestore: (snapshot, options) => ChatRoom.fromJson(snapshot.id, snapshot.data()!),
+          //   toFirestore: (value, options) => value.toJson(),
+          // )
+          .set({"blocked": true}, SetOptions(merge: true));
+      return const Right(true);
+    } on Exception catch (_) {
+      return Left(CustomException());
+    }
+  }
 }

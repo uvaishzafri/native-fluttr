@@ -328,14 +328,23 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, bool>> reportUser(String userId, String reason) async {
+  Future<Either<AppException, bool>> reportUser(String userId, String reasonCategory, String? reasonDesc) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
       var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
-      var data = jsonEncode({'reason': reason});
+      dynamic data;
+      if (reasonDesc?.isNotEmpty ?? false) {
+        data = jsonEncode({
+          'reason': {"category": reasonCategory, "description": reasonDesc}
+        });
+      } else {
+        data = jsonEncode({
+          'reason': {"category": reasonCategory}
+        });
+      }
       final response =
           await _dioClient.post('/chat/users/$userId/issue', data: data, options: Options(headers: headers));
 
@@ -404,4 +413,29 @@ class UserRepository {
     }
   }
 
+  Future<Either<AppException, List<User>>> getMatches() async {
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      final response = await _dioClient.get(
+        '/matches',
+        options: Options(headers: headers),
+      );
+
+      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (response.data == null) return Left(NoResponseBody());
+
+      return Right((response.data as List).map((e) => User.fromJson(e)).toList());
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(error.message));
+    } catch (e) {
+      return Left(CustomException());
+    }
+  }
 }

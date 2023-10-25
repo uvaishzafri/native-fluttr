@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/chat/cubit/report_user_cubit.dart';
 import 'package:native/feature/chat/problem_submitted_bottom_sheet.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_text_field.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
@@ -49,6 +51,10 @@ class _OtherProblemBottomSheetState extends State<OtherProblemBottomSheet> {
             errorState: (value) {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
+              }
+              if (value.appException is UnauthorizedException) {
+                BlocProvider.of<AppCubit>(context).logout();
+                return;
               }
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -95,7 +101,7 @@ class _OtherProblemBottomSheetState extends State<OtherProblemBottomSheet> {
                     isEnabled: _otherReasonTextController.text.isNotEmpty,
                     text: 'Submit',
                     onPressed: () {
-                      bloc.reportUser(widget.userId, _otherReasonTextController.text);
+                      bloc.reportUser(widget.userId, "others", _otherReasonTextController.text);
                       // Navigator.pop(context);
                       // showModalBottomSheet(
                       //   context: context,

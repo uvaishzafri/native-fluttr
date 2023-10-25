@@ -4,20 +4,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_holo_date_picker/date_picker.dart';
 import 'package:flutter_holo_date_picker/date_picker_theme.dart';
 import 'package:flutter_holo_date_picker/widget/date_picker_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
-import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/profile/cubit/profile_cubit.dart';
 import 'package:native/model/custom_claims.dart';
-import 'package:native/model/native_type.dart';
 import 'package:native/model/user.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_simple_button.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
@@ -116,7 +115,13 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
                   if (context.loaderOverlay.visible) {
                     context.loaderOverlay.hide();
                   }
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
+                  if (value.exception is UnauthorizedException) {
+                    BlocProvider.of<AppCubit>(context).logout();
+                    return;
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(value.exception.message),
+                  ));
                 },
                 profileUpdated: (_) async {
                   if (context.loaderOverlay.visible) {

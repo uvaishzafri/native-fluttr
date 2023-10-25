@@ -5,11 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/profile/cubit/profile_cubit.dart';
 import 'package:native/model/looking_for.dart';
 import 'package:native/model/user_prefs.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_dropdown.dart';
 import 'package:native/widget/native_linear_progress_indicator.dart';
@@ -59,8 +61,8 @@ class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
             borderRadius: BorderRadius.circular(10),
           ),
           const SizedBox(height: 4),
-          Center(
-            child: const NativeSmallBodyText(
+          const Center(
+            child: NativeSmallBodyText(
               '1/2 done',
               color: ColorUtils.purple,
             ),
@@ -146,7 +148,13 @@ class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
                   if (context.loaderOverlay.visible) {
                     context.loaderOverlay.hide();
                   }
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
+                  if (value.exception is UnauthorizedException) {
+                    BlocProvider.of<AppCubit>(context).logout();
+                    return;
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(value.exception.message),
+                  ));
                 },
                 profileUpdated: (_) {
                   if (context.loaderOverlay.visible) {
