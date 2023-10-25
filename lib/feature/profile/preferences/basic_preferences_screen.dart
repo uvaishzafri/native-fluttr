@@ -11,6 +11,8 @@ import 'package:native/widget/native_dropdown.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 @RoutePage()
 class BasicPrefrencesScreen extends StatefulWidget {
@@ -23,15 +25,41 @@ class BasicPrefrencesScreen extends StatefulWidget {
 class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
   Gender _selectedGender = Gender.male;
   final TextEditingController locationSearchTextController = TextEditingController();
-  // double minAge = 18;
-  // double maxAge = 40;
-  RangeValues minMaxAge = const RangeValues(22, 40);
+  SfRangeValues minMaxAge = const SfRangeValues(22, 40);
   String? selectedLocation;
+  final TextEditingController _rangeStartController = TextEditingController(text: '22');
+  final TextEditingController _rangeEndController = TextEditingController(text: '44');
 
   @override
   void dispose() {
     locationSearchTextController.dispose();
+    _rangeStartController.dispose();
+    _rangeEndController.dispose();
+
     super.dispose();
+  }
+
+  Widget _buildThumbIcon(TextEditingController controller) {
+    return Transform.translate(
+      offset: const Offset(0, -20),
+      child: OverflowBox(
+        maxWidth: 150,
+        child: TextField(
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: ColorUtils.purple),
+          decoration: const InputDecoration(
+              fillColor: Colors.transparent,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              focusedErrorBorder: InputBorder.none,
+              border: InputBorder.none,
+              isDense: true),
+          controller: controller,
+        ),
+      ),
+    );
   }
 
   @override
@@ -112,25 +140,29 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
           ),
           const SizedBox(height: 20),
           const NativeSmallBodyText('Age range'),
-          
-          Theme(
-            data: ThemeData(
-              sliderTheme: SliderTheme.of(context).copyWith(
-                inactiveTickMarkColor: Colors.transparent,
-                activeTickMarkColor: Colors.transparent,
-                activeTrackColor: ColorUtils.aquaGreen,
-                showValueIndicator: ShowValueIndicator.always,
-              ),
+          const SizedBox(height: 10),
+          SfRangeSliderTheme(
+            data: SfRangeSliderThemeData(
+              activeTrackColor: ColorUtils.aquaGreen,
             ),
-            child: RangeSlider(
-              // labels: RangeLabels("18", "60"),
+            child: SfRangeSlider(
               min: 18,
               max: 50,
-              divisions: 50 - 18,
+              stepSize: 1,
+              startThumbIcon: _buildThumbIcon(_rangeStartController),
+              endThumbIcon: _buildThumbIcon(_rangeEndController),
+              showLabels: true,
               values: minMaxAge,
-              onChanged: (value) {
-                minMaxAge = value;
-                setState(() {});
+              onChangeStart: (SfRangeValues newValues) {
+                _rangeStartController.text = newValues.start.toInt().toString();
+                _rangeEndController.text = newValues.end.toInt().toString();
+              },
+              onChanged: (SfRangeValues newValues) {
+                setState(() {
+                  _rangeStartController.text = newValues.start.toInt().toString();
+                  _rangeEndController.text = newValues.end.toInt().toString();
+                  minMaxAge = newValues;
+                });
               },
             ),
           ),
@@ -159,7 +191,12 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
               if (selectedLocation?.isEmpty ?? true) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Kindly select a location')));
               }
-              context.router.push(OtherPreferencesRoute(gender: _selectedGender, minMaxAge: minMaxAge, location: selectedLocation!));
+              context.router.push(
+                OtherPreferencesRoute(
+                    gender: _selectedGender,
+                    minMaxAge: RangeValues(minMaxAge.start, minMaxAge.end),
+                    location: selectedLocation!),
+              );
             },
           ),
           const SizedBox(height: 40),

@@ -85,6 +85,8 @@ dependencies:
   flutter_local_notifications: ^16.1.0
   device_info_plus: ^9.1.0
   flutter_chat_types: ^3.6.2
+  syncfusion_flutter_sliders: ^23.1.42
+  syncfusion_flutter_core: ^23.1.42
   
 dev_dependencies:
   flutter_test:

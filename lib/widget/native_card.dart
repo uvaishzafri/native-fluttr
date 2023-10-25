@@ -45,22 +45,29 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
               expanded = value;
             });
           },
-          title: Container(
-            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Text(
-                "Hello ${widget.native.displayName}!",
-                style: const TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 175,
+                child: Text(
+                  "Hello ${widget.native.displayName}!",
+                  style: const TextStyle(
+                    color: Color(0xffffffff),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  // softWrap: true,
+                  maxLines: 1,
                 ),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(
                 width: 4,
               ),
               Image.asset("assets/home/ic_hi.png")
-            ]),
+            ],
           ),
           trailing: Text(
             expanded ? "View less" : "Show Native card",

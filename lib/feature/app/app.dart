@@ -105,6 +105,7 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
               if (state.authResult!.user.customClaims?.birthday == null) {
                 context.router.replace(const BasicDetailsRoute());
               } else {
+                // context.router.replace(const BasicPrefrencesRoute());
                 context.router.replace(const HomeWrapperRoute());
               }
             } else {
