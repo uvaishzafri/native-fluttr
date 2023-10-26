@@ -57,34 +57,12 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
   }
 
   @override
-  void didPushNext() {
-    print('Tab route visited');
-  }
-
-  @override
-  void didPopNext() {
-    print('Tab route popped');
-  }
-
-  @override
-  void didPop() {
-    print('Tab route popped');
-  }
-
-  @override
-  void didPush() {
-    print('Tab route popped');
-  }
-
-  @override
   void didInitTabRoute(TabPageRoute? previousRoute) {
-    print('Tab route Init');
     getMatches();
   }
 
   @override
   void didChangeTabRoute(TabPageRoute previousRoute) {
-    print('Tab route Changed');
     getMatches();
   }
 
@@ -132,17 +110,17 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
                 body: CustomScrollView(
                   slivers: [
                     SliverPadding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       sliver: SliverToBoxAdapter(
                         child: _searchBar(),
                       ),
                     ),
                     // _searchBar(),
                     // const SizedBox(height: 13),
-                    SliverPadding(padding: EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
+                    SliverPadding(padding: const EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
                     // const SizedBox(height: 13),
                     if (state is HomeSuccessState)
-                      SliverPadding(padding: EdgeInsets.all(12), sliver: _recommendations(state.users, bloc)),
+                      SliverPadding(padding: const EdgeInsets.all(12), sliver: _recommendations(state.users, bloc)),
                   ],
                 ),
               ),
@@ -169,12 +147,16 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
                   content: Text(value.appException.message),
                 ));
               },
-              success: (value) {},
+              success: (value) {
+                if (context.loaderOverlay.visible) {
+                  context.loaderOverlay.hide();
+                }
+              },
               requestMatchSuccess: (value) {
                 if (context.loaderOverlay.visible) {
                   context.loaderOverlay.hide();
                 }
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Like Sent')));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Like Sent')));
               },
             );
           }),
@@ -192,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
         ? ExpandableNativeCard(
             native: _user!,
           )
-        : SizedBox();
+        : const SizedBox();
   }
 
   Widget _recommendations(List<User> users, HomeCubit bloc) {

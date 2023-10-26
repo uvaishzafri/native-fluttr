@@ -68,7 +68,11 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
+      child: user == null
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Scaffold(
         body: Container(
           decoration: const BoxDecoration(
             gradient: ColorUtils.nativeGradient,

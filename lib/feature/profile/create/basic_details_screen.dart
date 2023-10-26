@@ -72,6 +72,9 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
             NativeTextField(
               _nameTextEditingController,
               hintText: 'Name',
+              onChanged: (value) {
+                setState(() {});
+              },
             ),
             const SizedBox(height: 28),
             const NativeSmallBodyText('About you'),
@@ -80,6 +83,9 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
               hintText: 'Tell us about your IKIGAI, when do you feel the most happiest? Eg: while playing with puppies',
               maxLength: 100,
               maxLines: 6,
+              onChanged: (value) {
+                setState(() {});
+              },
             ),
             const SizedBox(height: 20),
             const NativeSmallBodyText('Location'),

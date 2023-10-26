@@ -27,8 +27,9 @@ class SingleMatchDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(),
+              const SizedBox(),
               RichText(
                 text: TextSpan(
                   text: "It's a match",
@@ -39,7 +40,7 @@ class SingleMatchDialog extends StatelessWidget {
                       ),
                 ),
               ),
-              IconButton(onPressed: () => context.router.pop(), icon: Icon(Icons.close))
+              IconButton(onPressed: () => context.router.pop(), icon: const Icon(Icons.close))
             ],
           ),
           const SizedBox(height: 20),
@@ -119,7 +120,8 @@ class SingleMatchDialog extends StatelessWidget {
         NativeButton(
           isEnabled: true,
           onPressed: () {
-            context.router.push(const ChatsRoute());
+            Navigator.of(context).pop();
+            context.navigateTo(const HomeWrapperRoute(children: [ChatsRoute()]));
           },
           text: "Chat",
         )

@@ -28,10 +28,13 @@ class _PhotoScreenState extends State<PhotoScreen> {
             middle: NativeMediumTitleText('Create your profile'),
           ),
           const SizedBox(height: 8),
-          Container(
-            height: 560,
-            width: double.infinity,
-            decoration: BoxDecoration(image: DecorationImage(image: NetworkImage(widget.photoUrl), fit: BoxFit.cover)),
+          Expanded(
+            child: Container(
+              // height: 560,
+              width: double.infinity,
+              decoration:
+                  BoxDecoration(image: DecorationImage(image: NetworkImage(widget.photoUrl), fit: BoxFit.cover)),
+            ),
           ),
           const SizedBox(height: 8),
           NativeButton(

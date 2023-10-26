@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/model/native_card/native_card.dart';
 import 'package:native/model/native_type.dart';
 import 'package:native/model/user.dart';
@@ -48,8 +50,8 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
-                width: 175,
+              Expanded(
+                // width: 175,
                 child: Text(
                   "Hello ${widget.native.displayName}!",
                   style: const TextStyle(
@@ -80,34 +82,41 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
             textAlign: TextAlign.center,
           ),
           children: [
-            Container(
-              height: 104,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  NativeEnergyWidget(
-                    energy: widget.native.native!.energyScore ?? 0,
-                    radius: 27.5,
-                  ),
-                  const SizedBox(
-                    width: 13,
-                  ),
-                  NativeTypeWidget(type: getNativeTypeDetail(widget.native.native!.type!), radius: 27.5),
-                  // NativeTypeWidget(type: getNativeTypeDetail(NativeTypeEnum.values.firstWhere((element) => element.name.toLowerCase() == widget.native.native!.type!.en!.toLowerCase() )), radius: 27.5),
-                  const SizedBox(
-                    width: 17,
-                  ),
-                  const VerticalDivider(
-                    width: 1,
-                    color: Color(0xFFFFFFFF),
-                  ),
-                  const SizedBox(
-                    width: 17,
-                  ),
-                  NativeGoodFitsWidget(types: widget.native.native!.matchTypes!.map((e) => getNativeTypeDetail(e!)).toList()),
-                ],
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                context.router.push(NativeCardScaffold(user: widget.native));
+              },
+              child: Container(
+                height: 104,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    NativeEnergyWidget(
+                      energy: widget.native.native!.energyScore ?? 0,
+                      radius: 27.5,
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    NativeTypeWidget(type: getNativeTypeDetail(widget.native.native!.type!), radius: 27.5),
+                    // NativeTypeWidget(type: getNativeTypeDetail(NativeTypeEnum.values.firstWhere((element) => element.name.toLowerCase() == widget.native.native!.type!.en!.toLowerCase() )), radius: 27.5),
+                    const SizedBox(
+                      width: 17,
+                    ),
+                    const VerticalDivider(
+                      width: 1,
+                      color: Color(0xFFFFFFFF),
+                    ),
+                    const SizedBox(
+                      width: 17,
+                    ),
+                    NativeGoodFitsWidget(
+                        types: widget.native.native!.matchTypes!.map((e) => getNativeTypeDetail(e!)).toList()),
+                  ],
+                ),
               ),
             )
           ],

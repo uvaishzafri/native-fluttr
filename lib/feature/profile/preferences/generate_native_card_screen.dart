@@ -33,7 +33,7 @@ class GenerateNativeCardScreen extends StatefulWidget {
 }
 
 class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
-  DateTime? _selectedDate;
+  DateTime _selectedDate = DateTime(2003, 6, 15);
   @override
   Widget build(BuildContext context) {
     Widget photoUpload(ProfileCubit profileCubit) {
@@ -64,6 +64,9 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
           SizedBox(
               height: 200,
               child: DatePickerWidget(
+                // firstDate: DateTime.now().subtract(Duration()),
+                lastDate: DateTime.now(),
+                initialDate: DateTime(2003, 6, 15),
                 onChange: (dateTime, selectedIndex) {
                   setState(() {
                     _selectedDate = dateTime;
@@ -80,6 +83,10 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
             isEnabled: true,
             text: 'Generate',
             onPressed: () {
+              if (!isDateValid(_selectedDate)) {
+                return ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content: Text('Age should be greater than 18 and less than 50 yrs')));
+              }
               showDialog(
                 context: context,
                 useRootNavigator: false,
@@ -198,13 +205,13 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: NativeButton(
-                isEnabled: _selectedDate != null,
+                isEnabled: true,
                 text: 'Yes, Generate',
                 fontSize: 14,
                 onPressed: () {
                   final user = User(
                     customClaims: CustomClaims(
-                      birthday: DateFormat('yyyy-MM-dd').format(_selectedDate!),
+                      birthday: DateFormat('yyyy-MM-dd').format(_selectedDate),
                       // birthday: _selectedDate!.toIso8601String(),
                     ),
                   );
@@ -217,4 +224,13 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
       ],
     );
   }
+
+  bool isDateValid(DateTime date) {
+    DateTime currentDate = DateTime.now();
+    DateTime minDate = currentDate.subtract(const Duration(days: 18 * 365));
+    DateTime maxDate = currentDate.subtract(const Duration(days: 50 * 365));
+
+    return date.isAfter(minDate) && date.isBefore(maxDate);
+  }
+
 }

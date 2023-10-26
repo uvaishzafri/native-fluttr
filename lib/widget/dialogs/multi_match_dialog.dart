@@ -57,7 +57,7 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(),
+              const SizedBox(),
               RichText(
                 text: TextSpan(
                   text: "It's a match",
@@ -68,7 +68,7 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
                       ),
                 ),
               ),
-              IconButton(onPressed: () => context.router.pop(), icon: Icon(Icons.close))
+              IconButton(onPressed: () => context.router.pop(), icon: const Icon(Icons.close))
             ],
           ),
           const SizedBox(height: 20),
@@ -123,7 +123,7 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
                         radius: 20,
                         backgroundImage: CachedNetworkImageProvider(e.photoURL ?? ''),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       NativeSmallBodyText(
                         e.displayName!,
                         color: ColorUtils.white,
@@ -181,7 +181,8 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
         NativeButton(
           isEnabled: true,
           onPressed: () {
-            context.router.push(const ChatsRoute());
+            Navigator.of(context).pop();
+            context.navigateTo(const HomeWrapperRoute(children: [ChatsRoute()]));
           },
           text: "Chat",
         )

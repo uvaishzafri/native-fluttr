@@ -60,7 +60,9 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                 clipBehavior: Clip.antiAlias,
                 height: 256,
                 width: 231,
-                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: ColorUtils.aquaGreen, width: 2)),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: widget.gender == Gender.female ? null : Border.all(color: ColorUtils.aquaGreen, width: 2)),
                 child: _imageFile != null
                     ? Image.file(
                         _imageFile!,
