@@ -105,7 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return BlocProvider(
         create: (_) => getIt<AuthCubit>(),
         child: BlocConsumer<AuthCubit, AuthState>(
-          buildWhen: (p, c) => p != c,
+          buildWhen: (p, c) => p != c && c is! AuthLoadingState,
           builder: (context, state) {
             final bloc = BlocProvider.of<AuthCubit>(context);
 

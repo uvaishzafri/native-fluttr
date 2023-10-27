@@ -61,6 +61,15 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
       var response = await userRepository.getUserNativeCardDetails(userId: widget.user.uid!);
       if (response.isRight) {
         nativeUser = response.right;
+        final prefs = await SharedPreferences.getInstance();
+        String? userJson = prefs.getString('user');
+        if (userJson != null) {
+          User user = User.fromJson(jsonDecode(userJson));
+          if (user.uid == widget.user.uid) {
+            user = user.copyWith(native: nativeUser!.meta);
+            prefs.setString('user', jsonEncode(user.toJson()));
+          }
+        }
       }
     }
   }
@@ -73,63 +82,63 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
               child: CircularProgressIndicator(),
             )
           : Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: ColorUtils.nativeGradient,
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Image.asset("assets/ic_logo_dark.png"),
-                          const SizedBox(height: 20),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: ColorUtils.white,
-                            ),
-                            child: BigNativeUserCard(
-                              native: nativeUser!,
-                              user: user!,
-                              // userImage: Image.asset("assets/home/ic_test.png"),
+              body: Container(
+                decoration: const BoxDecoration(
+                  gradient: ColorUtils.nativeGradient,
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Image.asset("assets/ic_logo_dark.png"),
+                                const SizedBox(height: 20),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: ColorUtils.white,
+                                  ),
+                                  child: BigNativeUserCard(
+                                    native: nativeUser!,
+                                    user: user!,
+                                    // userImage: Image.asset("assets/home/ic_test.png"),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                needsParameterCard(),
+                                const SizedBox(height: 10),
+                                celebsCard(),
+                                const SizedBox(height: 10),
+                                personalityCard(),
+                                const SizedBox(height: 10),
+                                loveCard(),
+                                const SizedBox(height: 10),
+                                idealDatePlanCard(),
+                                const SizedBox(height: 10),
+                                idealPartnerCard(),
+                                const SizedBox(height: 10),
+                                adviceCard(),
+                                const SizedBox(height: 20),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          needsParameterCard(),
-                          const SizedBox(height: 10),
-                          celebsCard(),
-                          const SizedBox(height: 10),
-                          personalityCard(),
-                          const SizedBox(height: 10),
-                          loveCard(),
-                          const SizedBox(height: 10),
-                          idealDatePlanCard(),
-                          const SizedBox(height: 10),
-                          idealPartnerCard(),
-                          const SizedBox(height: 10),
-                          adviceCard(),
-                          const SizedBox(height: 20),
-                        ],
-                      ),
+                        ),
+                        // SizedBox(height: 8),
+                        // NativeSimpleButton(
+                        //   isEnabled: true,
+                        //   text: 'Next',
+                        //   onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
+                        // )
+                      ],
                     ),
                   ),
-                  // SizedBox(height: 8),
-                  // NativeSimpleButton(
-                  //   isEnabled: true,
-                  //   text: 'Next',
-                  //   onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
-                  // )
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -188,7 +197,6 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
                     width: 100,
                     child: Column(
                       children: [
-                  
                         NativeHeadImage(
                           Image.asset("assets/native_card/ariana.png"),
                           borderColor: ColorUtils.aquaGreen,
@@ -205,7 +213,7 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
                       ],
                     ),
                   ),
-)
+                )
                 .toList(),
 
             // [
