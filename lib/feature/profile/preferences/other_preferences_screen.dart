@@ -86,7 +86,7 @@ class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
                       ))
                   .toList()),
           const SizedBox(height: 24),
-          const NativeSmallBodyText('Community'),
+          const NativeSmallBodyText('Language'),
           const SizedBox(height: 8),
           NativeDropdown(
               onChanged: (value) {

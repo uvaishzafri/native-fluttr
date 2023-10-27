@@ -304,6 +304,7 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
       decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
       padding: const EdgeInsets.all(24),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           cardHeader('assets/native_card/heart.svg', 'Love'),
           const SizedBox(height: 12),

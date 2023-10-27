@@ -122,25 +122,53 @@ class _SignInScreenState extends State<SignInScreen> {
             }
           },
           listener: (BuildContext context, AuthState state) {
+            if (state is AuthLoadingState) {
+              if (!context.loaderOverlay.visible) {
+                context.loaderOverlay.show();
+              }
+            }
             if (state is AuthInputPincodeState) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
               _startTimer();
               errorController = StreamController();
             }
             if (state is AuthErrorPincodeState) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
               errorController!.add(ErrorAnimationType.shake);
             }
             if (state is AuthErrorState) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
             }
+            if (state is AuthInputEmailState) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
+            }
             if (state is AuthEmailSendFailedState) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
             }
             if (state is AuthEmailVerificationCompleteState) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
               _checkEmailVerifiedTimer?.cancel();
               // Navigator.pop(context);
-              _showEmailVerifiedDialog();
+              _showEmailVerifiedDialog(context);
             }
             if (state is AuthEmailVerificationSentState) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
               _checkEmailVerifiedTimer = Timer.periodic(const Duration(seconds: 3), (_) {
                 final bloc = BlocProvider.of<AuthCubit>(context);
                 bloc.checkIfEmailVerified();
@@ -148,9 +176,15 @@ class _SignInScreenState extends State<SignInScreen> {
               _showSentVerificationEmailDialog(_emailController.text);
             }
             if (state is AuthCreateProfileState) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
               context.router.replaceAll([const BasicDetailsRoute()]);
             }
             if (state is AuthAuthorizedState) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
               context.router.replaceAll([
                 const HomeWrapperRoute()
               ]);
@@ -590,17 +624,22 @@ class _SignInScreenState extends State<SignInScreen> {
         });
   }
 
-  Future<void> _showEmailVerifiedDialog() async {
+  Future<void> _showEmailVerifiedDialog(BuildContext ctx) async {
     await showDialog<void>(
         context: context,
         useRootNavigator: false,
         barrierDismissible: false,
         builder: (BuildContext context) {
           Future.delayed(const Duration(seconds: 3), () {
-            // Navigator.pop(context);
-            BlocProvider.of<AppCubit>(context).logout();
-            BlocProvider.of<AuthCubit>(context).initial();
-            // _goToSignInScreen();
+            if (context.mounted) {
+              Navigator.pop(context);
+              BlocProvider.of<AppCubit>(context).logout();
+            }
+            // var authBloc = getIt<AuthCubit>();
+            // authBloc.initial();
+            if (ctx.mounted) {
+              BlocProvider.of<AuthCubit>(ctx).initial();
+            }
           });
           return WillPopScope(
               onWillPop: () => Future.value(false),

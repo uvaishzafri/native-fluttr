@@ -13,6 +13,7 @@ import 'package:native/model/custom_claims.dart';
 import 'package:native/model/user.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_dropdown.dart';
@@ -210,10 +211,14 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
                   if (context.loaderOverlay.visible) {
                     context.loaderOverlay.hide();
                   }
-                  if (value.exception.message == 'unauthorized') {
+                  if (value.exception is UnauthorizedException) {
                     BlocProvider.of<AppCubit>(context).logout();
                     return;
                   }
+                  // if (value.exception.message == 'unauthorized') {
+                  //   BlocProvider.of<AppCubit>(context).logout();
+                  //   return;
+                  // }
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
                 },
                 profileUpdated: (_) {

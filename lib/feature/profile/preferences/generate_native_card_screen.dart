@@ -230,7 +230,7 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
     DateTime minDate = currentDate.subtract(const Duration(days: 18 * 365));
     DateTime maxDate = currentDate.subtract(const Duration(days: 50 * 365));
 
-    return date.isAfter(minDate) && date.isBefore(maxDate);
+    return date.isBefore(minDate) && date.isAfter(maxDate);
   }
 
 }

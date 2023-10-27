@@ -30,6 +30,7 @@ class AuthCubit extends Cubit<AuthState> {
   late bool isSignUp;
 
   void submitPhoneNumber(String phoneNumber, bool isSignUp) async {
+    emit(const AuthState.loading());
     this.isSignUp = isSignUp;
     var isUserInDb = await _userRepository.checkUser(phoneNumber);
     if (isUserInDb.isLeft) {
@@ -66,6 +67,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> inputPincode(String otpCode) async {
+    emit(const AuthState.loading());
     try {
       PhoneAuthCredential credential = _firebaseRepository.submitOTP(otpCode, verificationId);
       await signIn(credential);
@@ -143,6 +145,7 @@ class AuthCubit extends Cubit<AuthState> {
   // }
 
   void verifyEmail(String email) async {
+    emit(const AuthState.loading());
     try {
       await _firebaseRepository.verifyEmail(email);
       emit(const AuthState.emailVerificationSent());

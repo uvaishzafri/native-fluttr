@@ -80,9 +80,11 @@ class AppCubit extends HydratedCubit<AppState> {
 
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+    prefs.remove('user');
+    prefs.remove('userIdToken');
     _firebaseAuth.signOut();
-    emit(AppState.loggedOut(true));
+    bool isSkipped = await _getStoreOnboardInfo();
+    emit(AppState.loggedOut(isSkipped));
   }
 
   Future<void> setThemeMode({required ThemeMode mode}) async {

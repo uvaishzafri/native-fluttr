@@ -80,7 +80,8 @@ class ChoosePartnerScreen extends StatelessWidget {
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         crossAxisCount: 2,
-        childAspectRatio: 0.6,
+        // childAspectRatio: 0.6,
+        mainAxisExtent: 300,
       ),
       itemBuilder: (context, index) {
         return GestureDetector(
@@ -196,6 +197,7 @@ class ChoosePartnerScreen extends StatelessWidget {
           isEnabled: true,
           onPressed: () {
             context.router.pop();
+            context.router.replaceAll([const HomeWrapperRoute()]);
           },
           text: "Let's go",
         )
