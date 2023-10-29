@@ -47,10 +47,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/users/me',
         options: Options(headers: headers),
@@ -76,10 +73,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/users/me/nativeCard',
         options: Options(headers: headers),
@@ -153,9 +147,7 @@ class UserRepository {
 
   Future<Either<AppException, bool>> checkUser(String phoneNumber) async {
     try {
-      var data = jsonEncode({
-        "phoneNumber": phoneNumber
-      });
+      var data = jsonEncode({"phoneNumber": phoneNumber});
       final response = await _dioClient.post('/public/checkUser', data: data);
 
       if (!isSuccess(response.statusCode)) {
@@ -187,10 +179,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       var data = jsonEncode(user.toJson());
       final response = await _dioClient.patch('/users/me', data: data, options: Options(headers: headers));
 
@@ -216,10 +205,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       var data = jsonEncode(userPrefs.toJson());
       final response = await _dioClient.patch('/users/me/preference', data: data, options: Options(headers: headers));
 
@@ -244,13 +230,8 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
-      var data = jsonEncode({
-        "photo": img64
-      });
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var data = jsonEncode({"photo": img64});
       final response = await _dioClient.post('/users/me/photo', data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
@@ -279,10 +260,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/users/me/notifications',
         options: Options(headers: headers),
@@ -291,7 +269,18 @@ class UserRepository {
       if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
-      return Right((response.data as List).map((e) => AppNotification.fromJson(e)).toList());
+      List<AppNotification> appNotificationList = [];
+      for (var notification in response.data) {
+        var appNotification = AppNotification.fromJson(notification);
+        if (appNotification.fromUid != null) {
+          var user = await getUserDetails(appNotification.fromUid!);
+          if (user.isRight) {
+            appNotification = appNotification.copyWith(user: user.right);
+          }
+        }
+        appNotificationList.add(appNotification);
+      }
+      return Right(appNotificationList);
     } on DioException catch (e) {
       if (e.response?.statusCode == 403) {
         return Left(UnauthorizedException());

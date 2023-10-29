@@ -164,9 +164,12 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
   }
 
   Widget _searchBar() {
-    return NativeTextField(_searchController,
-        hintText: 'Search',
-        prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E)));
+    return NativeTextField(
+      onTap: () => context.router.push(const AccountPlansRoute()),
+      _searchController,
+      hintText: 'Search',
+      prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E)),
+    );
   }
 
   Widget _nativeCard() {

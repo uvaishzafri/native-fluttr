@@ -8,6 +8,7 @@ class NativeTextField extends StatelessWidget {
     this.onChanged,
     this.maxLength,
     this.maxLines,
+    this.onTap,
     Key? key,
   }) : super(key: key);
 
@@ -17,9 +18,11 @@ class NativeTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final int? maxLength;
   final int? maxLines;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => TextField(
+        onTap: onTap,
         controller: controller,
         onChanged: onChanged,
         maxLength: maxLength,

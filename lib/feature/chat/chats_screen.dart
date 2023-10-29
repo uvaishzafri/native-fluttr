@@ -69,7 +69,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
             isEnabled: true,
             text: 'Find your partner',
             onPressed: () {
-              // context.router.push(const );
+              context.router.push(const HomeWrapperRoute(children: [HomeRoute()]));
             },
           ),
           const SizedBox(height: 30),

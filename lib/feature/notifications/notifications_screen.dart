@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,14 +119,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                   itemBuilder: (context, element) => ListTile(
                     contentPadding: EdgeInsets.zero,
-                      leading: const CircleAvatar(
+                      leading: CircleAvatar(
                       // backgroundImage: AssetImage(element.imageUrl),
-                          // backgroundImage: CachedNetworkImageProvider(element.photoURL!),
+                        backgroundImage: CachedNetworkImageProvider(element.user?.photoURL! ?? ''),
                     ),
                     title: Row(
                       children: [
                         NativeSmallBodyText(
-                            '${element.id}',
+                            element.user?.displayName ?? '',
                           fontWeight: FontWeight.w500,
                           height: 22 / 12,
                         ),

@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:native/model/user.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/datetime_serializer.dart';
 
@@ -12,6 +13,7 @@ class AppNotification with _$AppNotification {
   factory AppNotification({
     @JsonKey(includeIfNull: false) String? id,
     @JsonKey(includeIfNull: false) String? fromUid,
+    @JsonKey(includeToJson: false) User? user,
     @JsonKey(includeIfNull: false) @DatetimeSerializer() DateTime? timestamp,
     @JsonKey(includeIfNull: false) NotificationType? type,
     @JsonKey(includeIfNull: false) String? content,
