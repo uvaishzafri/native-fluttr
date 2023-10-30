@@ -30,13 +30,19 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   // List<ChatRoom> _chats = [];
   // TextEditingController? _searchController;
-  bool isLikesSelected = false;
-  bool isChatsSelected = false;
+  bool isLikesSelected = true;
+  bool isChatsSelected = true;
 
   @override
   void initState() {
     super.initState();
     // _searchController = TextEditingController();
+    _fetchNotifications();
+  }
+
+  _fetchNotifications() {
+    final notificationBloc = getIt<NotificationCubit>();
+    notificationBloc.fetchNotifications();
   }
 
   @override
@@ -48,7 +54,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     Widget content = BlocProvider<NotificationCubit>.value(
-      value: getIt<NotificationCubit>()..fetchNotifications(),
+      value: getIt<NotificationCubit>(), //..fetchNotifications(),
       child: BlocConsumer<NotificationCubit, NotificationState>(
         listener: (context, state) {
           state.map(

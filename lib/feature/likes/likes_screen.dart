@@ -68,7 +68,11 @@ class _LikesScreenState extends State<LikesScreen> {
                 content: Text(value.appException.message),
               ));
             },
-            successState: (_) {},
+            successState: (_) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
+            },
           );
         },
         builder: (context, state) {
@@ -230,7 +234,6 @@ class _LikesScreenState extends State<LikesScreen> {
       // trailing: trailing,
     );
   }
-
 
   DateTime groupLikeList(LikedUser element) {
     var now = DateTime.now();

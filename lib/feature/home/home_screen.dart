@@ -9,6 +9,7 @@ import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/home/bloc/home_cubit.dart';
+import 'package:native/feature/likes/cubit/likes_cubit.dart';
 import 'package:native/model/user.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/exceptions.dart';
@@ -203,8 +204,10 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
         return GestureDetector(
           onTap: () async {
             var overlayItem = LikeOverlay(
-              onPressedLike: () {
-                bloc.requestMatch(users[index].uid!);
+              onPressedLike: () async {
+                await bloc.requestMatch(users[index].uid!);
+                final likesBloc = getIt<LikesCubit>();
+                likesBloc.fetchLikesReport();
               },
             );
             await context.router.push(NativeCardScaffold(user: users[index], overlayItem: overlayItem));

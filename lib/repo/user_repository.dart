@@ -13,29 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 bool isSuccess(int? statusCode) => statusCode != null && statusCode >= 200 && statusCode < 300;
 
-// List<User> _testUsers = [
-//   User(
-//     uid: '1',
-//     displayName: 'User1',
-//     photoURL: 'https://picsum.photos/id/237/200/300',
-//     email: 'test1@gmail.com',
-//     emailVerified: true,
-//     phoneNumber: '9898989898',
-//     phoneNumberVerified: true,
-//     customClaims: CustomClaims(gender: Gender.male, birthday: '12-12-2013', religion: 'Hindu', community: 'Brahmin', location: 'Pune', about: 'this is about me'),
-//   ),
-//   User(
-//     uid: '2',
-//     displayName: 'User2',
-//     photoURL: 'https://picsum.photos/id/2/200/300',
-//     email: 'test2@gmail.com',
-//     emailVerified: true,
-//     phoneNumber: '9898989899',
-//     phoneNumberVerified: true,
-//     customClaims: CustomClaims(gender: Gender.female, birthday: '12-12-2001', religion: 'Hindu', community: 'Marwadi', location: 'Mumbai', about: 'this is about me'),
-//   ),
-// ];
-
 @lazySingleton
 class UserRepository {
   UserRepository(this._dioClient);

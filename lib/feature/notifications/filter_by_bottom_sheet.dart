@@ -1,5 +1,3 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
@@ -21,7 +19,6 @@ class _FilterByBottomSheetState extends State<FilterByBottomSheet> {
   late bool isChatsSelected;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isLikesSelected = widget.isLikesSelected;
     isChatsSelected = widget.isChatsSelected;
@@ -44,12 +41,15 @@ class _FilterByBottomSheetState extends State<FilterByBottomSheet> {
                 const NativeMediumTitleText('Filter by'),
                 GestureDetector(
                     onTap: () {
-                      isChatsSelected = false;
-                      isLikesSelected = false;
-                      Navigator.pop(context);
-                      widget.onSubmit(isLikesSelected, isChatsSelected);
+                      isChatsSelected = true;
+                      isLikesSelected = true;
+                      setState(() {});
+                      // isChatsSelected = false;
+                      // isLikesSelected = false;
+                      // Navigator.pop(context);
+                      // widget.onSubmit(isLikesSelected, isChatsSelected);
                     },
-                    child: const NativeSmallTitleText('Clear')),
+                    child: const NativeSmallTitleText('Select all')),
               ],
             ),
           ),
