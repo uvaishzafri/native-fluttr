@@ -113,10 +113,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     //   usersList[1],
                     //   usersList[2]
                     // ],
-                    reverse: false,
-                    groupBy: (element) => element.timestamp!,
+                    order: GroupedListOrder.DESC,
+                    groupBy: groupLikeList,
+                    // groupBy: (element) => element.timestamp!,
                     // groupBy: (element) => likes.fromYou.firstWhere((ele) => element.uid == ele.userId).likedDate,
-                    groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
+                    groupSeparatorBuilder: (value) => NativeMediumTitleText(groupHeaderText(value)),
+                    // groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                   itemBuilder: (context, element) => ListTile(
                     contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
@@ -152,6 +154,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
             ],
           );
+          } else if (state is Loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else {
             return const SizedBox.expand();
           }
@@ -188,5 +194,53 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     isLikesSelected = isLikes;
     isChatsSelected = isChats;
     setState(() {});
+  }
+
+  DateTime groupLikeList(AppNotification element) {
+    var now = DateTime.now();
+    var today = DateTime(now.year, now.month, now.day);
+    DateTime yesterday = today.subtract(const Duration(days: 1));
+    DateTime thisWeek = today.subtract(Duration(days: today.weekday));
+
+    DateTime lastWeek = thisWeek.subtract(const Duration(days: 7));
+    DateTime thisMonth = DateTime(today.year, today.month, 1);
+    DateTime lastMonth = DateTime(today.year, today.month - 1, 1);
+    return element.timestamp!.isAfter(today)
+        ? today
+        : element.timestamp!.isAfter(yesterday)
+            ? yesterday
+            : element.timestamp!.isAfter(thisWeek)
+                ? thisWeek
+                : element.timestamp!.isAfter(lastWeek)
+                    ? lastWeek
+                    : element.timestamp!.isAfter(thisMonth)
+                        ? thisMonth
+                        : element.timestamp!.isAfter(lastMonth)
+                            ? lastMonth
+                            : DateTime(1900);
+  }
+
+  String groupHeaderText(DateTime dateTime) {
+    var now = DateTime.now();
+    var today = DateTime(now.year, now.month, now.day);
+    DateTime yesterday = today.subtract(const Duration(days: 1));
+    DateTime thisWeek = today.subtract(Duration(days: today.weekday));
+
+    DateTime lastWeek = thisWeek.subtract(const Duration(days: 7));
+    DateTime thisMonth = DateTime(today.year, today.month, 1);
+    DateTime lastMonth = DateTime(today.year, today.month - 1, 1);
+    return dateTime == today
+        ? 'Today'
+        : dateTime == yesterday
+            ? 'Yesterday'
+            : dateTime == thisWeek
+                ? 'This Week'
+                : dateTime == lastWeek
+                    ? 'Last Week'
+                    : dateTime == thisMonth
+                        ? 'This Month'
+                        : dateTime == lastMonth
+                            ? 'Last Month'
+                            : 'Earlier';
   }
 }

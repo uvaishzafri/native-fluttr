@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initUser();
-      setState(() {});
+      // setState(() {});
     });
   }
 
@@ -96,10 +96,9 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
     return BlocProvider.value(
       value: getIt<HomeCubit>()..fetchRecommendations(),
       child: BlocConsumer<HomeCubit, HomeState>(
-          buildWhen: (p, c) => p != c,
+          buildWhen: (p, c) => p != c && c is HomeSuccessState,
           builder: (context, state) {
             final bloc = BlocProvider.of<HomeCubit>(context);
-
             return SafeArea(
               child: Scaffold(
                 appBar: AppBar(
@@ -119,13 +118,20 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
                     // const SizedBox(height: 13),
                     SliverPadding(padding: const EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
                     // const SizedBox(height: 13),
-                    if (state is HomeSuccessState)
-                      SliverPadding(padding: const EdgeInsets.all(12), sliver: _recommendations(state.users, bloc)),
+                    // if (state is HomeSuccessState)
+                    SliverPadding(
+                        padding: const EdgeInsets.all(12),
+                        sliver: state is HomeSuccessState
+                            ? _recommendations(state.users, bloc)
+                            : const SliverToBoxAdapter(
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )),
                   ],
                 ),
               ),
             );
-
           },
           listener: (BuildContext context, HomeState state) {
             state.map(

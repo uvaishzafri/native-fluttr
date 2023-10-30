@@ -194,7 +194,7 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
               context.router.push(
                 OtherPreferencesRoute(
                     gender: _selectedGender,
-                    minMaxAge: RangeValues(minMaxAge.start, minMaxAge.end),
+                    minMaxAge: RangeValues(minMaxAge.start.toDouble(), minMaxAge.end.toDouble()),
                     location: selectedLocation!),
               );
             },

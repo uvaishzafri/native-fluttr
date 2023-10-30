@@ -39,7 +39,7 @@ class HomeCubit extends Cubit<HomeState> {
     var requestRep = await _userRepository.requestMatch(userId);
     requestRep.fold(
       (left) => emit(HomeState.error(appException: left)),
-      (right) => emit(HomeState.requestMatchSuccess()),
+      (right) => emit(const HomeState.requestMatchSuccess()),
     );
   }
 

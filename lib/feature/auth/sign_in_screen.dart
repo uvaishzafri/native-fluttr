@@ -16,7 +16,7 @@ import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_text_field.dart';
-import 'package:native/widget/text/native_medium_body_text.dart';
+// import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -72,10 +72,10 @@ class _SignInScreenState extends State<SignInScreen> {
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
+        print(_start);
         if (_start == 0) {
-          setState(() {
-            timer.cancel();
-          });
+          timer.cancel();
+          setState(() {});
         } else {
           setState(() {
             _start--;
@@ -95,9 +95,9 @@ class _SignInScreenState extends State<SignInScreen> {
     context.router.replace(const SignUpRoute());
   }
 
-  void _goToSignInScreen() {
-    context.router.replace(const SignInRoute());
-  }
+  // void _goToSignInScreen() {
+  //   context.router.replace(const SignInRoute());
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -108,10 +108,8 @@ class _SignInScreenState extends State<SignInScreen> {
           builder: (context, state) {
             final bloc = BlocProvider.of<AuthCubit>(context);
 
-            if (state is AuthInputPincodeState ||
-                state is AuthErrorPincodeState) {
-              return AuthScaffold(_inputPincode(
-                  context, bloc, _number.phoneNumber ?? "", state));
+            if (state is AuthInputPincodeState || state is AuthErrorPincodeState) {
+              return AuthScaffold(_inputPincode(context, bloc, _number.phoneNumber ?? "", state));
             } else if (state is AuthInputEmailState ||
                 state is AuthEmailSendFailedState ||
                 state is AuthEmailVerificationSentState ||
@@ -185,22 +183,15 @@ class _SignInScreenState extends State<SignInScreen> {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
               }
-              context.router.replaceAll([
-                const HomeWrapperRoute()
-              ]);
+              context.router.replaceAll([const HomeWrapperRoute()]);
             }
           },
         ));
   }
 
-  Widget _inputPincode(
-      BuildContext context, AuthCubit bloc, String phone, AuthState state) {
-    Color borderColor = state is AuthErrorPincodeState
-        ? const Color(0xFFFF0000)
-        : Colors.transparent;
-    Color fillColor = state is AuthErrorPincodeState
-        ? const Color(0x0DFF0000)
-        : const Color(0x0d7B7B7B);
+  Widget _inputPincode(BuildContext context, AuthCubit bloc, String phone, AuthState state) {
+    Color borderColor = state is AuthErrorPincodeState ? const Color(0xFFFF0000) : Colors.transparent;
+    Color fillColor = state is AuthErrorPincodeState ? const Color(0x0DFF0000) : const Color(0x0d7B7B7B);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -210,18 +201,12 @@ class _SignInScreenState extends State<SignInScreen> {
         const Text(
           'Enter confirmation code',
           textAlign: TextAlign.start,
-          style: TextStyle(
-              color: Color(0xff1E1E1E),
-              fontSize: 22,
-              fontWeight: FontWeight.w500),
+          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 22, fontWeight: FontWeight.w500),
         ),
         Text(
           "Enter confirmation code sent to $phone",
           textAlign: TextAlign.start,
-          style: const TextStyle(
-              color: Color(0xff7B7B7B),
-              fontSize: 14,
-              fontWeight: FontWeight.w500),
+          style: const TextStyle(color: Color(0xff7B7B7B), fontSize: 14, fontWeight: FontWeight.w500),
         ),
         Text.rich(TextSpan(
           text: 'Edit number',
@@ -335,15 +320,9 @@ class _SignInScreenState extends State<SignInScreen> {
               ],
               gradient: LinearGradient(
                 colors: [
-                  _isInputCompleted
-                      ? const Color(0xB2BE94C6)
-                      : const Color(0x55BE94C6),
-                  _isInputCompleted
-                      ? const Color(0xB2BE94C6)
-                      : const Color(0x55BE94C6),
-                  _isInputCompleted
-                      ? const Color(0xB27BC6CC)
-                      : const Color(0x557BC6CC),
+                  _isInputCompleted ? const Color(0xB2BE94C6) : const Color(0x55BE94C6),
+                  _isInputCompleted ? const Color(0xB2BE94C6) : const Color(0x55BE94C6),
+                  _isInputCompleted ? const Color(0xB27BC6CC) : const Color(0x557BC6CC),
                 ],
               )),
           child: ElevatedButton(
@@ -383,10 +362,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     children: [
                       Text.rich(TextSpan(
                         text: 'Incorrect OTP entered',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                            color: Color(0xFFFF0000)),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Color(0xFFFF0000)),
                       )),
                     ],
                   ),
@@ -408,16 +384,12 @@ class _SignInScreenState extends State<SignInScreen> {
             SizedBox(
               width: _start == 0 ? 60 : 120,
               child: Text.rich(TextSpan(
-                text: _start == 0
-                    ? 'Resend'
-                    : sprintf("Resend in 0:%02d", [_start]),
+                text: _start == 0 ? 'Resend' : sprintf("Resend in 0:%02d", [_start]),
                 style: TextStyle(
                   fontSize: 14,
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.normal,
-                  decoration: _start == 0
-                      ? TextDecoration.underline
-                      : TextDecoration.none,
+                  decoration: _start == 0 ? TextDecoration.underline : TextDecoration.none,
                   decorationColor: Theme.of(context).colorScheme.primary,
                 ),
                 recognizer: TapGestureRecognizer()
@@ -448,28 +420,19 @@ class _SignInScreenState extends State<SignInScreen> {
         const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
             "Sign in",
-            style: TextStyle(
-                color: Color(0xffBE94C6),
-                fontSize: 22,
-                fontWeight: FontWeight.w400),
+            style: TextStyle(color: Color(0xffBE94C6), fontSize: 22, fontWeight: FontWeight.w400),
           ),
         ]),
         const SizedBox(height: 40),
         const Text(
           'Enter your mobile number',
           textAlign: TextAlign.start,
-          style: TextStyle(
-              color: Color(0xff1E1E1E),
-              fontSize: 22,
-              fontWeight: FontWeight.w500),
+          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 22, fontWeight: FontWeight.w500),
         ),
         const Text(
           'We will send you a confirmation code',
           textAlign: TextAlign.start,
-          style: TextStyle(
-              color: Color(0xff7B7B7B),
-              fontSize: 14,
-              fontWeight: FontWeight.w500),
+          style: TextStyle(color: Color(0xff7B7B7B), fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 32),
         InternationalPhoneNumberInput(
@@ -501,21 +464,14 @@ class _SignInScreenState extends State<SignInScreen> {
           // initialValue: number,
           textFieldController: _controller,
           formatInput: true,
-          keyboardType: const TextInputType.numberWithOptions(
-              signed: true, decimal: true),
+          keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
           // inputBorder: const OutlineInputBorder(),
           inputDecoration: const InputDecoration(
             // fillColor: Colors.transparent,
             // border: OutlineInputBorder(borderSide: BorderSide()),
             filled: false,
-            labelStyle: TextStyle(
-                color: Color(0xff1E1E1E),
-                fontSize: 14,
-                fontWeight: FontWeight.w500),
-            hintStyle: TextStyle(
-                color: Color(0x807B7B7B),
-                fontSize: 14,
-                fontWeight: FontWeight.w500),
+            labelStyle: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
+            hintStyle: TextStyle(color: Color(0x807B7B7B), fontSize: 14, fontWeight: FontWeight.w500),
             hintText: "Mobile number",
           ),
 
@@ -536,7 +492,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   bloc.submitPhoneNumber(_number.phoneNumber ?? '', false);
                 },
         ),
-
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -572,7 +527,6 @@ class _SignInScreenState extends State<SignInScreen> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           // Future.delayed(const Duration(seconds: 10), () {
-          //   // TODO: This is for DEMO
           //   // Navigator.pop(context);
           //   // _showEmailVerifiedDialog();
           // });
@@ -711,15 +665,9 @@ class _SignInScreenState extends State<SignInScreen> {
               ],
               gradient: LinearGradient(
                 colors: [
-                  _isInputCompleted
-                      ? const Color(0xB2BE94C6)
-                      : const Color(0x55BE94C6),
-                  _isInputCompleted
-                      ? const Color(0xB2BE94C6)
-                      : const Color(0x55BE94C6),
-                  _isInputCompleted
-                      ? const Color(0xB27BC6CC)
-                      : const Color(0x557BC6CC),
+                  _isInputCompleted ? const Color(0xB2BE94C6) : const Color(0x55BE94C6),
+                  _isInputCompleted ? const Color(0xB2BE94C6) : const Color(0x55BE94C6),
+                  _isInputCompleted ? const Color(0xB27BC6CC) : const Color(0x557BC6CC),
                 ],
               )),
           child: ElevatedButton(

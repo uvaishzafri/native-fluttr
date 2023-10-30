@@ -125,8 +125,7 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
 }
 
 class NativeEnergyWidget extends StatelessWidget {
-  const NativeEnergyWidget(
-      {
+  const NativeEnergyWidget({
     super.key,
     required this.energy,
     required this.radius,
@@ -197,10 +196,10 @@ class NativeTypeWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-            width: radius * 2,
-            height: radius * 2,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
+          width: radius * 2,
+          height: radius * 2,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
             image: DecorationImage(image: type.imageProvider, fit: BoxFit.contain),
           ),
         ),
@@ -208,12 +207,13 @@ class NativeTypeWidget extends StatelessWidget {
           isCaps ?? false ? type.name.toUpperCase() : type.name,
           style: textStyle ??
               const TextStyle(
-            color: Color(0xff1E1E1E),
-            fontSize: 8,
-            fontWeight: FontWeight.w500,
+                color: Color(0xff1E1E1E),
+                fontSize: 8,
+                fontWeight: FontWeight.w500,
                 letterSpacing: 1.6,
                 height: 22 / 8,
-          ),
+              ),
+          overflow: TextOverflow.clip,
           textAlign: TextAlign.center,
         ),
       ],
@@ -273,8 +273,7 @@ class NativeGoodFitsWidget extends StatelessWidget {
 }
 
 class NativeUserCard extends StatelessWidget {
-  const NativeUserCard(
-      {super.key, required this.native});
+  const NativeUserCard({super.key, required this.native});
   final User native;
   // final Image userImage;
 
@@ -338,7 +337,7 @@ class NativeUserCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       native.customClaims!.location!,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xff787878),
                         fontSize: 8,
                         fontWeight: FontWeight.w400,
@@ -367,30 +366,30 @@ class NativeUserCard extends StatelessWidget {
                   const DottedLine(),
                   const SizedBox(height: 12),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: native.native!.matchTypes!.asMap().entries.map((e) {
-                      return Container(
-                          margin: EdgeInsets.only(left: e.key > 0 ? 17 : 0),
-                          child: Column(
+                      return Column(
+                        children: [
+                          Row(
                             children: [
-                              Row(children: [
-                                SvgPicture.asset('assets/home/ic_native_badge.svg'),
-                                Text(
-                                  "No.${e.key + 1}",
-                                  style: const TextStyle(
-                                    color: Color(0xff1E1E1E),
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  textAlign: TextAlign.center,
+                              SvgPicture.asset('assets/home/ic_native_badge.svg'),
+                              Text(
+                                "No.${e.key + 1}",
+                                style: const TextStyle(
+                                  color: Color(0xff1E1E1E),
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                              ]),
-                              NativeTypeWidget(
-                                type: getNativeTypeDetail(e.value!),
-                                radius: 16,
+                                textAlign: TextAlign.center,
                               ),
                             ],
-                          ));
+                          ),
+                          NativeTypeWidget(
+                            type: getNativeTypeDetail(e.value!),
+                            radius: 16,
+                          ),
+                        ],
+                      );
                     }).toList(),
                   ),
                 ],
@@ -535,7 +534,8 @@ class BigNativeUserCard extends StatelessWidget {
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                              ]),
+                                ],
+                              ),
                               NativeTypeWidget(
                                 type: getNativeTypeDetail(e.value!),
                                 radius: 31,
@@ -558,7 +558,7 @@ class BigNativeUserCard extends StatelessWidget {
               color: ColorUtils.purple.withOpacity(0.6),
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: NativeMediumBodyText(
                     native.meta?.slogan ?? "",
                     color: ColorUtils.white,
