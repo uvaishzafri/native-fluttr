@@ -69,7 +69,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
             isEnabled: true,
             text: 'Find your partner',
             onPressed: () {
-              context.router.push(const HomeWrapperRoute(children: [HomeRoute()]));
+              AutoTabsRouter.of(context).setActiveIndex(0);
+              // context.router.push(const HomeWrapperRoute(children: [HomeRoute()]));
             },
           ),
           const SizedBox(height: 30),
