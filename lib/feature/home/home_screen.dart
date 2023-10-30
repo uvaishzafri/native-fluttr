@@ -29,7 +29,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<HomeScreen> {
-
   TextEditingController? _searchController;
   User? _user;
   @override
@@ -120,14 +119,17 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
                     // const SizedBox(height: 13),
                     // if (state is HomeSuccessState)
                     SliverPadding(
-                        padding: const EdgeInsets.all(12),
-                        sliver: state is HomeSuccessState
-                            ? _recommendations(state.users, bloc)
-                            : const SliverToBoxAdapter(
-                                child: Center(
-                                  child: CircularProgressIndicator(),
+                      padding: const EdgeInsets.all(12),
+                      sliver: state is HomeSuccessState
+                          ? _recommendations(state.users, bloc)
+                          : context.loaderOverlay.visible
+                              ? const SizedBox()
+                              : const SliverToBoxAdapter(
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
                                 ),
-                              )),
+                    ),
                   ],
                 ),
               ),
