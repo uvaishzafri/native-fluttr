@@ -5,47 +5,17 @@ import 'package:native/repo/firestore_repository.dart';
 
 @lazySingleton
 class NotificationManager {
-  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  // final UserRepository _userRepository;
-  // final FirestoreRepository _firestoreRepository;
-  // bool _initialized = false;
-  // User? _user;
-
   NotificationManager();
 
-  // set user(User user) => _user = user;
-
-  // Future<void> init() async {
-  //   if (!_initialized) {
-  //     String? token = await _firebaseMessaging.getToken();
-  //     if (token != null) {
-  //       storeToken(token);
-  //     }
-
-  //     _firebaseMessaging.onTokenRefresh.listen((String token) {
-  //       storeToken(token);
-  //     });
-
-  //     _initialized = true;
-  //   }
-  // }
-
-  void setForegroundMessageCallback(void handler(RemoteMessage remoteMessage)) {
+  void setForegroundMessageCallback(void Function(RemoteMessage remoteMessage) handler) {
     FirebaseMessaging.onMessage.listen(handler);
   }
 
-  void setBackgroundMessageOpenedCallback(void handler(RemoteMessage remoteMessage)) {
+  void setBackgroundMessageOpenedCallback(void Function(RemoteMessage remoteMessage) handler) {
     FirebaseMessaging.onMessageOpenedApp.listen(handler);
   }
 
-  void setBackgroundMessageCallback(Future<void> handler(RemoteMessage remoteMessage)) {
+  void setBackgroundMessageCallback(Future<void> Function(RemoteMessage remoteMessage) handler) {
     FirebaseMessaging.onBackgroundMessage(handler);
   }
-
-  // Future<void> storeToken(String token) async {
-  //   if (_user != null) {
-  //     _firestoreRepository.updateUserDeviceToken(_user!.uid!, token);
-  //     // _userRepository.storeUserFcmToken(_user!.id, token);
-  //   }
-  // }
 }

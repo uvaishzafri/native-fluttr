@@ -72,7 +72,6 @@ class _SignInScreenState extends State<SignInScreen> {
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
-        print(_start);
         if (_start == 0) {
           timer.cancel();
           setState(() {});

@@ -8,6 +8,7 @@ class AppState with _$AppState {
     required ThemeModel theme,
     @Default(false) bool hasSkippedOnboarding,
     AuthResult? authResult,
+    bool? loggedOut,
   }) = _AppState;
 
   factory AppState.initial() => _AppState(
@@ -16,13 +17,11 @@ class AppState with _$AppState {
       );
 
   factory AppState.loggedIn(bool hasSkippedOnboarding, AuthResult authResult) =>
-      _AppState(
-          theme: getIt<ThemeModel>(),
-          hasSkippedOnboarding: hasSkippedOnboarding,
-          authResult: authResult);
+      _AppState(theme: getIt<ThemeModel>(), hasSkippedOnboarding: hasSkippedOnboarding, authResult: authResult);
 
   factory AppState.loggedOut(bool hasSkippedOnboarding) => _AppState(
         theme: getIt<ThemeModel>(),
         hasSkippedOnboarding: hasSkippedOnboarding,
+        loggedOut: true,
       );
 }

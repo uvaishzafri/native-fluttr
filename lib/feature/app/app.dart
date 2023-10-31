@@ -81,8 +81,7 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    Future.delayed(const Duration(milliseconds: 10),
-        () => {context.read<AppCubit>().checkAuth()});
+    Future.delayed(const Duration(milliseconds: 10), () => {context.read<AppCubit>().checkAuth()});
     // context.read<AppCubit>().changeStoryListType(type: StoryListType.best);
   }
 

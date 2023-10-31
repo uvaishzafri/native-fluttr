@@ -114,11 +114,7 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
                         child: _searchBar(),
                       ),
                     ),
-                    // _searchBar(),
-                    // const SizedBox(height: 13),
                     SliverPadding(padding: const EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
-                    // const SizedBox(height: 13),
-                    // if (state is HomeSuccessState)
                     SliverPadding(
                       padding: const EdgeInsets.all(12),
                       sliver: state is HomeSuccessState

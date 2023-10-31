@@ -79,124 +79,159 @@ class _ChatsScreenState extends State<ChatsScreen> {
     }
 
     Widget searchBar() {
-      return NativeTextField(_searchController,
-          hintText: 'Search', prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E)));
+      return NativeTextField(
+        _searchController,
+        hintText: 'Search',
+        maxLines: 1,
+        prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E)),
+      );
     }
 
-    Widget content = BlocProvider<ChatCubit>.value(
-      value: getIt<ChatCubit>(),
-      child: BlocConsumer<ChatCubit, ChatState>(
-        listener: (context, state) {
-          state.map(
-            initial: (value) {},
-            loading: (value) {
-              if (!context.loaderOverlay.visible) {
-                context.loaderOverlay.show();
-              }
-            },
-            error: (value) {
-              if (context.loaderOverlay.visible) {
-                context.loaderOverlay.hide();
-              }
-              if (value.appException is UnauthorizedException) {
-                BlocProvider.of<AppCubit>(context).logout();
-                return;
-              }
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(value.appException.message),
-              ));
-            },
-            // chatCreated: (value) {},
-            chatRoomsFetched: (_) {},
-            // chatMessagesFetched: (_) {},
-            // chatMessageCreated: (value) {},
-          );
-        },
-        builder: (context, state) {
-          // final chatCubit = BlocProvider.of<ChatCubit>(context);
-          if (state is ChatRoomFetched) {
-            _chats = state.chatRooms;
-            return _chats.isEmpty
-                ? emptyChatWidget()
-                : Column(
-                    children: [
-                      searchBar(),
-                      const NativeMediumTitleText('Recent chats'),
-                      Expanded(
-                          child: ListView.builder(
-                        itemCount: _chats.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            onTap: () {
-                              if (!(_chats[index].blocked ?? false)) {
-                                context.router.push(
-                                  ChatMessagesRoute(
-                                    chatRoomDocId: _chats[index].firestoreDocId!,
-                                    userId: _chats[index]
-                                        .participants
-                                        .keys
-                                        .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid),
-                                    name: _chats[index].participants[_chats[index].participants.keys.firstWhere(
-                                        (element) => element != FirebaseAuth.instance.currentUser?.uid)]![0],
-                                    imageUrl: _chats[index].participants[_chats[index].participants.keys.firstWhere(
-                                        (element) => element != FirebaseAuth.instance.currentUser?.uid)]![1],
-                                  ),
-                                );
-                              }
-                            },
-                            contentPadding: const EdgeInsets.only(right: 10),
-                            leading: CircleAvatar(
-                              backgroundImage: CachedNetworkImageProvider(_chats[index].participants[_chats[index]
+    Widget content = GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: BlocProvider<ChatCubit>.value(
+        value: getIt<ChatCubit>(),
+        child: BlocConsumer<ChatCubit, ChatState>(
+          listener: (context, state) {
+            state.map(
+              initial: (value) {},
+              loading: (value) {
+                if (!context.loaderOverlay.visible) {
+                  context.loaderOverlay.show();
+                }
+              },
+              error: (value) {
+                if (context.loaderOverlay.visible) {
+                  context.loaderOverlay.hide();
+                }
+                if (value.appException is UnauthorizedException) {
+                  BlocProvider.of<AppCubit>(context).logout();
+                  return;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(value.appException.message),
+                ));
+              },
+              // chatCreated: (value) {},
+              chatRoomsFetched: (_) {
+                if (context.loaderOverlay.visible) {
+                  context.loaderOverlay.hide();
+                }
+              },
+              // chatMessagesFetched: (_) {},
+              // chatMessageCreated: (value) {},
+            );
+          },
+          buildWhen: (previous, current) => true,
+          builder: (context, state) {
+            // final chatCubit = BlocProvider.of<ChatCubit>(context);
+            if (state is ChatRoomFetched) {
+              _chats = state.chatRooms;
+              return _chats.isEmpty
+                  ? emptyChatWidget()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        searchBar(),
+                        const SizedBox(height: 8),
+                        const NativeMediumTitleText('Recent chats'),
+                        Expanded(
+                            child: ListView.builder(
+                          itemCount: _chats.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              onTap: () {
+                                if (!(_chats[index].blocked ?? false)) {
+                                  context.router.push(
+                                    ChatMessagesRoute(
+                                      chatRoomDocId: _chats[index].firestoreDocId!,
+                                      userId: _chats[index]
                                           .participants
                                           .keys
-                                          .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]
-                                      ?[1] ??
-                                  ''),
-                            ),
-                            title: NativeMediumTitleText(_chats[index].participants[_chats[index]
-                                .participants
-                                .keys
-                                .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![0]),
-                            subtitle: Row(
-                              children: [
-                                NativeMediumBodyText(_chats[index].lastMessage ?? "No conversation yet"),
-                                const Spacer(),
-                                _chats[index].blocked ?? false
-                                    ? Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                        decoration: BoxDecoration(
-                                            color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
-                                        child: const NativeSmallBodyText(
-                                          'Blocked',
-                                          color: ColorUtils.white,
-                                          fontSize: 10,
-                                          height: 14 / 10,
-                                        ),
-                                      )
-                                    : _chats[index].lastMessageTime != null
-                                        ? NativeMediumBodyText(timeago.format(_chats[index].lastMessageTime!))
-                                        : Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                            decoration: BoxDecoration(
-                                                color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
-                                            child: const NativeSmallBodyText(
-                                              'Start now',
-                                              color: ColorUtils.white,
-                                              fontSize: 10,
-                                              height: 14 / 10,
-                                            ),
+                                          .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid),
+                                      name: _chats[index].participants[_chats[index].participants.keys.firstWhere(
+                                          (element) => element != FirebaseAuth.instance.currentUser?.uid)]![0],
+                                      imageUrl: _chats[index].participants[_chats[index].participants.keys.firstWhere(
+                                          (element) => element != FirebaseAuth.instance.currentUser?.uid)]![1],
+                                    ),
+                                  );
+                                }
+                              },
+                              contentPadding: const EdgeInsets.only(right: 10),
+                              leading: CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(_chats[index].participants[_chats[index]
+                                            .participants
+                                            .keys
+                                            .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]
+                                        ?[1] ??
+                                    ''),
+                              ),
+                              title: Row(
+                                children: [
+                                  NativeMediumTitleText(_chats[index].participants[_chats[index]
+                                      .participants
+                                      .keys
+                                      .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![0]),
+                                  const SizedBox(width: 8),
+                                  (_chats[index].unreadCount ?? 0) > 0
+                                      ? Badge.count(
+                                          count: _chats[index].unreadCount!,
+                                          backgroundColor: ColorUtils.aquaGreen,
+                                        )
+                                      : const SizedBox(),
+                                ],
+                              ),
+                              subtitle: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      _chats[index].lastMessage ?? "No conversation yet",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                  // NativeMediumBodyText(_chats[index].lastMessage ?? "No conversation yet"),
+                                  const SizedBox(width: 6),
+                                  _chats[index].lastMessageTime != null
+                                      ? NativeMediumBodyText(timeago.format(_chats[index].lastMessageTime!))
+                                      : const SizedBox(),
+                                ],
+                              ),
+                              trailing: _chats[index].blocked ?? false
+                                  ? Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                      decoration: BoxDecoration(
+                                          color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
+                                      child: const NativeSmallBodyText(
+                                        'Blocked',
+                                        color: ColorUtils.white,
+                                        fontSize: 10,
+                                        height: 14 / 10,
+                                      ),
+                                    )
+                                  : _chats[index].lastMessageTime != null
+                                      ? null
+                                      : Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                          decoration: BoxDecoration(
+                                              color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
+                                          child: const NativeSmallBodyText(
+                                            'Start now',
+                                            color: ColorUtils.white,
+                                            fontSize: 10,
+                                            height: 14 / 10,
                                           ),
-                              ],
-                            ),
-                          );
-                        },
-                      )),
-                    ],
-                  );
-          } else {
-            return emptyChatWidget();
-          }
-        },
+                                        ),
+                            );
+                          },
+                        )),
+                      ],
+                    );
+            } else {
+              return emptyChatWidget();
+            }
+          },
+        ),
       ),
     );
 

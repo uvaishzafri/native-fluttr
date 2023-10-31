@@ -7,20 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:native/di/di.dart';
 import 'package:native/dummy_data.dart';
-import 'package:native/feature/app/app_router.gr.dart';
-import 'package:native/model/native_type.dart';
 import 'package:native/model/native_card/native_card.dart';
 import 'package:native/model/user.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/images.dart';
-import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_card.dart';
-import 'package:native/widget/native_simple_button.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
-import 'package:native/widget/text/native_small_title_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
@@ -82,6 +77,7 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
               child: CircularProgressIndicator(),
             )
           : Scaffold(
+              appBar: AppBar(),
               body: Container(
                 decoration: const BoxDecoration(
                   gradient: ColorUtils.nativeGradient,

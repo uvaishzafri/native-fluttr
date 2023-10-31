@@ -312,7 +312,7 @@ class UserRepository {
         });
       }
       final response =
-          await _dioClient.post('/chat/users/$userId/issue', data: data, options: Options(headers: headers));
+          await _dioClient.post('/chats/users/$userId/issue', data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -42,7 +43,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
     _listenForNotificationPermissions();
     _listenForLocalNotifications();
     _registerNotificationCallbacks();
-    _handleInitialNotificationMessages();
+    // _handleInitialNotificationMessages();
     futureUser = getStoredUser();
   }
 
@@ -54,6 +55,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
     }
     return User.fromJson(jsonDecode(userJson));
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -65,15 +67,15 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
         future: futureUser,
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
           return AutoTabsScaffold(
             // inheritNavigatorObservers: false,
             routes: [
-              HomeRoute(),
-              LikesRoute(),
-              NotificationsRoute(),
-              ChatsRoute(),
+              const HomeRoute(),
+              const LikesRoute(),
+              const NotificationsRoute(),
+              const ChatsRoute(),
               AccountRoute(imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!),
             ],
             bottomNavigationBuilder: (_, tabsRouter) {
@@ -117,8 +119,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                   ));
             },
           );
-        }
-    );
+        });
   }
 
   void _listenForNotificationPermissions() {
@@ -148,26 +149,11 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
       );
     });
   }
-
-  Future<void> _handleInitialNotificationMessages() async {
-    RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
-    if (message != null) {
-      _notificationNavigator.navigateNotification(context: context, data: message.data);
-    }
-
-    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
-        await _localNotificationManager.getNotificationAppLaunchDetails();
-    if (notificationAppLaunchDetails != null &&
-        notificationAppLaunchDetails.notificationResponse?.payload != null &&
-        notificationAppLaunchDetails.notificationResponse!.payload!.isNotEmpty) {
-      _notificationNavigator.navigateNotification(
-        context: context,
-        data: jsonDecode(notificationAppLaunchDetails.notificationResponse!.payload!),
-      );
-    }
-  }
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // No-op
+  LocalNotificationManager()
+    ..init()
+    ..showLocalNotification(message: message);
 }

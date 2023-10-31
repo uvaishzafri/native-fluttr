@@ -25,7 +25,10 @@ class AccountScreen extends StatelessWidget {
             alignment: AlignmentDirectional.centerEnd,
             child: Text(
               'Edit Profile',
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(color: ColorUtils.purple, decoration: TextDecoration.underline),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: ColorUtils.purple, decoration: TextDecoration.underline),
             ),
           ),
         ),
@@ -61,13 +64,13 @@ class AccountScreen extends StatelessWidget {
                   child: NativeLargeBodyText('Account plan'),
                 ),
               ),
-              GestureDetector(
-                onTap: () => context.router.push(const SocialAccountSettingsRoute()),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
-                  child: NativeLargeBodyText('Social accounts'),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () => context.router.push(const SocialAccountSettingsRoute()),
+              //   child: const Padding(
+              //     padding: EdgeInsets.symmetric(vertical: 12.0),
+              //     child: NativeLargeBodyText('Social accounts'),
+              //   ),
+              // ),
               GestureDetector(
                 onTap: () {},
                 child: const Padding(

@@ -26,7 +26,21 @@ class FirestoreRepository {
         )
         .snapshots()
         .map((snapshots) => snapshots.docs)
-        .map((document) => document.map((e) => e.data()).toList());
+        .asyncMap((event) async {
+      List<ChatRoom> rooms = [];
+      for (var element in event) {
+        var data = element.data();
+        // if (data.lastReadTime?[userId] != null) {
+        final count = await getUnreadMsgCount(data.firestoreDocId!, data.lastReadTime?[userId]?.millisecondsSinceEpoch);
+        if (count.isRight) {
+          data = data.copyWith(unreadCount: count.right);
+        }
+        // }
+        rooms.add(data);
+      }
+      return rooms;
+    });
+    // .map((document) => document.map((e) => e.data()).toList());
     // return Stream.fromFutures([
     //   Future.delayed(
     //       const Duration(seconds: 2),
@@ -69,48 +83,6 @@ class FirestoreRepository {
         .snapshots()
         .map((snapshots) => snapshots.docs)
         .map((document) => document.map((e) => e.data()).toList());
-    // return Stream.fromFutures([
-    //   Future.delayed(
-    //     const Duration(seconds: 2),
-    //     () => [
-    //       dummyMessages.first
-    //     ],
-    //   ),
-    //   Future.delayed(
-    //     const Duration(seconds: 4),
-    //     () => [
-    //       dummyMessages[0],
-    //       dummyMessages[1],
-    //     ],
-    //   ),
-    //   Future.delayed(
-    //     const Duration(seconds: 10),
-    //     () => [
-    //       dummyMessages[0],
-    //       dummyMessages[1],
-    //       dummyMessages[2],
-    //     ],
-    //   ),
-    //   // Future.delayed(
-    //   //   const Duration(seconds: 20),
-    //   //   () => [
-    //   //     dummyMessages[0],
-    //   //     dummyMessages[1],
-    //   //     dummyMessages[2],
-    //   //     dummyMessages[3],
-    //   //   ],
-    //   // ),
-    //   // Future.delayed(
-    //   //   const Duration(seconds: 24),
-    //   //   () => [
-    //   //     dummyMessages[0],
-    //   //     dummyMessages[1],
-    //   //     dummyMessages[2],
-    //   //     dummyMessages[3],
-    //   //     dummyMessages[4],
-    //   //   ],
-    //   // ),
-    // ]);
   }
 
   Future<Either<AppException, bool>> createChatMessage(String chatRoomDocId, Message message) async {
@@ -138,18 +110,12 @@ class FirestoreRepository {
         {deviceId: deviceToken},
         SetOptions(merge: true),
       );
-
-      // .set(
-      //   {
-      //     'deviceToken': deviceToken
-      //   },
-      //   SetOptions(merge: true),
-      // );
       return const Right(true);
     } on Exception catch (_) {
       return Left(CustomException());
     }
   }
+
   Future<Either<AppException, bool>> markChatRoomBlocked(String chatRoomDocId) async {
     try {
       await _firestore
@@ -157,12 +123,50 @@ class FirestoreRepository {
           .doc('chats')
           .collection('chat_rooms')
           .doc(chatRoomDocId)
-          // .withConverter<ChatRoom>(
-          //   fromFirestore: (snapshot, options) => ChatRoom.fromJson(snapshot.id, snapshot.data()!),
-          //   toFirestore: (value, options) => value.toJson(),
-          // )
           .set({"blocked": true}, SetOptions(merge: true));
       return const Right(true);
+    } on Exception catch (_) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, bool>> updateMsgReadTime(String chatRoomDocId, String userId) async {
+    try {
+      await _firestore.collection('inAppUsers').doc('chats').collection('chat_rooms').doc(chatRoomDocId).update(
+        {
+          'lastReadTime.$userId': DateTime.now().millisecondsSinceEpoch,
+        },
+      );
+      return const Right(true);
+    } on Exception catch (_) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, bool>> updateLastMsgDetails(String chatRoomDocId, String message) async {
+    try {
+      await _firestore.collection('inAppUsers').doc('chats').collection('chat_rooms').doc(chatRoomDocId).set({
+        "lastMessage": message,
+        "lastMessageTime": DateTime.now().millisecondsSinceEpoch,
+      }, SetOptions(merge: true));
+      return const Right(true);
+    } on Exception catch (_) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, int>> getUnreadMsgCount(String chatRoomDocId, int? lastReadTime) async {
+    try {
+      final query = await _firestore
+          .collection('inAppUsers')
+          .doc('chats')
+          .collection('chat_rooms')
+          .doc(chatRoomDocId)
+          .collection('message')
+          .where("creationDate", isGreaterThan: lastReadTime)
+          .count()
+          .get();
+      return Right(query.count);
     } on Exception catch (_) {
       return Left(CustomException());
     }

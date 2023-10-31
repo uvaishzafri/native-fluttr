@@ -71,15 +71,18 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
               Image.asset("assets/home/ic_hi.png")
             ],
           ),
-          trailing: Text(
-            expanded ? "View less" : "Show Native card",
-            style: const TextStyle(
-                color: Color(0xffffffff),
-                fontSize: 12,
-                fontWeight: FontWeight.w300,
-                decoration: TextDecoration.underline,
-                decorationColor: Color(0xffffffff)),
-            textAlign: TextAlign.center,
+          trailing: SizedBox(
+            width: 150,
+            child: Text(
+              expanded ? "View less" : "Show Native card",
+              style: const TextStyle(
+                  color: Color(0xffffffff),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w300,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Color(0xffffffff)),
+              textAlign: TextAlign.center,
+            ),
           ),
           children: [
             GestureDetector(
@@ -91,7 +94,7 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
                 height: 104,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     NativeEnergyWidget(
@@ -519,21 +522,22 @@ class BigNativeUserCard extends StatelessWidget {
                           margin: EdgeInsets.only(left: e.key > 0 ? 17 : 0),
                           child: Column(
                             children: [
-                              Row(children: [
-                                SvgPicture.asset(
-                                  'assets/home/ic_native_badge.svg',
-                                  height: 16,
-                                ),
-                                Text(
-                                  "No.${e.key + 1}",
-                                  style: const TextStyle(
-                                    color: Color(0xff1E1E1E),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    height: 22 / 12,
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/home/ic_native_badge.svg',
+                                    height: 16,
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
+                                  Text(
+                                    "No.${e.key + 1}",
+                                    style: const TextStyle(
+                                      color: Color(0xff1E1E1E),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      height: 22 / 12,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ],
                               ),
                               NativeTypeWidget(

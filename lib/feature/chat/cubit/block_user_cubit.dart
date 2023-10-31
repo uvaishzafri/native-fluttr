@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:native/repo/firestore_repository.dart';
@@ -9,7 +9,7 @@ part 'block_user_cubit.freezed.dart';
 
 @lazySingleton
 class BlockUserCubit extends Cubit<BlockUserState> {
-  BlockUserCubit(this._firestoreRepository) : super(BlockUserState.initial());
+  BlockUserCubit(this._firestoreRepository) : super(const BlockUserState.initial());
 
   final FirestoreRepository _firestoreRepository;
 
@@ -19,7 +19,7 @@ class BlockUserCubit extends Cubit<BlockUserState> {
     var notificationsList = await _firestoreRepository.markChatRoomBlocked(chatRoomDocId);
     notificationsList.fold(
       (left) => emit(BlockUserState.errorState(appException: left)),
-      (right) => emit(BlockUserState.successState()),
+      (right) => emit(const BlockUserState.successState()),
     );
   }
 }

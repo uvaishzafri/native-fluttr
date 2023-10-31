@@ -13,12 +13,14 @@ class ChatRoom with _$ChatRoom {
     @JsonKey(includeIfNull: false) required Map<String, List<String>> participants,
     @JsonKey(includeIfNull: false) @DatetimeSerializer() DateTime? lastMessageTime,
     @JsonKey(includeIfNull: false) @DatetimeSerializer() DateTime? creationTime,
-    @JsonKey(includeIfNull: false) @DatetimeSerializer() Map<String, DateTime>? lastReadTime,
+    @JsonKey(includeIfNull: false) @DatetimeSerializer() Map<String, DateTime?>? lastReadTime,
     String? creatorId,
     String? lastMessage,
     @JsonKey(includeToJson: false) String? firestoreDocId,
     @JsonKey(includeToJson: false) bool? blocked,
+    @JsonKey(includeToJson: false) int? unreadCount,
   }) = _ChatRoom;
 
-  factory ChatRoom.fromJson(String docId, Map<String, dynamic> json) => _$ChatRoomFromJson(json).copyWith(firestoreDocId: docId);
+  factory ChatRoom.fromJson(String docId, Map<String, dynamic> json) =>
+      _$ChatRoomFromJson(json).copyWith(firestoreDocId: docId);
 }

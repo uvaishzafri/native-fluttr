@@ -21,7 +21,6 @@ part 'app_state.dart';
 @lazySingleton
 class AppCubit extends HydratedCubit<AppState> {
   AppCubit(this._firebaseAuth) : super(AppState(theme: ThemeModel.initial())) {
-
     // Pretend initialization
     // Future.delayed(const Duration(milliseconds: 10),
     //     () => {changeStoryListType(type: StoryListType.top)});
@@ -40,6 +39,7 @@ class AppCubit extends HydratedCubit<AppState> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('userIdToken');
   }
+
   Future<String?> _getStoredUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('user');
@@ -56,7 +56,7 @@ class AppCubit extends HydratedCubit<AppState> {
     //     emit(AppState.loggedOut(isSkipped));
     //   }
     // });
-    
+
     if (idToken != null) {
       String? userJson = await _getStoredUser();
       if (userJson != null) {
@@ -79,6 +79,7 @@ class AppCubit extends HydratedCubit<AppState> {
   }
 
   logout() async {
+    emit(AppState.initial());
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('user');
     prefs.remove('userIdToken');
@@ -99,16 +100,11 @@ class AppCubit extends HydratedCubit<AppState> {
   }
 
   void updateSystemOverlay() {
-    final systemModeIsDark =
-        SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
+    final systemModeIsDark = SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
 
-    final isDark = state.theme.mode == ThemeMode.system
-        ? systemModeIsDark
-        : state.theme.mode == ThemeMode.dark;
-    final colorScheme =
-        isDark ? state.theme.dark.colorScheme : state.theme.light.colorScheme;
-    final primaryColor = ElevationOverlay.colorWithOverlay(
-        colorScheme.surface, colorScheme.primary, 3);
+    final isDark = state.theme.mode == ThemeMode.system ? systemModeIsDark : state.theme.mode == ThemeMode.dark;
+    final colorScheme = isDark ? state.theme.dark.colorScheme : state.theme.light.colorScheme;
+    final primaryColor = ElevationOverlay.colorWithOverlay(colorScheme.surface, colorScheme.primary, 3);
 
     SystemChrome.setSystemUIOverlayStyle(
       createOverlayStyle(

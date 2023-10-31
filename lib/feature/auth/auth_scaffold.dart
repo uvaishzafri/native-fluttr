@@ -14,7 +14,14 @@ class AuthScaffold extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Column(
         children: [
-          SvgPicture.asset("$_assetFolder/top_banner.svg"),
+          SizedBox(
+            width: double.infinity,
+            child: SvgPicture.asset(
+              "$_assetFolder/top_banner.svg",
+              fit: BoxFit.cover,
+              clipBehavior: Clip.none,
+            ),
+          ),
           Container(
               margin: const EdgeInsets.only(top: 15, left: 32, right: 32),
               child: SingleChildScrollView(
@@ -44,15 +51,11 @@ class AuthScaffold extends StatelessWidget {
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     const Text(
                       'By continuing you agree to ',
-                      style: TextStyle(
-                          color: Color(0xff1E1E1E),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
+                      style: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
                     ),
                     GradientText(
                       'native.',
-                      style: const TextStyle(
-                          fontSize: 14.0, fontWeight: FontWeight.w400),
+                      style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),
                       colors: const [
                         Color(0xFFBE94C6),
                         Color(0xFF7BC6CC),
@@ -60,32 +63,32 @@ class AuthScaffold extends StatelessWidget {
                     ),
                   ]),
                   const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text.rich(TextSpan(
-                          text: 'terms of use',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                            decoration: TextDecoration.underline,
-                          ),
-                        )),
-                        Text(
-                          ' & ',
-                          style: TextStyle(
-                              color: Color(0xff1E1E1E),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text.rich(TextSpan(
+                        text: 'terms of use',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                          decoration: TextDecoration.underline,
                         ),
-                        Text.rich(TextSpan(
+                      )),
+                      Text(
+                        ' & ',
+                        style: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
+                      ),
+                      Text.rich(
+                        TextSpan(
                           text: 'privacy policy',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.normal,
                             decoration: TextDecoration.underline,
                           ),
-                        )),
-                      ]),
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 26,
                   )

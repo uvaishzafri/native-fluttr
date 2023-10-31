@@ -63,7 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _user = User.fromJson(jsonDecode(prefs.getString('user') ?? ""));
     nameTextEditingController.text = _user?.displayName ?? '';
     aboutYouTextEditingController.text = _user?.customClaims?.about ?? '';
-    // selectedCommunity = _user?.customClaims?.community! ?? '';
+    selectedCommunity = _user?.customClaims?.community! ?? '';
     selectedLocation = _user?.customClaims?.location! ?? '';
     selectedReligion = _user?.customClaims?.religion! ?? '';
     setState(() {});
@@ -81,221 +81,221 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     Widget content = SingleChildScrollView(
-        child: BlocProvider<EditProfileCubit>.value(
-      value: getIt<EditProfileCubit>(),
-      child: BlocConsumer<EditProfileCubit, EditProfileState>(
-        listener: (context, state) {
-          state.map(
-            initial: (_) {},
-            loading: (value) {
-              if (!context.loaderOverlay.visible) {
-                context.loaderOverlay.show();
-              }
-            },
-            error: (value) {
-              if (context.loaderOverlay.visible) {
-                context.loaderOverlay.hide();
-              }
-              if (value.appException is UnauthorizedException) {
-                BlocProvider.of<AppCubit>(context).logout();
-                return;
-              }
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(value.appException.message),
-              ));
-            },
-            success: (value) {
-              if (context.loaderOverlay.visible) {
-                context.loaderOverlay.hide();
-              }
-              // nameTextEditingController.text = value.user.displayName ?? '';
-              // aboutYouTextEditingController.text = value.user.customClaims!.about ?? '';
-              // selectedCommunity = value.user.customClaims!.community!;
-              // selectedLocation = value.user.customClaims!.location!;
-              // selectedReligion = value.user.customClaims!.religion!;
+      child: BlocProvider<EditProfileCubit>.value(
+        value: getIt<EditProfileCubit>(),
+        child: BlocConsumer<EditProfileCubit, EditProfileState>(
+          listener: (context, state) {
+            state.map(
+              initial: (_) {},
+              loading: (value) {
+                if (!context.loaderOverlay.visible) {
+                  context.loaderOverlay.show();
+                }
+              },
+              error: (value) {
+                if (context.loaderOverlay.visible) {
+                  context.loaderOverlay.hide();
+                }
+                if (value.appException is UnauthorizedException) {
+                  BlocProvider.of<AppCubit>(context).logout();
+                  return;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(value.appException.message),
+                ));
+              },
+              success: (value) {
+                if (context.loaderOverlay.visible) {
+                  context.loaderOverlay.hide();
+                }
+                // nameTextEditingController.text = value.user.displayName ?? '';
+                // aboutYouTextEditingController.text = value.user.customClaims!.about ?? '';
+                // selectedCommunity = value.user.customClaims!.community!;
+                // selectedLocation = value.user.customClaims!.location!;
+                // selectedReligion = value.user.customClaims!.religion!;
 
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Update successful'),
-              ));
-            },
-          );
-        },
-        builder: (context, state) {
-          // if (state is EditProfileSuccessState) {
-          if (_user == null) {
-            return SizedBox();
-          }
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: AlignmentDirectional.center,
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 125,
-                      width: 125,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ColorUtils.grey,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: _imageFile != null
-                              ? Image.file(_imageFile!, fit: BoxFit.cover) as ImageProvider
-                              : CachedNetworkImageProvider(_user!.photoURL!),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 5,
-                      bottom: 5,
-                      child: GestureDetector(
-                        onTap: () => showModalBottomSheet(
-                          context: context,
-                          builder: (context) => PhotoPickerWidget(
-                            onFilePicked: (file) {
-                              setState(() {
-                                _imageFile = file;
-                              });
-                            },
-                          ),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(9),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorUtils.purple,
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt_outlined,
-                            color: ColorUtils.white,
-                            size: 14,
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Update successful'),
+                ));
+              },
+            );
+          },
+          builder: (context, state) {
+            // if (state is EditProfileSuccessState) {
+            if (_user == null) {
+              return const SizedBox();
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.center,
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 125,
+                        width: 125,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: ColorUtils.grey,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: _imageFile != null
+                                ? Image.file(_imageFile!, fit: BoxFit.cover) as ImageProvider
+                                : CachedNetworkImageProvider(_user!.photoURL!),
                           ),
                         ),
                       ),
-                    )
-                  ],
+                      Positioned(
+                        right: 5,
+                        bottom: 5,
+                        child: GestureDetector(
+                          onTap: () => showModalBottomSheet(
+                            context: context,
+                            builder: (context) => PhotoPickerWidget(
+                              onFilePicked: (file) {
+                                setState(() {
+                                  _imageFile = file;
+                                });
+                              },
+                            ),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(9),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: ColorUtils.purple,
+                            ),
+                            child: const Icon(
+                              Icons.camera_alt_outlined,
+                              color: ColorUtils.white,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Align(
-                alignment: AlignmentDirectional.center,
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: NativeSmallTitleText(_user!.displayName!),
+                Align(
+                  alignment: AlignmentDirectional.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: NativeSmallTitleText(_user!.displayName!),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const NativeSmallBodyText('Name'),
-              NativeTextField(
-                nameTextEditingController,
-                hintText: 'Name',
-                onChanged: (value) {
-                  setState(() {
-                    valueChanged = true;
-                  });
-                },
-              ),
-              const SizedBox(height: 28),
-              const NativeSmallBodyText('About you'),
-              NativeTextField(
-                aboutYouTextEditingController,
-                hintText:
-                    'Tell us about your IKIGAI, when do you feel the most happiest? Eg: while playing with puppies',
-                maxLength: 100,
-                maxLines: 6,
-                onChanged: (value) {
-                  setState(() {
-                    valueChanged = true;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              const NativeSmallBodyText('Location'),
-              NativeDropdown<String>(
-                onChanged: (value) {
-                  setState(() {
-                    selectedLocation = value;
-                    valueChanged = true;
-                  });
-                },
-                value: selectedLocation,
-                searchController: locationSearchTextController,
-                items: locations
-                    .map((item) => DropdownMenuItem(
-                          value: item,
-                          child: NativeMediumBodyText(item),
-                        ))
-                    .toList(),
-              ),
-              const SizedBox(height: 20),
-              const NativeSmallBodyText('Religion'),
-              const SizedBox(height: 8),
-              NativeDropdown(
-                onChanged: (value) {
-                  setState(() {
-                    selectedReligion = value;
-                    // selectedCommunity = null;
-                    valueChanged = true;
-                  });
-                },
-                value: selectedReligion,
-                searchController: religionSearchController,
-                items: religions.keys
-                    .map((item) => DropdownMenuItem(
-                          value: item,
-                          child: NativeMediumBodyText(item),
-                        ))
-                    .toList(),
-              ),
-              const SizedBox(height: 24),
-              const NativeSmallBodyText('Language'),
-              const SizedBox(height: 8),
-              NativeDropdown(
-                onChanged: (value) {
-                  setState(() {
-                    selectedCommunity = value;
-                    valueChanged = true;
-                  });
-                },
-                value: selectedCommunity,
-                searchController: communitySearchController,
-                items: languages
-                    .map((item) => DropdownMenuItem(
-                          value: item,
-                          child: NativeMediumBodyText(item),
-                        ))
-                    .toList(),
-              ),
-              const SizedBox(height: 30),
-              NativeButton(
-                isEnabled: _imageFile != null || valueChanged,
-                text: 'Save',
-                onPressed: () {
-                  // context.router.push(const );
-                  var editProfileBloc = BlocProvider.of<EditProfileCubit>(context);
-                  User? user;
-                  if (valueChanged) {
-                    user = _user!.copyWith(
-                      displayName: nameTextEditingController.text,
-                      customClaims: _user!.customClaims!.copyWith(
-                          community: selectedCommunity,
-                          religion: selectedReligion,
-                          location: selectedLocation,
-                          about: aboutYouTextEditingController.text),
-                    );
-                  }
-                  editProfileBloc.updateUserProfile(user: user, imageFile: _imageFile);
-                },
-              ),
-              const SizedBox(height: 40),
-            ],
-          );
-          // } else {
-          //   return SizedBox();
-          // }
-        },
+                const SizedBox(height: 20),
+                const NativeSmallBodyText('Name'),
+                NativeTextField(
+                  nameTextEditingController,
+                  hintText: 'Name',
+                  onChanged: (value) {
+                    setState(() {
+                      valueChanged = true;
+                    });
+                  },
+                ),
+                const SizedBox(height: 28),
+                const NativeSmallBodyText('About you'),
+                NativeTextField(
+                  aboutYouTextEditingController,
+                  hintText:
+                      'Tell us about your IKIGAI, when do you feel the most happiest? Eg: while playing with puppies',
+                  maxLength: 100,
+                  maxLines: 6,
+                  onChanged: (value) {
+                    setState(() {
+                      valueChanged = true;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                const NativeSmallBodyText('Location'),
+                NativeDropdown<String>(
+                  onChanged: (value) {
+                    setState(() {
+                      selectedLocation = value;
+                      valueChanged = true;
+                    });
+                  },
+                  value: selectedLocation,
+                  searchController: locationSearchTextController,
+                  items: locations
+                      .map((item) => DropdownMenuItem(
+                            value: item,
+                            child: NativeMediumBodyText(item),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 20),
+                const NativeSmallBodyText('Religion'),
+                const SizedBox(height: 8),
+                NativeDropdown(
+                  onChanged: (value) {
+                    setState(() {
+                      selectedReligion = value;
+                      // selectedCommunity = null;
+                      valueChanged = true;
+                    });
+                  },
+                  value: selectedReligion,
+                  searchController: religionSearchController,
+                  items: religions.keys
+                      .map((item) => DropdownMenuItem(
+                            value: item,
+                            child: NativeMediumBodyText(item),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 24),
+                const NativeSmallBodyText('Language'),
+                const SizedBox(height: 8),
+                NativeDropdown(
+                  onChanged: (value) {
+                    setState(() {
+                      selectedCommunity = value;
+                      valueChanged = true;
+                    });
+                  },
+                  value: selectedCommunity,
+                  searchController: communitySearchController,
+                  items: languages
+                      .map((item) => DropdownMenuItem(
+                            value: item,
+                            child: NativeMediumBodyText(item),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 30),
+                NativeButton(
+                  isEnabled: _imageFile != null || valueChanged,
+                  text: 'Save',
+                  onPressed: () {
+                    // context.router.push(const );
+                    var editProfileBloc = BlocProvider.of<EditProfileCubit>(context);
+                    User? user;
+                    if (valueChanged) {
+                      user = _user!.copyWith(
+                        displayName: nameTextEditingController.text,
+                        customClaims: _user!.customClaims!.copyWith(
+                            community: selectedCommunity,
+                            religion: selectedReligion,
+                            location: selectedLocation,
+                            about: aboutYouTextEditingController.text),
+                      );
+                    }
+                    editProfileBloc.updateUserProfile(user: user, imageFile: _imageFile);
+                  },
+                ),
+                const SizedBox(height: 40),
+              ],
+            );
+            // } else {
+            //   return SizedBox();
+            // }
+          },
+        ),
       ),
-    )
     );
 
     Widget trailing = IconButton(
