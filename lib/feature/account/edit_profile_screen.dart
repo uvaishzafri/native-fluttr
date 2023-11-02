@@ -9,18 +9,15 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/account/cubit/edit_profile_cubit.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
-import 'package:native/feature/profile/cubit/profile_cubit.dart';
 import 'package:native/model/user.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/exceptions.dart';
-import 'package:native/widget/common_scaffold.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_dropdown.dart';
 import 'package:native/widget/native_text_field.dart';
 import 'package:native/widget/photo_picker_widget.dart';
-import 'package:native/widget/text/native_large_body_text.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
@@ -51,7 +48,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getUserDetails();
@@ -113,7 +109,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 // selectedCommunity = value.user.customClaims!.community!;
                 // selectedLocation = value.user.customClaims!.location!;
                 // selectedReligion = value.user.customClaims!.religion!;
-
+                getUserDetails();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('Update successful'),
                 ));
@@ -141,7 +137,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: _imageFile != null
-                                ? Image.file(_imageFile!, fit: BoxFit.cover) as ImageProvider
+                                ? FileImage(_imageFile!) as ImageProvider
                                 : CachedNetworkImageProvider(_user!.photoURL!),
                           ),
                         ),

@@ -18,18 +18,6 @@ class EditProfileCubit extends Cubit<EditProfileState> {
 
   final UserRepository _userRepository;
 
-  // getProfileFromPref() async {
-  //   emit(const EditProfileState.loading());
-  //   final prefs = await SharedPreferences.getInstance();
-  //   String? userJson = prefs.getString('user');
-  //   if (userJson != null) {
-  //     User user = User.fromJson(jsonDecode(userJson));
-  //     emit(EditProfileState.success(user: user));
-  //   } else {
-  //     emit(EditProfileState.error(appException: CustomException('User not found')));
-  //   }
-  // }
-
   updateUserProfile({User? user, File? imageFile}) async {
     emit(const EditProfileState.loading());
     String? imageUrl;

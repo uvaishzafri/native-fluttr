@@ -28,7 +28,6 @@ class _ReportUserBottomSheetState extends State<ReportUserBottomSheet> {
       value: getIt<ReportUserCubit>(),
       child: BlocConsumer<ReportUserCubit, ReportUserState>(
         listener: (context, state) {
-          // TODO: implement listener
           state.map(
             initial: (value) {},
             loading: (value) {

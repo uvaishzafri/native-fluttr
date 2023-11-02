@@ -166,7 +166,7 @@ class _LikesScreenState extends State<LikesScreen> {
                                 // groupSeparatorBuilder: (value) => NativeMediumTitleText(value),
                                 // NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                                 itemBuilder: (context, element) => ListTile(
-                                  onTap: () => context.router.push(NativeCardDetailsRoute(user: element.user!)),
+                                  onTap: () => context.router.push(NativeCardScaffold(user: element.user!)),
                                   contentPadding: EdgeInsets.zero,
                                   leading: CircleAvatar(
                                     // backgroundImage: AssetImage(element.imageUrl),

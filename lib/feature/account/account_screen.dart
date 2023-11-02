@@ -1,26 +1,65 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
+import 'package:native/model/user.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key, required this.imageUrl, required this.displayName});
-  final String imageUrl;
-  final String displayName;
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key /*, required this.imageUrl, required this.displayName*/});
+  // final String imageUrl;
+  // final String displayName;
 
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  late String imageUrl;
+  late String displayName;
+
+  @override
+  void initState() {
+    super.initState();
+    imageUrl = '';
+    displayName = '';
+    refreshUserDetails();
+  }
+
+  void refreshUserDetails() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('user');
+    if (userJson != null) {
+      final user = User.fromJson(jsonDecode(userJson));
+      if (user.photoURL?.isNotEmpty ?? false) {
+        imageUrl = user.photoURL!;
+      }
+      if (user.displayName?.isNotEmpty ?? false) {
+        displayName = user.displayName!;
+      }
+      if (context.mounted) {
+        setState(() {});
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     Widget content = Column(
       children: [
         GestureDetector(
-          onTap: () => context.router.push(const EditProfileRoute()),
+          onTap: () async {
+            await context.router.push(const EditProfileRoute());
+            refreshUserDetails();
+          },
           child: Align(
             alignment: AlignmentDirectional.centerEnd,
             child: Text(
@@ -38,7 +77,9 @@ class AccountScreen extends StatelessWidget {
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: ColorUtils.grey,
-              image: DecorationImage(image: CachedNetworkImageProvider(imageUrl), fit: BoxFit.cover)),
+              image: imageUrl.isEmpty
+                  ? null
+                  : DecorationImage(image: CachedNetworkImageProvider(imageUrl), fit: BoxFit.cover)),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

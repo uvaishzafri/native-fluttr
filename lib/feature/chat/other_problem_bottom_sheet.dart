@@ -101,7 +101,7 @@ class _OtherProblemBottomSheetState extends State<OtherProblemBottomSheet> {
                     isEnabled: _otherReasonTextController.text.isNotEmpty,
                     text: 'Submit',
                     onPressed: () {
-                      bloc.reportUser(widget.userId, "others", _otherReasonTextController.text);
+                      bloc.reportUser(widget.userId, "CHAT", _otherReasonTextController.text);
                       // Navigator.pop(context);
                       // showModalBottomSheet(
                       //   context: context,

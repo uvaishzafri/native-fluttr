@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:native/di/di.dart';
+import 'package:native/feature/account/cubit/edit_profile_cubit.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/model/native_card/native_card.dart';
 import 'package:native/model/native_type.dart';
@@ -22,108 +25,127 @@ class ExpandableNativeCard extends StatefulWidget {
 
 class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
   bool expanded = false;
+  late User user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.native;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(6)),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x19616161),
-                offset: Offset(10, 10),
-                blurRadius: 10.0,
-                spreadRadius: 1.0,
+    return BlocProvider<EditProfileCubit>.value(
+      value: getIt<EditProfileCubit>(),
+      child: BlocListener<EditProfileCubit, EditProfileState>(
+        listener: (context, state) {
+          if (state is EditProfileSuccessState) {
+            user = state.user;
+            setState(() {});
+          }
+        },
+        child: Container(
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(6)),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x19616161),
+                    offset: Offset(10, 10),
+                    blurRadius: 10.0,
+                    spreadRadius: 1.0,
+                  ),
+                ],
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFFBE94C6).withOpacity(0.7),
+                    const Color(0xFF7BC6CC).withOpacity(0.7),
+                  ],
+                )),
+            child: ExpansionTile(
+              onExpansionChanged: (value) {
+                setState(() {
+                  expanded = value;
+                });
+              },
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    // width: 175,
+                    child: Text(
+                      "Hello ${user.displayName}!",
+                      style: const TextStyle(
+                        color: Color(0xffffffff),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      // softWrap: true,
+                      maxLines: 1,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Image.asset("assets/home/ic_hi.png")
+                ],
               ),
-            ],
-            gradient: LinearGradient(
-              colors: [
-                const Color(0xFFBE94C6).withOpacity(0.7),
-                const Color(0xFF7BC6CC).withOpacity(0.7),
+              trailing: SizedBox(
+                width: 150,
+                child: Text(
+                  expanded ? "View less" : "Show Native card",
+                  style: const TextStyle(
+                      color: Color(0xffffffff),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Color(0xffffffff)),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    context.router.push(NativeCardScaffold(user: user));
+                  },
+                  child: Container(
+                    height: 104,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        NativeEnergyWidget(
+                          energy: user.native!.energyScore ?? 0,
+                          radius: 27.5,
+                        ),
+                        const SizedBox(
+                          width: 13,
+                        ),
+                        NativeTypeWidget(type: getNativeTypeDetail(user.native!.type!), radius: 27.5),
+                        // NativeTypeWidget(type: getNativeTypeDetail(NativeTypeEnum.values.firstWhere((element) => element.name.toLowerCase() == widget.native.native!.type!.en!.toLowerCase() )), radius: 27.5),
+                        const SizedBox(
+                          width: 17,
+                        ),
+                        const VerticalDivider(
+                          width: 1,
+                          color: Color(0xFFFFFFFF),
+                        ),
+                        const SizedBox(
+                          width: 17,
+                        ),
+                        NativeGoodFitsWidget(
+                            types: user.native!.matchTypes!.map((e) => getNativeTypeDetail(e!)).toList()),
+                      ],
+                    ),
+                  ),
+                )
               ],
             )),
-        child: ExpansionTile(
-          onExpansionChanged: (value) {
-            setState(() {
-              expanded = value;
-            });
-          },
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                // width: 175,
-                child: Text(
-                  "Hello ${widget.native.displayName}!",
-                  style: const TextStyle(
-                    color: Color(0xffffffff),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  // softWrap: true,
-                  maxLines: 1,
-                ),
-              ),
-              const SizedBox(
-                width: 4,
-              ),
-              Image.asset("assets/home/ic_hi.png")
-            ],
-          ),
-          trailing: SizedBox(
-            width: 150,
-            child: Text(
-              expanded ? "View less" : "Show Native card",
-              style: const TextStyle(
-                  color: Color(0xffffffff),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300,
-                  decoration: TextDecoration.underline,
-                  decorationColor: Color(0xffffffff)),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          children: [
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                context.router.push(NativeCardScaffold(user: widget.native));
-              },
-              child: Container(
-                height: 104,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    NativeEnergyWidget(
-                      energy: widget.native.native!.energyScore ?? 0,
-                      radius: 27.5,
-                    ),
-                    const SizedBox(
-                      width: 13,
-                    ),
-                    NativeTypeWidget(type: getNativeTypeDetail(widget.native.native!.type!), radius: 27.5),
-                    // NativeTypeWidget(type: getNativeTypeDetail(NativeTypeEnum.values.firstWhere((element) => element.name.toLowerCase() == widget.native.native!.type!.en!.toLowerCase() )), radius: 27.5),
-                    const SizedBox(
-                      width: 17,
-                    ),
-                    const VerticalDivider(
-                      width: 1,
-                      color: Color(0xFFFFFFFF),
-                    ),
-                    const SizedBox(
-                      width: 17,
-                    ),
-                    NativeGoodFitsWidget(
-                        types: widget.native.native!.matchTypes!.map((e) => getNativeTypeDetail(e!)).toList()),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ));
+      ),
+    );
   }
 }
 

@@ -6,8 +6,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:native/di/di.dart';
+import 'package:native/feature/account/cubit/edit_profile_cubit.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/manager/notification_manager/local_notification_manager.dart';
 import 'package:native/manager/notification_manager/notification_manager.dart';
@@ -43,6 +45,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
     _listenForNotificationPermissions();
     _listenForLocalNotifications();
     _registerNotificationCallbacks();
+    _listenForUserUpdates();
     // _handleInitialNotificationMessages();
     futureUser = getStoredUser();
   }
@@ -63,12 +66,6 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User?>(
-        future: futureUser,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const CircularProgressIndicator();
-          }
           return AutoTabsScaffold(
             // inheritNavigatorObservers: false,
             routes: [
@@ -76,50 +73,70 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
               const LikesRoute(),
               const NotificationsRoute(),
               const ChatsRoute(),
-              AccountRoute(imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!),
+        AccountRoute(/*imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!*/),
             ],
             bottomNavigationBuilder: (_, tabsRouter) {
+        return FutureBuilder<User?>(
+            future: futureUser,
+            builder: (context, snapshot) {
               return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: BottomNavigationBar(
-                    currentIndex: tabsRouter.activeIndex,
-                    onTap: tabsRouter.setActiveIndex,
-                    showSelectedLabels: false,
-                    showUnselectedLabels: false,
-                    items: <BottomNavigationBarItem>[
-                      const BottomNavigationBarItem(
-                          icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home_filled), label: 'Home'),
-                      const BottomNavigationBarItem(
-                        icon: Icon(Icons.favorite_border_outlined),
-                        activeIcon: Icon(Icons.favorite),
-                        label: 'Likes',
-                      ),
-                      const BottomNavigationBarItem(
-                          icon: Icon(Icons.notifications_outlined),
-                          activeIcon: Icon(Icons.notifications),
-                          label: 'Notification'),
-                      const BottomNavigationBarItem(
-                        icon: Icon(Icons.chat_outlined),
-                        activeIcon: Icon(Icons.chat),
-                        label: 'Chat',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: NativeHeadImage(
-                          // Image.asset("$_assetFolder/ic_test.png"),
-                          Image.network(snapshot.data!.photoURL!),
-                          borderColor: Theme.of(context).colorScheme.primary,
-                          radius: 14,
-                          borderRadius: 2,
-                          isGradientBorder: false,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: BottomNavigationBar(
+                  currentIndex: tabsRouter.activeIndex,
+                  onTap: tabsRouter.setActiveIndex,
+                  showSelectedLabels: false,
+                  showUnselectedLabels: false,
+                  items: <BottomNavigationBarItem>[
+                    const BottomNavigationBarItem(
+                        icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home_filled), label: 'Home'),
+                    const BottomNavigationBarItem(
+                      icon: Icon(Icons.favorite_border_outlined),
+                      activeIcon: Icon(Icons.favorite),
+                      label: 'Likes',
+                    ),
+                    const BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications_outlined),
+                        activeIcon: Icon(Icons.notifications),
+                        label: 'Notification'),
+                    const BottomNavigationBarItem(
+                      icon: Icon(Icons.chat_outlined),
+                      activeIcon: Icon(Icons.chat),
+                      label: 'Chat',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: BlocProvider<EditProfileCubit>.value(
+                        value: getIt<EditProfileCubit>(),
+                        child: BlocListener<EditProfileCubit, EditProfileState>(
+                          listener: (context, state) {
+                            if (state is EditProfileSuccessState) {
+                              futureUser = Future(() => state.user);
+                              // context.tabsRouter.setActiveIndex(4);
+                              // setState(() {});
+                            }
+                          },
+                          child: snapshot.connectionState != ConnectionState.done
+                              ? CircularProgressIndicator()
+                              : snapshot.data!.photoURL != null
+                                  ? NativeHeadImage(
+                                      // Image.asset("$_assetFolder/ic_test.png"),
+                                      Image.network(snapshot.data!.photoURL!),
+                                      borderColor: Theme.of(context).colorScheme.primary,
+                                      radius: 14,
+                                      borderRadius: 2,
+                                      isGradientBorder: false,
+                                    )
+                                  : Placeholder(),
                         ),
-                        label: 'Account',
                       ),
-                    ],
-                    type: BottomNavigationBarType.fixed,
-                  ));
-            },
-          );
-        });
+                      label: 'Account',
+                    ),
+                  ],
+                  type: BottomNavigationBarType.fixed,
+                ),
+              );
+            });
+      },
+    );
   }
 
   void _listenForNotificationPermissions() {
@@ -149,6 +166,8 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
       );
     });
   }
+
+  void _listenForUserUpdates() {}
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {

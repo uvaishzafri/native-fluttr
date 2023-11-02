@@ -101,6 +101,9 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
             FlutterNativeSplash.remove();
             // context.router.replace(const BasicDetailsRoute());
             if (state.authResult != null) {
+              // if (!(state.authResult!.user.emailVerified ?? false)) {
+              //   context.router.replace(const BasicDetailsRoute());
+              // } else
               if (state.authResult!.user.customClaims?.birthday == null) {
                 context.router.replace(const BasicDetailsRoute());
               } else {

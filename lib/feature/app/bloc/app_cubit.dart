@@ -60,6 +60,10 @@ class AppCubit extends HydratedCubit<AppState> {
     if (idToken != null) {
       String? userJson = await _getStoredUser();
       if (userJson != null) {
+        if (!(user.User.fromJson(jsonDecode(userJson)).emailVerified ?? false)) {
+          logout();
+          return;
+        } else {
         emit(AppState.loggedIn(
             isSkipped,
             AuthResult(
@@ -68,6 +72,7 @@ class AppCubit extends HydratedCubit<AppState> {
               expiry: 10000,
             )));
         return;
+        }
       }
     }
     // _firebaseAuth.
@@ -83,6 +88,7 @@ class AppCubit extends HydratedCubit<AppState> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('user');
     prefs.remove('userIdToken');
+    prefs.remove('notificationSettings');
     _firebaseAuth.signOut();
     bool isSkipped = await _getStoreOnboardInfo();
     emit(AppState.loggedOut(isSkipped));

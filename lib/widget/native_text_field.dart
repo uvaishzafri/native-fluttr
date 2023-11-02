@@ -30,10 +30,9 @@ class NativeTextField extends StatelessWidget {
         decoration: InputDecoration(
           filled: true,
           fillColor: Theme.of(context).colorScheme.tertiaryContainer,
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.transparent, width: 0.0),
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          // contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           hintText: hintText,
           prefixIcon: prefixIcon, //icon at head of input
           hintStyle: const TextStyle(color: Color(0x321E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
