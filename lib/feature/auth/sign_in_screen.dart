@@ -585,7 +585,9 @@ class _SignInScreenState extends State<SignInScreen> {
         builder: (BuildContext context) {
           Future.delayed(const Duration(seconds: 3), () {
             if (context.mounted) {
-              Navigator.pop(context);
+              Navigator.of(context)
+                ..pop()
+                ..pop();
               BlocProvider.of<AppCubit>(context).logout();
             }
             // var authBloc = getIt<AuthCubit>();
