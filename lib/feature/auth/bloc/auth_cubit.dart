@@ -19,7 +19,8 @@ part 'auth_state.dart';
 
 @lazySingleton
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this._firebaseRepository, this._logger, this._userRepository, this._firestoreRepository)
+  AuthCubit(this._firebaseRepository, this._logger, this._userRepository,
+      this._firestoreRepository)
       : super(const AuthState.initial());
 
   final FirebaseRepository _firebaseRepository;
@@ -46,8 +47,8 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
     }
-    _firebaseRepository.submitPhoneNumber(
-        phoneNumber, verificationCompleted, verificationFailed, forceResendingToken, codeSent);
+    _firebaseRepository.submitPhoneNumber(phoneNumber, verificationCompleted,
+        verificationFailed, forceResendingToken, codeSent);
     emit(const AuthState.inputPincode());
   }
 
@@ -71,7 +72,8 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> inputPincode(String otpCode) async {
     emit(const AuthState.loading());
     try {
-      PhoneAuthCredential credential = _firebaseRepository.submitOTP(otpCode, verificationId);
+      PhoneAuthCredential credential =
+          _firebaseRepository.submitOTP(otpCode, verificationId);
       await signIn(credential);
     } catch (error) {
       emit(AuthState.errorPincode(exception: CustomException()));
@@ -92,7 +94,8 @@ class AuthCubit extends Cubit<AuthState> {
         var userDetailsResp = await _userRepository.getCurrentUserDetails();
         userDetailsResp.fold(
           (left) {
-            emit(AuthState.errorPincode(exception: CustomException('Unable to get user details')));
+            emit(AuthState.errorPincode(
+                exception: CustomException('Unable to get user details')));
           },
           (user) async {
             var prefs = await SharedPreferences.getInstance();
@@ -114,7 +117,8 @@ class AuthCubit extends Cubit<AuthState> {
                 deviceId = deviceInfo.identifierForVendor;
               }
               if (user.uid != null && deviceToken != null && deviceId != null) {
-                await _firestoreRepository.updateUserDeviceToken(user.uid!, deviceId, deviceToken);
+                await _firestoreRepository.updateUserDeviceToken(
+                    user.uid!, deviceId, deviceToken);
               }
             }
             if (!(user.emailVerified ?? false)) {
@@ -133,7 +137,9 @@ class AuthCubit extends Cubit<AuthState> {
         //   emit(AuthState.authorized(user: userCredentials.user!));
         // }
       } else {
-        emit(AuthState.errorPincode(exception: CustomException('Unable to get user details from firebase')));
+        emit(AuthState.errorPincode(
+            exception:
+                CustomException('Unable to get user details from firebase')));
       }
     } on FirebaseAuthException catch (err) {
       emit(AuthState.errorPincode(exception: CustomException(err.message)));
@@ -154,8 +160,13 @@ class AuthCubit extends Cubit<AuthState> {
   void verifyEmail(String email) async {
     emit(const AuthState.loading());
     try {
-      await _firebaseRepository.verifyEmail(email);
-      emit(const AuthState.emailVerificationSent());
+      await _firebaseRepository.updateEmail(email);
+      var verifyEmailResp = await _userRepository.verifyEmail(email);
+      if (verifyEmailResp.isRight) {
+        emit(const AuthState.emailVerificationSent());
+      } else {
+        emit(AuthState.emailSendFailed(exception: verifyEmailResp.left));
+      }
     } on AppException catch (e) {
       emit(AuthState.emailSendFailed(exception: e));
     } on FirebaseAuthException catch (e) {

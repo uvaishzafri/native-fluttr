@@ -24,6 +24,7 @@ class UserDoesNotExistException implements AppException {
   @override
   String get message => 'User does not exists. Sign up first.';
 }
+
 class UnauthorizedException implements AppException {
   @override
   String get message => 'Unauthorized';
@@ -36,12 +37,18 @@ class CustomException implements AppException {
   String get message => _message ?? "Something went wrong!";
 }
 
+class MissingRequiredConfigException implements AppException {
+  final String? _message;
+  MissingRequiredConfigException([this._message]);
+  @override
+  String get message => _message ?? "Something went wrong!";
+}
+
 class ApiException implements AppException {
   final String? errorCode;
   ApiException([this.errorCode]);
   @override
   String get message {
-
     switch (errorCode) {
       case 'USER_NOT_FOUND':
         return 'Given user is not found.';

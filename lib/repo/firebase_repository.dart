@@ -3,12 +3,14 @@ import 'dart:ffi';
 import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
+import 'package:native/config.dart';
 import 'package:native/util/exceptions.dart';
 
 @lazySingleton
 class FirebaseRepository {
-  FirebaseRepository(this._auth);
+  FirebaseRepository(this._auth, this._config);
   final FirebaseAuth _auth;
+  final Config _config;
 
   // Stream<User?> get user {
   //   return _auth.authStateChanges().map((firebaseUser) {
@@ -50,14 +52,21 @@ class FirebaseRepository {
     return await _auth.signInWithCredential(credential);
   }
 
-  Future<void> verifyEmail(String email) async {
+  Future<void> updateEmail(String email) async {
     if (_auth.currentUser == null) {
       throw CustomException('Could not get current user');
     }
     await _auth.currentUser?.updateEmail(email);
+  }
+
+  Future<void> verifyEmail(String email) async {
+    if (_auth.currentUser == null) {
+      throw CustomException('Could not get current user');
+    }
+    await updateEmail(email);
     return await _auth.currentUser?.sendEmailVerification(
       ActionCodeSettings(
-        url: 'https://dev.be-native.me/linking',
+        url: _config.verifyEmailRedirectUrl,
         handleCodeInApp: false,
         androidInstallApp: true,
         androidPackageName: 'me.benative.mobile',

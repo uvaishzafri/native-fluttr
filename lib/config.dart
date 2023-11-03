@@ -1,8 +1,10 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
+import 'package:native/util/exceptions.dart';
 
 part 'config.freezed.dart';
 part 'config.g.dart';
@@ -24,6 +26,7 @@ class Config with _$Config {
     required String hacknewsBaseUrl,
     required bool debugShowCheckedModeBanner,
     required bool debugShowMaterialGrid,
+    required String verifyEmailRedirectUrl,
   }) = _Config;
 
   Config._();
@@ -45,6 +48,10 @@ class Config with _$Config {
     final httpClientTimeout =
         int.parse(timeoutStr.isNotEmpty ? timeoutStr : _defaultTimeout);
     final hacknewsBaseUrl = dotenv.env['HK_BASE_URL'] ?? '';
+
+    final verifyEmailRedirectUrl = dotenv.env['VERIFY_EMAIL_REDIRECT_URL'];
+    throwIf(verifyEmailRedirectUrl == null,
+        MissingRequiredConfigException("Missing VERIFY_EMAIL_REDIRECT_URL"));
 
     final logLevelStr = dotenv.env['LOG_LEVEL'] ?? 'WARM';
     switch (logLevelStr) {
@@ -76,6 +83,7 @@ class Config with _$Config {
       debugShowCheckedModeBanner: false,
       // debugShowCheckedModeBanner: build == Build.debug,
       debugShowMaterialGrid: false,
+      verifyEmailRedirectUrl: verifyEmailRedirectUrl!,
     );
   }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
+import 'package:native/config.dart';
 import 'package:native/model/app_notification.dart';
 import 'package:native/model/likes_model.dart';
 import 'package:native/model/native_card/native_card.dart';
@@ -11,12 +12,14 @@ import 'package:native/model/user_prefs.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-bool isSuccess(int? statusCode) => statusCode != null && statusCode >= 200 && statusCode < 300;
+bool isSuccess(int? statusCode) =>
+    statusCode != null && statusCode >= 200 && statusCode < 300;
 
 @lazySingleton
 class UserRepository {
-  UserRepository(this._dioClient);
+  UserRepository(this._dioClient, this._config);
   final Dio _dioClient;
+  final Config _config;
 
   Future<Either<AppException, User>> getCurrentUserDetails() async {
     try {
@@ -24,13 +27,17 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       final response = await _dioClient.get(
         '/users/me',
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (!isSuccess(response.statusCode))
+        return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(User.fromJson(response.data));
@@ -44,19 +51,24 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, NativeCard>> getCurrentUserNativeCardDetails() async {
+  Future<Either<AppException, NativeCard>>
+      getCurrentUserNativeCardDetails() async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       final response = await _dioClient.get(
         '/users/me/nativeCard',
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (!isSuccess(response.statusCode))
+        return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(NativeCard.fromJson(response.data['nativeCard']));
@@ -70,19 +82,24 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, NativeCard>> getUserNativeCardDetails({required String userId}) async {
+  Future<Either<AppException, NativeCard>> getUserNativeCardDetails(
+      {required String userId}) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       final response = await _dioClient.get(
         '/users/$userId/nativeCard',
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (!isSuccess(response.statusCode))
+        return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(NativeCard.fromJson(response.data['nativeCard']));
@@ -102,13 +119,17 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       final response = await _dioClient.get(
         '/users/$userId',
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (!isSuccess(response.statusCode))
+        return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(User.fromJson(response.data));
@@ -156,9 +177,13 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       var data = jsonEncode(user.toJson());
-      final response = await _dioClient.patch('/users/me', data: data, options: Options(headers: headers));
+      final response = await _dioClient.patch('/users/me',
+          data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -176,15 +201,20 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, bool>> updateUserPrefs(UserPrefs userPrefs) async {
+  Future<Either<AppException, bool>> updateUserPrefs(
+      UserPrefs userPrefs) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       var data = jsonEncode(userPrefs.toJson());
-      final response = await _dioClient.patch('/users/me/preference', data: data, options: Options(headers: headers));
+      final response = await _dioClient.patch('/users/me/preference',
+          data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -207,9 +237,13 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       var data = jsonEncode({"photo": img64});
-      final response = await _dioClient.post('/users/me/photo', data: data, options: Options(headers: headers));
+      final response = await _dioClient.post('/users/me/photo',
+          data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -226,24 +260,67 @@ class UserRepository {
     }
   }
 
-  Future<String?> _getStoreUserIdToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userIdToken');
-  }
-
-  Future<Either<AppException, List<AppNotification>>> getCurrentUserNotifications() async {
+  Future<Either<AppException, bool>> verifyEmail(String email) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      var data = jsonEncode({
+        'email': email,
+        'actionCodeSettings': {
+          'url': _config.verifyEmailRedirectUrl,
+          'handleCodeInApp': false,
+          'androidInstallApp': true,
+          'androidPackageName': 'me.benative.mobile',
+          'iOSBundleId': 'me.benative.mobile',
+        }
+      });
+      final response = await _dioClient.post('/users/me/verify/email',
+          data: data, options: Options(headers: headers));
+
+      if (!isSuccess(response.statusCode)) {
+        return Left(RequestError(response.statusMessage ?? ''));
+      }
+
+      return const Right(true);
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 403) {
+        return Left(UnauthorizedException());
+      }
+      return Left(CustomException(error.message));
+    } catch (error) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<String?> _getStoreUserIdToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userIdToken');
+  }
+
+  Future<Either<AppException, List<AppNotification>>>
+      getCurrentUserNotifications() async {
+    try {
+      var token = await _getStoreUserIdToken();
+      if (token == null) {
+        return Left(CustomException('Token not found'));
+      }
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       final response = await _dioClient.get(
         '/users/me/notifications',
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (!isSuccess(response.statusCode))
+        return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
       List<AppNotification> appNotificationList = [];
@@ -274,13 +351,17 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       final response = await _dioClient.get(
         '/users/me/likes',
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (!isSuccess(response.statusCode))
+        return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(LikesModel.fromJson(response.data));
@@ -294,13 +375,17 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, bool>> reportUser(String userId, String reasonCategory, String? reasonDesc) async {
+  Future<Either<AppException, bool>> reportUser(
+      String userId, String reasonCategory, String? reasonDesc) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       dynamic data;
       if (reasonDesc?.isNotEmpty ?? false) {
         data = jsonEncode({
@@ -311,8 +396,8 @@ class UserRepository {
           'reason': {"category": reasonCategory}
         });
       }
-      final response =
-          await _dioClient.post('/chats/users/$userId/issue', data: data, options: Options(headers: headers));
+      final response = await _dioClient.post('/chats/users/$userId/issue',
+          data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -335,16 +420,21 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       final response = await _dioClient.get(
         '/matches/recommendation',
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (!isSuccess(response.statusCode))
+        return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
-      return Right((response.data as List).map((e) => User.fromJson(e)).toList());
+      return Right(
+          (response.data as List).map((e) => User.fromJson(e)).toList());
     } on DioException catch (error) {
       if (error.response?.statusCode == 403) {
         return Left(UnauthorizedException());
@@ -361,8 +451,12 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
-      final response = await _dioClient.post('/matches/users/$userId/request', options: Options(headers: headers));
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      final response = await _dioClient.post('/matches/users/$userId/request',
+          options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -385,16 +479,21 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
       final response = await _dioClient.get(
         '/matches',
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode)) return Left(RequestError('Request error'));
+      if (!isSuccess(response.statusCode))
+        return Left(RequestError('Request error'));
       if (response.data == null) return Left(NoResponseBody());
 
-      return Right((response.data as List).map((e) => User.fromJson(e)).toList());
+      return Right(
+          (response.data as List).map((e) => User.fromJson(e)).toList());
     } on DioException catch (error) {
       if (error.response?.statusCode == 403) {
         return Left(UnauthorizedException());
