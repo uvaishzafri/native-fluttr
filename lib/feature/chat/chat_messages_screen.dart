@@ -162,7 +162,7 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
                   inputOptions: const flutterchat.InputOptions(
                     sendButtonVisibilityMode: flutterchat.SendButtonVisibilityMode.always,
                   ),
-                  dateIsUtc: true,
+                  // dateIsUtc: true,
                   dateHeaderBuilder: (p0) {
                     return Center(
                       child: Container(

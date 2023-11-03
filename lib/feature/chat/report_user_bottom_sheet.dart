@@ -93,7 +93,7 @@ class _ReportUserBottomSheetState extends State<ReportUserBottomSheet> {
                     onPressed: () {
                       if (problems.indexOf(_selectedProblem!) < 5) {
                         // context.router.pop();
-                        bloc.reportUser(widget.userId, _selectedProblem!, null);
+                        bloc.reportUser(widget.userId, 'CHAT', _selectedProblem!);
                         // Navigator.pop(context);
                         // showModalBottomSheet(
                         //   context: context,
