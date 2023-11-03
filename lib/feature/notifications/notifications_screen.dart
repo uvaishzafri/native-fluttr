@@ -101,17 +101,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   state.notifications.where((element) => element.type == NotificationType.liked).toList();
             }
 
-          return Column(
-            children: [
-              // CupertinoSlidingSegmentedControl(
-              //   children: {
-              //     'From you': Text('From you'),
-              //     'From others': Text('From others'),
-              //   },
-              //   onValueChanged: (value) {},
-              // ),
+            return Column(
+              children: [
+                // CupertinoSlidingSegmentedControl(
+                //   children: {
+                //     'From you': Text('From you'),
+                //     'From others': Text('From others'),
+                //   },
+                //   onValueChanged: (value) {},
+                // ),
                 const SizedBox(height: 12),
-              Expanded(
+                Expanded(
                   child: GroupedListView<AppNotification, DateTime>(
                     elements: notificationList,
                     // elements: [
@@ -125,27 +125,27 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     // groupBy: (element) => likes.fromYou.firstWhere((ele) => element.uid == ele.userId).likedDate,
                     groupSeparatorBuilder: (value) => NativeMediumTitleText(groupHeaderText(value)),
                     // groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
-                  itemBuilder: (context, element) => ListTile(
-                    contentPadding: EdgeInsets.zero,
+                    itemBuilder: (context, element) => ListTile(
+                      contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
-                      // backgroundImage: AssetImage(element.imageUrl),
+                        // backgroundImage: AssetImage(element.imageUrl),
                         backgroundImage: CachedNetworkImageProvider(element.user?.photoURL! ?? ''),
-                    ),
-                    title: Row(
-                      children: [
-                        NativeSmallBodyText(
+                      ),
+                      title: Row(
+                        children: [
+                          NativeSmallBodyText(
                             element.user?.displayName ?? '',
-                          fontWeight: FontWeight.w500,
-                          height: 22 / 12,
-                        ),
+                            fontWeight: FontWeight.w500,
+                            height: 22 / 12,
+                          ),
                           const Spacer(),
-                        NativeSmallBodyText(
+                          NativeSmallBodyText(
                             timeago.format(element.timestamp!),
-                          height: 22 / 12,
-                        )
-                      ],
-                    ),
-                    subtitle: NativeSmallBodyText(
+                            height: 22 / 12,
+                          )
+                        ],
+                      ),
+                      subtitle: NativeSmallBodyText(
                         element.type == NotificationType.liked
                             ? 'Liked your profile'
                             : element.type == NotificationType.blocked
@@ -153,13 +153,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 : element.type == NotificationType.matched
                                     ? "Profile matched"
                                     : "Requested chat",
-                      height: 22 / 12,
+                        height: 22 / 12,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          );
+              ],
+            );
           } else if (state is Loading) {
             return const Center(
               child: CircularProgressIndicator(),

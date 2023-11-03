@@ -19,7 +19,8 @@ part 'auth_state.dart';
 
 @lazySingleton
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this._firebaseRepository, this._logger, this._userRepository, this._firestoreRepository) : super(const AuthState.initial());
+  AuthCubit(this._firebaseRepository, this._logger, this._userRepository, this._firestoreRepository)
+      : super(const AuthState.initial());
 
   final FirebaseRepository _firebaseRepository;
   final FirestoreRepository _firestoreRepository;
@@ -45,7 +46,8 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
     }
-    _firebaseRepository.submitPhoneNumber(phoneNumber, verificationCompleted, verificationFailed, forceResendingToken, codeSent);
+    _firebaseRepository.submitPhoneNumber(
+        phoneNumber, verificationCompleted, verificationFailed, forceResendingToken, codeSent);
     emit(const AuthState.inputPincode());
   }
 
@@ -96,7 +98,12 @@ class AuthCubit extends Cubit<AuthState> {
             var prefs = await SharedPreferences.getInstance();
             prefs.setString('user', jsonEncode(user.toJson()));
             if (user.emailVerified ?? false) {
-              var deviceToken = await FirebaseMessaging.instance.getToken();
+              var deviceToken;
+              try {
+                deviceToken = await FirebaseMessaging.instance.getToken();
+              } catch (e) {
+                print(e.toString());
+              }
               String? deviceId;
               var deviceInfoPlugin = DeviceInfoPlugin();
               if (Platform.isAndroid) {

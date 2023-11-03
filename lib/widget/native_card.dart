@@ -351,14 +351,39 @@ class NativeUserCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '${native.displayName}, ${DateTime.tryParse(native.customClaims!.birthday!)?.ageFromDate()}',
-                      style: const TextStyle(
-                        color: Color(0xffffffff),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    Row(
+                      children: [
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 110),
+                          child: Text(
+                            '${native.displayName}',
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: ColorUtils.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                        ),
+                        Text(
+                          ', ${DateTime.tryParse(native.customClaims!.birthday!)?.ageFromDate()}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: ColorUtils.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                      ],
                     ),
+
+                    // Text(
+                    //   '${native.displayName}, ${DateTime.tryParse(native.customClaims!.birthday!)?.ageFromDate()}',
+                    //   style: const TextStyle(
+                    //     color: Color(0xffffffff),
+                    //     fontSize: 10,
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    // ),
                     const SizedBox(height: 4),
                     Text(
                       native.customClaims!.location!,

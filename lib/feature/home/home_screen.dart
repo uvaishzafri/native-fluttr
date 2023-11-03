@@ -100,34 +100,38 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
           builder: (context, state) {
             final bloc = BlocProvider.of<HomeCubit>(context);
             return SafeArea(
-              child: Scaffold(
-                appBar: AppBar(
-                  toolbarHeight: 100,
-                  centerTitle: true,
-                  title: SvgPicture.asset('assets/home/ic_logo_black.svg'),
-                ),
-                body: CustomScrollView(
-                  slivers: [
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      sliver: SliverToBoxAdapter(
-                        child: _searchBar(),
+              child: GestureDetector(
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: Scaffold(
+                  appBar: AppBar(
+                    toolbarHeight: 100,
+                    centerTitle: true,
+                    title: SvgPicture.asset('assets/home/ic_logo_black.svg'),
+                  ),
+                  body: CustomScrollView(
+                    slivers: [
+                      SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        sliver: SliverToBoxAdapter(
+                          child: _searchBar(),
+                        ),
                       ),
-                    ),
-                    SliverPadding(padding: const EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
-                    SliverPadding(
-                      padding: const EdgeInsets.all(12),
-                      sliver: state is HomeSuccessState
-                          ? _recommendations(state.users, bloc)
-                          : context.loaderOverlay.visible
-                              ? const SizedBox()
-                              : const SliverToBoxAdapter(
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
+                      SliverPadding(
+                          padding: const EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
+                      SliverPadding(
+                        padding: const EdgeInsets.all(12),
+                        sliver: state is HomeSuccessState
+                            ? _recommendations(state.users, bloc)
+                            : context.loaderOverlay.visible
+                                ? const SizedBox()
+                                : const SliverToBoxAdapter(
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
                                   ),
-                                ),
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

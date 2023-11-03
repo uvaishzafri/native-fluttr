@@ -59,8 +59,10 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
           const SizedBox(height: 42),
           SvgPicture.asset('assets/girl_with_balloons.svg'),
           const SizedBox(height: 42),
-          const NativeMediumBodyText('Enter your date of birth, we will generate your native card and help you find your match'),
-          const SizedBox(height: 42),
+          const NativeMediumBodyText(
+              'Enter your date of birth, we will generate your native card and help you find your match'),
+          // const SizedBox(height: 42),
+          const Spacer(),
           SizedBox(
               height: 200,
               child: DatePickerWidget(
@@ -232,5 +234,4 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
 
     return date.isBefore(minDate) && date.isAfter(maxDate);
   }
-
 }

@@ -4,7 +4,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:native/model/chat_room.dart';
 import 'package:native/repo/firestore_repository.dart';
-import 'package:native/repo/model/message.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -60,12 +59,12 @@ class ChatCubit extends Cubit<ChatState> {
     //   }
     // chatRooms.addAll(event);
     _chatRepository.getChatRooms(currentUser!.uid).listen((event) {
-      emit(ChatState.loading());
+      emit(const ChatState.loading());
       chatRooms.clear();
       chatRooms.addAll(event);
       emit(ChatState.chatRoomsFetched(chatRooms: chatRooms));
     }, onError: (err) {
-      emit(ChatState.error(appException: CustomException()));
+      // emit(ChatState.error(appException: CustomException()));
     });
 
     // response.fold((left) {
