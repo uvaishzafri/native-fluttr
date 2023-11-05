@@ -77,6 +77,7 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
           ),
           const SizedBox(height: 20),
           Stack(
+            clipBehavior: Clip.none,
             alignment: AlignmentDirectional.center,
             children: [
               Container(
