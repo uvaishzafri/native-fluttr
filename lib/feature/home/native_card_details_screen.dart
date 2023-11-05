@@ -20,10 +20,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class NativeCardDetailsScreen extends StatefulWidget {
-  const NativeCardDetailsScreen({super.key, required this.user, this.isDemoUser = false});
+  const NativeCardDetailsScreen({super.key, required this.user, this.isDemoUser = false, this.showBackButton = false});
 
   final User user;
   final bool isDemoUser;
+  final bool showBackButton;
 
   @override
   State<NativeCardDetailsScreen> createState() => _NativeCardDetailsScreenState();
@@ -77,7 +78,7 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
               child: CircularProgressIndicator(),
             )
           : Scaffold(
-              appBar: AppBar(),
+              appBar: widget.showBackButton ? AppBar() : null,
               body: Container(
                 decoration: const BoxDecoration(
                   gradient: ColorUtils.nativeGradient,

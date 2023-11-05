@@ -119,6 +119,8 @@ class _LikesScreenState extends State<LikesScreen> {
                                 groupSeparatorBuilder: (value) => NativeMediumTitleText(groupHeaderText(value)),
                                 // NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                                 itemBuilder: (context, element) => ListTile(
+                                  onTap: () => context.router
+                                      .push(NativeCardScaffold(user: element.user!, showBackButton: true)),
                                   contentPadding: EdgeInsets.zero,
                                   leading: CircleAvatar(
                                     // backgroundImage: AssetImage(element.photoURL),
@@ -166,7 +168,8 @@ class _LikesScreenState extends State<LikesScreen> {
                                 // groupSeparatorBuilder: (value) => NativeMediumTitleText(value),
                                 // NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                                 itemBuilder: (context, element) => ListTile(
-                                  onTap: () => context.router.push(NativeCardScaffold(user: element.user!)),
+                                  onTap: () => context.router
+                                      .push(NativeCardScaffold(user: element.user!, showBackButton: true)),
                                   contentPadding: EdgeInsets.zero,
                                   leading: CircleAvatar(
                                     // backgroundImage: AssetImage(element.imageUrl),

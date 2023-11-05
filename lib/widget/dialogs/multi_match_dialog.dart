@@ -2,15 +2,11 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/model/user.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
-import 'package:native/widget/text/native_medium_body_text.dart';
-import 'package:native/widget/text/native_small_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 
 class MultiMatchDialog extends StatefulWidget {
@@ -30,10 +26,18 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
     // Check for collision with existing circles
     for (var circle in circles) {
       double distance = sqrt(
+        pow(left - (330 / 2), 2) + pow(top - (330 / 2), 2),
+      );
+
+      if (distance < 2 * 50 || distance > (300 / 2)) {
+        return true; // Collision detected
+      }
+
+      distance = sqrt(
         pow(left - circle[0], 2) + pow(top - circle[1], 2),
       );
 
-      if (distance < 2 * 20) {
+      if (distance < 2 * 30) {
         return true; // Collision detected
       }
     }
@@ -101,7 +105,7 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
               ),
               Center(
                 child: CircleAvatar(
-                  radius: 36,
+                  radius: 32,
                   backgroundImage: CachedNetworkImageProvider(widget.selfPhotoUrl),
                 ),
               ),
@@ -111,12 +115,15 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
                 do {
                   // Generate random positions
                   left = Random().nextDouble() * (330 - 2 * 20);
-                  top = Random().nextDouble() * (300 - 2 * 20);
+                  top = Random().nextDouble() * (330 - 2 * 20);
                 } while (checkCollision(left, top));
 
-                return Positioned(
-                  left: left,
-                  top: top,
+                return Positioned.fromRect(
+                  rect: Rect.fromCenter(
+                    center: Offset(left, top),
+                    width: 60,
+                    height: 60,
+                  ),
                   child: Column(
                     children: [
                       CircleAvatar(
@@ -124,53 +131,23 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
                         backgroundImage: CachedNetworkImageProvider(e.photoURL ?? ''),
                       ),
                       const SizedBox(height: 4),
-                      NativeSmallBodyText(
-                        e.displayName!,
-                        color: ColorUtils.white,
+                      ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 50,
+                          ),
+                          child: Text(
+                            e.displayName!,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  fontSize: 10,
+                                  color: ColorUtils.black,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                          )
                       )
                     ],
                   ),
                 );
               }).toList(),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Column(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: [
-              //         CircleAvatar(
-              //           radius: 36,
-              //           backgroundImage: CachedNetworkImageProvider(widget.selfPhotoUrl),
-              //         ),
-              //         const SizedBox(height: 4),
-              //         const NativeSmallTitleText(
-              //           'You',
-              //           color: ColorUtils.white,
-              //         )
-              //       ],
-              //     ),
-              //     const SizedBox(width: 24),
-              //     const Icon(
-              //       CupertinoIcons.heart_fill,
-              //       color: ColorUtils.purple,
-              //       size: 37,
-              //     ),
-              //     const SizedBox(width: 24),
-              //     Column(
-              //       children: [
-              //         CircleAvatar(
-              //           radius: 36,
-              //           backgroundImage: CachedNetworkImageProvider(matchedUserPhotoUrl),
-              //         ),
-              //         const SizedBox(height: 4),
-              //         NativeSmallTitleText(
-              //           userName,
-              //           color: ColorUtils.white,
-              //         )
-              //       ],
-              //     ),
-              //   ],
-              // )
             ],
           ),
           const SizedBox(height: 16),

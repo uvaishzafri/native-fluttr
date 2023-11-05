@@ -108,7 +108,7 @@ class _ExpandableNativeCardState extends State<ExpandableNativeCard> {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    context.router.push(NativeCardScaffold(user: user));
+                    context.router.push(NativeCardScaffold(user: user, showBackButton: true));
                   },
                   child: Container(
                     height: 104,
