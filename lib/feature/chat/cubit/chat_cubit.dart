@@ -1,10 +1,9 @@
-import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:native/model/chat_room.dart';
 import 'package:native/repo/firestore_repository.dart';
-import 'package:native/repo/user_repository.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
@@ -13,12 +12,12 @@ part 'chat_cubit.freezed.dart';
 
 @lazySingleton
 class ChatCubit extends Cubit<ChatState> {
-  ChatCubit(this._chatRepository, this._userRepository) : super(const ChatState.initial()) {
+  ChatCubit(this._chatRepository) : super(const ChatState.initial()) {
     getChatRooms();
   }
 
   final FirestoreRepository _chatRepository;
-  final UserRepository _userRepository;
+  // final UserRepository _userRepository;
   List<types.TextMessage> chatMessages = [];
   List<ChatRoom> chatRooms = [];
 
@@ -35,7 +34,7 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   void getChatRooms() async {
-    emit(const ChatState.loading());
+    // emit(const ChatState.loading());
     var currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       emit(ChatState.error(appException: CustomException('User id not found')));

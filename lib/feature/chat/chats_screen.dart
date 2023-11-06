@@ -125,6 +125,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
           buildWhen: (previous, current) => true,
           builder: (context, state) {
             // final chatCubit = BlocProvider.of<ChatCubit>(context);
+            if (state is Initial) {
+              return const Center(child: CircularProgressIndicator());
+            }
             if (state is ChatRoomFetched) {
               _chats = state.chatRooms;
               return _chats.isEmpty
