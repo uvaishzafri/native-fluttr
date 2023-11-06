@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,28 +17,29 @@ import 'package:universal_platform/universal_platform.dart';
 import 'feature/app/app.dart';
 
 Future<void> main() async {
-  FlutterError.onError = (FlutterErrorDetails details) async {
-    if (kDebugMode) {
-      // In development mode simply print to console.
-      FlutterError.dumpErrorToConsole(details);
-    } else {
-      // In production mode report to the application zone to report to
-      // app exceptions provider. We do not need this in Profile mode.
-      // ignore: no-empty-block
-      if (kReleaseMode) {
-        // FlutterError class has something not changed as far as null safety
-        // so I just assume we do not have a stack trace but still want the
-        // detail of the exception.
-        // ignore: cast_nullable_to_non_nullable
-        Zone.current.handleUncaughtError(
-          // ignore: cast_nullable_to_non_nullable
-          details.exception,
-          // ignore: cast_nullable_to_non_nullable
-          details.stack as StackTrace,
-        );
-      }
-    }
-  };
+  // FlutterError.onError = (FlutterErrorDetails details) async {
+  //   if (kDebugMode) {
+  //     // In development mode simply print to console.
+  //     FlutterError.dumpErrorToConsole(details);
+
+  //   } else {
+  //     // In production mode report to the application zone to report to
+  //     // app exceptions provider. We do not need this in Profile mode.
+  //     // ignore: no-empty-block
+  //     if (kReleaseMode) {
+  //       // FlutterError class has something not changed as far as null safety
+  //       // so I just assume we do not have a stack trace but still want the
+  //       // detail of the exception.
+  //       // ignore: cast_nullable_to_non_nullable
+  //       Zone.current.handleUncaughtError(
+  //         // ignore: cast_nullable_to_non_nullable
+  //         details.exception,
+  //         // ignore: cast_nullable_to_non_nullable
+  //         details.stack as StackTrace,
+  //       );
+  //     }
+  //   }
+  // };
 
   await runZonedGuarded<Future<void>>(
     () async {
@@ -52,6 +54,15 @@ Future<void> main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
+      FlutterError.onError = (errorDetails) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      };
+      // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
+      
       // Configures dependency injection to init modules and singletons.
       await configureDi();
       getIt<Logger>().d("DI has been configured");

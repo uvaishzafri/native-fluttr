@@ -80,7 +80,7 @@ class ChatCubit extends Cubit<ChatState> {
         _chatRepository.updateMsgReadTime(chatRoomDocId, currentUser.uid);
       }
     } catch (e) {
-      print(e.toString());
+      //swallow
     }
   }
 
@@ -88,7 +88,7 @@ class ChatCubit extends Cubit<ChatState> {
     try {
       _chatRepository.updateLastMsgDetails(chatRoomDocId, message);
     } catch (e) {
-      print(e.toString());
+      //swallow
     }
   }
 }

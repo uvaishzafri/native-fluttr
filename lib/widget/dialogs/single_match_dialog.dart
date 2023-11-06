@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
-import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 
 class SingleMatchDialog extends StatelessWidget {

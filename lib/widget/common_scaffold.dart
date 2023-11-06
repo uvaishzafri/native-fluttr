@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native/util/color_utils.dart';
-import 'package:native/widget/native_button.dart';
 import 'package:native/widget/text/native_large_title_text.dart';
-import 'package:native/widget/text/native_medium_title_text.dart';
 
 class CommonScaffold extends StatelessWidget {
   final Widget content;

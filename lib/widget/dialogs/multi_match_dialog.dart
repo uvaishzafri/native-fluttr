@@ -112,14 +112,17 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
               ),
               ...widget.matchedUsers.map((e) {
                 double left, top;
-
+                int count = 0;
                 do {
                   // Generate random positions
                   left = Random().nextDouble() * (330 - 2 * 20);
                   top = Random().nextDouble() * (330 - 2 * 20);
-                } while (checkCollision(left, top));
+                  count++;
+                } while (checkCollision(left, top) && count <= 500);
 
-                return Positioned.fromRect(
+                return count > 500
+                    ? const SizedBox()
+                    : Positioned.fromRect(
                   rect: Rect.fromCenter(
                     center: Offset(left, top),
                     width: 60,

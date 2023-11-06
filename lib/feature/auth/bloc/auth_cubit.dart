@@ -101,11 +101,11 @@ class AuthCubit extends Cubit<AuthState> {
             var prefs = await SharedPreferences.getInstance();
             prefs.setString('user', jsonEncode(user.toJson()));
             if (user.emailVerified ?? false) {
-              var deviceToken;
+              String? deviceToken;
               try {
                 deviceToken = await FirebaseMessaging.instance.getToken();
               } catch (e) {
-                print(e.toString());
+                _logger.d(e.toString());
               }
               String? deviceId;
               var deviceInfoPlugin = DeviceInfoPlugin();

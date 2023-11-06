@@ -36,9 +36,9 @@ class FirebaseRepository {
         forceResendingToken: forceResendingToken,
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
-      return Right(null);
+      return const Right(null);
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+      // print(e.message);
       return Left(CustomException(e.message));
     }
   }
