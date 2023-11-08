@@ -15,4 +15,13 @@ extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
+
+  /// Print Long String
+  void printLongString() {
+    final RegExp pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern
+        .allMatches(this)
+        // ignore: avoid_print
+        .forEach((RegExpMatch match) => print(match.group(0)));
+  }
 }

@@ -3,19 +3,20 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:native/config.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
 /// ```dart
-/// import 'firebase_options.dart';
+/// import 'firebase_options_prod.dart';
 /// // ...
 /// await Firebase.initializeApp(
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
 class DefaultFirebaseOptions {
-  static FirebaseOptions get currentPlatform {
+  static FirebaseOptions currentPlatform(Config config) {
     if (kIsWeb) {
       throw UnsupportedError(
         'DefaultFirebaseOptions have not been configured for web - '
@@ -24,9 +25,9 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        return android(config);
       case TargetPlatform.iOS:
-        return ios;
+        return ios(config);
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -49,22 +50,20 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAsoe-EcKcrNsANToRiGvce26l9wtkx2LM',
-    appId: '1:1076611361348:android:b227cd834fb0b00f2aaa11',
-    messagingSenderId: '1076611361348',
-    projectId: 'native-dev-bd8e3',
-    storageBucket: 'native-dev-bd8e3.appspot.com',
-  );
+  static FirebaseOptions android(Config config) => FirebaseOptions(
+        apiKey: config.firebaseAndroidApiKey,
+        appId: config.firebaseAndroidAppId,
+        messagingSenderId: config.firebaseMessagingSenderId,
+        projectId: config.firebaseProjectId,
+        storageBucket: config.firebaseStorageBucket,
+      );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB_teiPlE6s1BzxVYc9avIpQjRH3LCcTgI',
-    appId: '1:1076611361348:ios:3642153076e6d3bb2aaa11',
-    messagingSenderId: '1076611361348',
-    projectId: 'native-dev-bd8e3',
-    storageBucket: 'native-dev-bd8e3.appspot.com',
-    androidClientId: '1076611361348-dqc6i747dpublaij3l0q9017h1lg9i2e.apps.googleusercontent.com',
-    iosClientId: '1076611361348-2ejks4rpiahmsa4ls1pgu3hm0qq65blg.apps.googleusercontent.com',
-    iosBundleId: 'me.benative.mobile',
-  );
+  static FirebaseOptions ios(Config config) => FirebaseOptions(
+        apiKey: config.firebaseIosApiKey,
+        appId: config.firebaseIosAppId,
+        messagingSenderId: config.firebaseMessagingSenderId,
+        projectId: config.firebaseProjectId,
+        storageBucket: config.firebaseStorageBucket,
+        iosBundleId: config.firebaseIosBundleId,
+      );
 }

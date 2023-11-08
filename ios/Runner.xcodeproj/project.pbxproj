@@ -14,7 +14,6 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		9EFD876DF192D13577CD30AD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8CA24D87FBAC297242DC9C36 /* GoogleService-Info.plist */; };
 		D3898C6929E2F48500D2553C /* LaunchScreenProd.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3898C6729E2F48500D2553C /* LaunchScreenProd.storyboard */; };
 		D3D319C429E2C97200C74606 /* LaunchScreenStg.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3D319C229E2C97200C74606 /* LaunchScreenStg.storyboard */; };
 /* End PBXBuildFile section */
@@ -44,7 +43,6 @@
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7539983BF8C43E5481C80EE2 /* Pods-Runner.debug-stg.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-stg.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-stg.xcconfig"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
-		8CA24D87FBAC297242DC9C36 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		919A62E6BA0DA3820C3D940C /* Pods-Runner.release-stg.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-stg.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-stg.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -89,7 +87,6 @@
 				97C146EF1CF9000F007C117D /* Products */,
 				F5DB976C61D55EDDC3CE2860 /* Pods */,
 				FC1C591C1531EBA5682B7E30 /* Frameworks */,
-				8CA24D87FBAC297242DC9C36 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -208,7 +205,6 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				9EFD876DF192D13577CD30AD /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,13 +384,14 @@
 		};
 		249021D4217E4FDB00AE95B9 /* Profile-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = B3424D8A9A6E0F2B58D58025 /* Pods-Runner.profile-prod.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-prod";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = native.;
 				LAUNCH_SCREEN_STORYBOARD = LaunchScreen.storyboard;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -519,13 +516,14 @@
 		};
 		97C147061CF9000F007C117D /* Debug-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
+			baseConfigurationReference = 610EB7FBDCC8510411E7A706 /* Pods-Runner.debug-prod.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-prod";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = native.;
 				LAUNCH_SCREEN_STORYBOARD = LaunchScreen.storyboard;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -542,13 +540,14 @@
 		};
 		97C147071CF9000F007C117D /* Release-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = 69884E9073810B36E50FCCB0 /* Pods-Runner.release-prod.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-prod";
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = native.;
 				LAUNCH_SCREEN_STORYBOARD = LaunchScreen.storyboard;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -620,13 +619,14 @@
 		};
 		D3D319BD29E1CF0600C74606 /* Debug-stg */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
+			baseConfigurationReference = 7539983BF8C43E5481C80EE2 /* Pods-Runner.debug-stg.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stg";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-stg;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = _native.;
 				LAUNCH_SCREEN_STORYBOARD = LaunchScreenStg.storyboard;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -696,13 +696,14 @@
 		};
 		D3D319BF29E1CF1100C74606 /* Release-stg */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = 919A62E6BA0DA3820C3D940C /* Pods-Runner.release-stg.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stg";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-stg;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = _native.;
 				LAUNCH_SCREEN_STORYBOARD = LaunchScreenStg.storyboard;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -769,13 +770,14 @@
 		};
 		D3D319C129E1CF1B00C74606 /* Profile-stg */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
+			baseConfigurationReference = 1E3D9B6E47FFC6428902C3E5 /* Pods-Runner.profile-stg.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-stg";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-stg;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = _native.;
 				LAUNCH_SCREEN_STORYBOARD = LaunchScreenStg.storyboard;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

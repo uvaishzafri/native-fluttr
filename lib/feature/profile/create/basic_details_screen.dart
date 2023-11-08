@@ -33,9 +33,12 @@ class BasicDetailsScreen extends StatefulWidget {
 class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
   Gender _selectedGender = Gender.male;
   String? _selectedLocation;
-  final TextEditingController _nameTextEditingController = TextEditingController();
-  final TextEditingController _aboutYouTextEditingController = TextEditingController();
-  final TextEditingController _locationSearchTextController = TextEditingController();
+  final TextEditingController _nameTextEditingController =
+      TextEditingController();
+  final TextEditingController _aboutYouTextEditingController =
+      TextEditingController();
+  final TextEditingController _locationSearchTextController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -72,6 +75,8 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
             const NativeSmallBodyText('Name'),
             NativeTextField(
               _nameTextEditingController,
+              maxLength: 30,
+              maxLines: 1,
               hintText: 'Name',
               onChanged: (value) {
                 setState(() {});
@@ -81,7 +86,8 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
             const NativeSmallBodyText('About you'),
             NativeTextField(
               _aboutYouTextEditingController,
-              hintText: 'Tell us about your IKIGAI, when do you feel the most happiest? Eg: while playing with puppies',
+              hintText:
+                  'Tell us about your IKIGAI, when do you feel the most happiest? Eg: while playing with puppies',
               maxLength: 100,
               maxLines: 6,
               onChanged: (value) {
@@ -121,7 +127,10 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
                           width: 100,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(7),
-                            border: Border.all(color: _selectedGender == e ? ColorUtils.aquaGreen : ColorUtils.grey),
+                            border: Border.all(
+                                color: _selectedGender == e
+                                    ? ColorUtils.aquaGreen
+                                    : ColorUtils.grey),
                           ),
                           child: Column(
                             children: [
@@ -137,10 +146,13 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
                                         }
                                       });
                                     },
-                                    fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                    fillColor:
+                                        MaterialStateProperty.resolveWith<
+                                            Color>((Set<MaterialState> states) {
                                       return ColorUtils.aquaGreen;
                                     }),
-                                    visualDensity: const VisualDensity(horizontal: -4),
+                                    visualDensity:
+                                        const VisualDensity(horizontal: -4),
                                   ),
                                   NativeMediumBodyText(
                                     e.name.capitalize(),
@@ -219,13 +231,15 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
                   //   BlocProvider.of<AppCubit>(context).logout();
                   //   return;
                   // }
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.exception.message)));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(value.exception.message)));
                 },
                 profileUpdated: (_) {
                   if (context.loaderOverlay.visible) {
                     context.loaderOverlay.hide();
                   }
-                  context.router.push(PhotoUploadRoute(gender: _selectedGender));
+                  context.router
+                      .push(PhotoUploadRoute(gender: _selectedGender));
                 },
                 photoUpdated: (_) {},
                 otherDetailsUpdated: (_) {},

@@ -107,13 +107,16 @@ class _SignInScreenState extends State<SignInScreen> {
           builder: (context, state) {
             final bloc = BlocProvider.of<AuthCubit>(context);
 
-            if (state is AuthInputPincodeState || state is AuthErrorPincodeState) {
-              return AuthScaffold(_inputPincode(context, bloc, _number.phoneNumber ?? "", state));
+            if (state is AuthInputPincodeState ||
+                state is AuthErrorPincodeState) {
+              return AuthScaffold(_inputPincode(
+                  context, bloc, _number.phoneNumber ?? "", state));
             } else if (state is AuthInputEmailState ||
                 state is AuthEmailSendFailedState ||
                 state is AuthEmailVerificationSentState ||
                 state is AuthEmailVerificationCompleteState) {
-              return AuthScaffold(_inputEmail(context, bloc, _number.phoneNumber ?? "", state));
+              return AuthScaffold(
+                  _inputEmail(context, bloc, _number.phoneNumber ?? "", state));
             } else {
               return AuthScaffold(_inputPhone(context, bloc));
             }
@@ -141,7 +144,8 @@ class _SignInScreenState extends State<SignInScreen> {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
               }
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.exception.message)));
             }
             if (state is AuthInputEmailState) {
               if (context.loaderOverlay.visible) {
@@ -152,7 +156,8 @@ class _SignInScreenState extends State<SignInScreen> {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
               }
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.exception.message)));
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.exception.message)));
             }
             if (state is AuthEmailVerificationCompleteState) {
               if (context.loaderOverlay.visible) {
@@ -166,7 +171,8 @@ class _SignInScreenState extends State<SignInScreen> {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
               }
-              _checkEmailVerifiedTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+              _checkEmailVerifiedTimer =
+                  Timer.periodic(const Duration(seconds: 3), (_) {
                 final bloc = BlocProvider.of<AuthCubit>(context);
                 bloc.checkIfEmailVerified();
               });
@@ -188,9 +194,14 @@ class _SignInScreenState extends State<SignInScreen> {
         ));
   }
 
-  Widget _inputPincode(BuildContext context, AuthCubit bloc, String phone, AuthState state) {
-    Color borderColor = state is AuthErrorPincodeState ? const Color(0xFFFF0000) : Colors.transparent;
-    Color fillColor = state is AuthErrorPincodeState ? const Color(0x0DFF0000) : const Color(0x0d7B7B7B);
+  Widget _inputPincode(
+      BuildContext context, AuthCubit bloc, String phone, AuthState state) {
+    Color borderColor = state is AuthErrorPincodeState
+        ? const Color(0xFFFF0000)
+        : Colors.transparent;
+    Color fillColor = state is AuthErrorPincodeState
+        ? const Color(0x0DFF0000)
+        : const Color(0x0d7B7B7B);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -200,12 +211,18 @@ class _SignInScreenState extends State<SignInScreen> {
         const Text(
           'Enter confirmation code',
           textAlign: TextAlign.start,
-          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 22, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: Color(0xff1E1E1E),
+              fontSize: 22,
+              fontWeight: FontWeight.w500),
         ),
         Text(
           "Enter confirmation code sent to $phone",
           textAlign: TextAlign.start,
-          style: const TextStyle(color: Color(0xff7B7B7B), fontSize: 14, fontWeight: FontWeight.w500),
+          style: const TextStyle(
+              color: Color(0xff7B7B7B),
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
         ),
         Text.rich(TextSpan(
           text: 'Edit number',
@@ -319,9 +336,15 @@ class _SignInScreenState extends State<SignInScreen> {
               ],
               gradient: LinearGradient(
                 colors: [
-                  _isInputCompleted ? const Color(0xB2BE94C6) : const Color(0x55BE94C6),
-                  _isInputCompleted ? const Color(0xB2BE94C6) : const Color(0x55BE94C6),
-                  _isInputCompleted ? const Color(0xB27BC6CC) : const Color(0x557BC6CC),
+                  _isInputCompleted
+                      ? const Color(0xB2BE94C6)
+                      : const Color(0x55BE94C6),
+                  _isInputCompleted
+                      ? const Color(0xB2BE94C6)
+                      : const Color(0x55BE94C6),
+                  _isInputCompleted
+                      ? const Color(0xB27BC6CC)
+                      : const Color(0x557BC6CC),
                 ],
               )),
           child: ElevatedButton(
@@ -361,7 +384,10 @@ class _SignInScreenState extends State<SignInScreen> {
                     children: [
                       Text.rich(TextSpan(
                         text: 'Incorrect OTP entered',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Color(0xFFFF0000)),
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                            color: Color(0xFFFF0000)),
                       )),
                     ],
                   ),
@@ -383,12 +409,16 @@ class _SignInScreenState extends State<SignInScreen> {
             SizedBox(
               width: _start == 0 ? 60 : 120,
               child: Text.rich(TextSpan(
-                text: _start == 0 ? 'Resend' : sprintf("Resend in 0:%02d", [_start]),
+                text: _start == 0
+                    ? 'Resend'
+                    : sprintf("Resend in 0:%02d", [_start]),
                 style: TextStyle(
                   fontSize: 14,
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.normal,
-                  decoration: _start == 0 ? TextDecoration.underline : TextDecoration.none,
+                  decoration: _start == 0
+                      ? TextDecoration.underline
+                      : TextDecoration.none,
                   decorationColor: Theme.of(context).colorScheme.primary,
                 ),
                 recognizer: TapGestureRecognizer()
@@ -419,19 +449,28 @@ class _SignInScreenState extends State<SignInScreen> {
         const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
             "Sign in",
-            style: TextStyle(color: Color(0xffBE94C6), fontSize: 22, fontWeight: FontWeight.w400),
+            style: TextStyle(
+                color: Color(0xffBE94C6),
+                fontSize: 22,
+                fontWeight: FontWeight.w400),
           ),
         ]),
         const SizedBox(height: 40),
         const Text(
           'Enter your mobile number',
           textAlign: TextAlign.start,
-          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 22, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: Color(0xff1E1E1E),
+              fontSize: 22,
+              fontWeight: FontWeight.w500),
         ),
         const Text(
           'We will send you a confirmation code',
           textAlign: TextAlign.start,
-          style: TextStyle(color: Color(0xff7B7B7B), fontSize: 14, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: Color(0xff7B7B7B),
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 32),
         InternationalPhoneNumberInput(
@@ -463,14 +502,21 @@ class _SignInScreenState extends State<SignInScreen> {
           // initialValue: number,
           textFieldController: _controller,
           formatInput: true,
-          keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+          keyboardType: const TextInputType.numberWithOptions(
+              signed: true, decimal: true),
           // inputBorder: const OutlineInputBorder(),
           inputDecoration: const InputDecoration(
             // fillColor: Colors.transparent,
             // border: OutlineInputBorder(borderSide: BorderSide()),
             filled: false,
-            labelStyle: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
-            hintStyle: TextStyle(color: Color(0x807B7B7B), fontSize: 14, fontWeight: FontWeight.w500),
+            labelStyle: TextStyle(
+                color: Color(0xff1E1E1E),
+                fontSize: 14,
+                fontWeight: FontWeight.w500),
+            hintStyle: TextStyle(
+                color: Color(0x807B7B7B),
+                fontSize: 14,
+                fontWeight: FontWeight.w500),
             hintText: "Mobile number",
           ),
 
@@ -497,7 +543,10 @@ class _SignInScreenState extends State<SignInScreen> {
           children: [
             const Text(
               "Don't have an account? ",
-              style: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  color: Color(0xff1E1E1E),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500),
             ),
             Text.rich(TextSpan(
               text: 'Sign up',
@@ -533,26 +582,35 @@ class _SignInScreenState extends State<SignInScreen> {
           return WillPopScope(
               onWillPop: () => Future.value(false),
               child: SimpleDialog(
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 children: <Widget>[
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 38, horizontal: 21),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 38, horizontal: 21),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SvgPicture.asset("$_assetFolder/ic_send_email_verification.svg"),
+                        SvgPicture.asset(
+                            "$_assetFolder/ic_send_email_verification.svg"),
                         const SizedBox(height: 28),
                         const Text(
                           "Verify your Email ID",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                              color: Color(0xff1E1E1E),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           "Please click on the link sent to your email address $email to verify",
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: Color(0xff1E1E1E), fontSize: 12, fontWeight: FontWeight.w400),
+                          style: const TextStyle(
+                              color: Color(0xff1E1E1E),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400),
                         ),
                         const SizedBox(height: 14),
                         Text.rich(TextSpan(
@@ -562,7 +620,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             fontSize: 14,
                             fontWeight: FontWeight.normal,
                             decoration: TextDecoration.underline,
-                            decorationColor: Theme.of(context).colorScheme.primary,
+                            decorationColor:
+                                Theme.of(context).colorScheme.primary,
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
@@ -599,10 +658,12 @@ class _SignInScreenState extends State<SignInScreen> {
           return WillPopScope(
               onWillPop: () => Future.value(false),
               child: SimpleDialog(
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 children: <Widget>[
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 42),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 42, horizontal: 42),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -612,7 +673,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         const Text(
                           "Successfully verified",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 16, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                              color: Color(0xff1E1E1E),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -622,7 +686,8 @@ class _SignInScreenState extends State<SignInScreen> {
         });
   }
 
-  Widget _inputEmail(BuildContext context, AuthCubit bloc, String phone, AuthState state) {
+  Widget _inputEmail(
+      BuildContext context, AuthCubit bloc, String phone, AuthState state) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -631,12 +696,18 @@ class _SignInScreenState extends State<SignInScreen> {
         const Text(
           'Enter your Email ID',
           textAlign: TextAlign.start,
-          style: TextStyle(color: Color(0xff1E1E1E), fontSize: 22, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: Color(0xff1E1E1E),
+              fontSize: 22,
+              fontWeight: FontWeight.w500),
         ),
         const Text(
           "Please enter your Email ID to verify account",
           textAlign: TextAlign.start,
-          style: TextStyle(color: Color(0xff7B7B7B), fontSize: 14, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: Color(0xff7B7B7B),
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 32),
         Padding(
@@ -666,9 +737,15 @@ class _SignInScreenState extends State<SignInScreen> {
               ],
               gradient: LinearGradient(
                 colors: [
-                  _isInputCompleted ? const Color(0xB2BE94C6) : const Color(0x55BE94C6),
-                  _isInputCompleted ? const Color(0xB2BE94C6) : const Color(0x55BE94C6),
-                  _isInputCompleted ? const Color(0xB27BC6CC) : const Color(0x557BC6CC),
+                  _isInputCompleted
+                      ? const Color(0xB2BE94C6)
+                      : const Color(0x55BE94C6),
+                  _isInputCompleted
+                      ? const Color(0xB2BE94C6)
+                      : const Color(0x55BE94C6),
+                  _isInputCompleted
+                      ? const Color(0xB27BC6CC)
+                      : const Color(0x557BC6CC),
                 ],
               )),
           child: ElevatedButton(

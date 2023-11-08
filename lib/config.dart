@@ -23,10 +23,18 @@ class Config with _$Config {
     required Build build,
     required Flavor flavor,
     required int httpClientTimeout,
-    required String hacknewsBaseUrl,
+    required String nativeBaseUrl,
     required bool debugShowCheckedModeBanner,
     required bool debugShowMaterialGrid,
     required String verifyEmailRedirectUrl,
+    required String firebaseProjectId,
+    required String firebaseStorageBucket,
+    required String firebaseMessagingSenderId,
+    required String firebaseAndroidApiKey,
+    required String firebaseAndroidAppId,
+    required String firebaseIosBundleId,
+    required String firebaseIosApiKey,
+    required String firebaseIosAppId,
   }) = _Config;
 
   Config._();
@@ -47,11 +55,21 @@ class Config with _$Config {
     final timeoutStr = dotenv.env['HTTP_CLIENT_TIMEOUT'] ?? _defaultTimeout;
     final httpClientTimeout =
         int.parse(timeoutStr.isNotEmpty ? timeoutStr : _defaultTimeout);
-    final hacknewsBaseUrl = dotenv.env['HK_BASE_URL'] ?? '';
+    final nativeBaseUrl = dotenv.env['NATIVE_BASE_URL'] ?? '';
 
     final verifyEmailRedirectUrl = dotenv.env['VERIFY_EMAIL_REDIRECT_URL'];
     throwIf(verifyEmailRedirectUrl == null,
         MissingRequiredConfigException("Missing VERIFY_EMAIL_REDIRECT_URL"));
+
+    final firebaseProjectId = dotenv.env['FIREBASE_PROJECT_ID'] ?? '';
+    final firebaseStorageBucket = dotenv.env['FIREBASE_STORAGE_BUCKET'] ?? '';
+    final firebaseMessagningSenderId =
+        dotenv.env['FIREBASE_MESSAGING_SENDER_ID'] ?? '';
+    final firebaseAndroidApiKey = dotenv.env['FIREBASE_ANDROID_API_KEY'] ?? '';
+    final firebaseAndroidAppId = dotenv.env['FIREBASE_ANDROID_APP_ID'] ?? '';
+    final firebaseIosBundleId = dotenv.env['FIREBASE_IOS_BUNDLE_ID'] ?? '';
+    final firebaseIosApiKey = dotenv.env['FIREBASE_IOS_API_KEY'] ?? '';
+    final firebaseIosAppId = dotenv.env['FIREBASE_IOS_APP_ID'] ?? '';
 
     final logLevelStr = dotenv.env['LOG_LEVEL'] ?? 'WARM';
     switch (logLevelStr) {
@@ -79,11 +97,19 @@ class Config with _$Config {
       build: build,
       flavor: flavor,
       httpClientTimeout: httpClientTimeout,
-      hacknewsBaseUrl: hacknewsBaseUrl,
+      nativeBaseUrl: nativeBaseUrl,
       debugShowCheckedModeBanner: false,
       // debugShowCheckedModeBanner: build == Build.debug,
       debugShowMaterialGrid: false,
       verifyEmailRedirectUrl: verifyEmailRedirectUrl!,
+      firebaseProjectId: firebaseProjectId,
+      firebaseStorageBucket: firebaseStorageBucket,
+      firebaseMessagingSenderId: firebaseMessagningSenderId,
+      firebaseAndroidApiKey: firebaseAndroidApiKey,
+      firebaseAndroidAppId: firebaseAndroidAppId,
+      firebaseIosBundleId: firebaseIosBundleId,
+      firebaseIosApiKey: firebaseIosApiKey,
+      firebaseIosAppId: firebaseIosAppId,
     );
   }
 

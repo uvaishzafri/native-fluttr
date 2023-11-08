@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native/repo/firebase_repository.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:logger/logger.dart';
 import 'package:native/repo/firestore_repository.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/exceptions.dart';
+import 'package:native/util/string_ext.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_cubit.freezed.dart';
@@ -87,6 +89,9 @@ class AuthCubit extends Cubit<AuthState> {
         var idToken = await userCredentials.user!.getIdToken();
         if (idToken != null) {
           _storeUserIdToken(idToken);
+          if (kDebugMode) {
+            idToken.printLongString();
+          }
         } else {
           emit(AuthState.errorPincode(exception: CustomException()));
           return;
@@ -160,7 +165,6 @@ class AuthCubit extends Cubit<AuthState> {
   void verifyEmail(String email) async {
     emit(const AuthState.loading());
     try {
-      await _firebaseRepository.updateEmail(email);
       var verifyEmailResp = await _userRepository.verifyEmail(email);
       if (verifyEmailResp.isRight) {
         emit(const AuthState.emailVerificationSent());

@@ -52,6 +52,7 @@ class FirebaseRepository {
     return await _auth.signInWithCredential(credential);
   }
 
+  @Deprecated("Should not update Email from client")
   Future<void> updateEmail(String email) async {
     if (_auth.currentUser == null) {
       throw CustomException('Could not get current user');
@@ -59,6 +60,7 @@ class FirebaseRepository {
     await _auth.currentUser?.updateEmail(email);
   }
 
+  @Deprecated("Should not via Firebase, please use UserRepository instead")
   Future<void> verifyEmail(String email) async {
     if (_auth.currentUser == null) {
       throw CustomException('Could not get current user');

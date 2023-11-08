@@ -26,7 +26,7 @@ Dio _initDioClient(Config config) {
     };
   }
 
-  dio.options.baseUrl = config.hacknewsBaseUrl;
+  dio.options.baseUrl = config.nativeBaseUrl;
   dio.options.headers['Accept-Language'] = Platform.localeName.substring(0, 2);
   dio.options.connectTimeout = Duration(milliseconds: config.httpClientTimeout);
   dio.options.receiveTimeout = Duration(milliseconds: config.httpClientTimeout);

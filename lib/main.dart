@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:native/config.dart';
 import 'package:native/di/di.dart';
 import 'package:native/firebase_options.dart';
 import 'package:native/i18n/translations.g.dart';
@@ -49,9 +50,16 @@ Future<void> main() async {
       // Use device locale.
       LocaleSettings.useDeviceLocale();
 
+      // Configures dependency injection to init modules and singletons.
+      await configureDi();
+      final logger = getIt<Logger>();
+      logger.d("DI has been configured");
+      final Config config = getIt<Config>();
+      logger.d("Config flavor ${config.flavor}");
+
       // Initial Firebase
       await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
+        options: DefaultFirebaseOptions.currentPlatform(config),
       );
 
       FlutterError.onError = (errorDetails) {
@@ -62,10 +70,6 @@ Future<void> main() async {
         FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
         return true;
       };
-      
-      // Configures dependency injection to init modules and singletons.
-      await configureDi();
-      getIt<Logger>().d("DI has been configured");
 
       if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS) {
         // Sets up allowed device orientations and other settings for the app.
@@ -87,7 +91,10 @@ Future<void> main() async {
       return runApp(TranslationProvider(child: App()));
     },
     (exception, stackTrace) async {
-      getIt<Logger>().e("", exception, stackTrace);
+      getIt<Logger>()
+          .e("Unexpected error during initialization", exception, stackTrace);
+      FirebaseCrashlytics.instance.recordError(exception, stackTrace,
+          fatal: true, reason: "Unexpected error during initialization");
     },
   );
 }
