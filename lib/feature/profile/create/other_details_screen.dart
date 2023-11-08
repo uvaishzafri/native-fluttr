@@ -170,10 +170,10 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
                     builder: (context) {
                       Future.delayed(const Duration(seconds: 3), () {
                         // context.router.pop();
-                        Navigator.pop(context);
-                        context.router.replaceAll([
-                          const BasicPrefrencesRoute()
-                        ]);
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          context.router.replaceAll([const BasicPrefrencesRoute()]);
+                        }
                       });
                       return _profileSuccessfullyCreatedDialog();
                     },

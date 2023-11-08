@@ -150,7 +150,7 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
                   if (userJson != null) {
                     if (context.mounted) {
                       var user = User.fromJson(jsonDecode(userJson));
-                      context.router.replaceAll([NativeCardScaffold(user: user, overlayItem: overlayItem)]);
+                      context.router.push(NativeCardScaffold(user: user, overlayItem: overlayItem));
                     }
                   }
                 },
