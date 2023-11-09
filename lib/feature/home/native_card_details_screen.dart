@@ -4,13 +4,16 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:native/di/di.dart';
 import 'package:native/dummy_data.dart';
+import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/model/native_card/native_card.dart';
 import 'package:native/model/user.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/exceptions.dart';
 import 'package:native/widget/images.dart';
 import 'package:native/widget/native_card.dart';
 import 'package:native/widget/text/native_medium_body_text.dart';
@@ -65,6 +68,13 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
             user = user.copyWith(native: nativeUser!.meta);
             prefs.setString('user', jsonEncode(user.toJson()));
           }
+        }
+      } else {
+        if (response.left is UnauthorizedException) {
+          if (context.mounted) {
+            BlocProvider.of<AppCubit>(context).logout();
+          }
+          return;
         }
       }
     }

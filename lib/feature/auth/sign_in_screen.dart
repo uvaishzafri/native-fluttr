@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
@@ -13,11 +14,13 @@ import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/auth/auth_scaffold.dart';
 import 'package:native/feature/auth/bloc/auth_cubit.dart';
+import 'package:native/model/user.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_text_field.dart';
 // import 'package:native/widget/text/native_medium_body_text.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprintf/sprintf.dart';
 
 const _assetFolder = 'assets/auth';
@@ -121,7 +124,7 @@ class _SignInScreenState extends State<SignInScreen> {
               return AuthScaffold(_inputPhone(context, bloc));
             }
           },
-          listener: (BuildContext context, AuthState state) {
+          listener: (BuildContext context, AuthState state) async {
             if (state is AuthLoadingState) {
               if (!context.loaderOverlay.visible) {
                 context.loaderOverlay.show();
@@ -188,7 +191,19 @@ class _SignInScreenState extends State<SignInScreen> {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
               }
-              context.router.replaceAll([const HomeWrapperRoute()]);
+              final prefs = await SharedPreferences.getInstance();
+              final isTutorialCompleted = prefs.getBool('tutorialCompleted');
+              final userJson = prefs.getString('user');
+              if (!(isTutorialCompleted ?? false) && userJson != null) {
+                final user = User.fromJson(jsonDecode(userJson));
+                if (context.mounted) {
+                  context.router.replaceAll([NativeCardScaffold(user: user, showNext: true)]);
+                }
+              } else {
+                if (context.mounted) {
+                  context.router.replaceAll([const HomeWrapperRoute()]);
+                }
+              }
             }
           },
         ));

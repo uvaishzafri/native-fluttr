@@ -7,6 +7,7 @@ class AppState with _$AppState {
   const factory AppState({
     required ThemeModel theme,
     @Default(false) bool hasSkippedOnboarding,
+    @Default(false) bool hasCompletedTutorial,
     AuthResult? authResult,
     bool? loggedOut,
   }) = _AppState;
@@ -16,12 +17,17 @@ class AppState with _$AppState {
         hasSkippedOnboarding: false,
       );
 
-  factory AppState.loggedIn(bool hasSkippedOnboarding, AuthResult authResult) =>
-      _AppState(theme: getIt<ThemeModel>(), hasSkippedOnboarding: hasSkippedOnboarding, authResult: authResult);
-
-  factory AppState.loggedOut(bool hasSkippedOnboarding) => _AppState(
+  factory AppState.loggedIn(bool hasSkippedOnboarding, bool hasCompletedTutorial, AuthResult authResult) => _AppState(
         theme: getIt<ThemeModel>(),
         hasSkippedOnboarding: hasSkippedOnboarding,
+        authResult: authResult,
+        hasCompletedTutorial: hasCompletedTutorial,
+      );
+
+  factory AppState.loggedOut(bool hasSkippedOnboarding, bool hasCompletedTutorial) => _AppState(
+        theme: getIt<ThemeModel>(),
+        hasSkippedOnboarding: hasSkippedOnboarding,
+        hasCompletedTutorial: hasCompletedTutorial,
         loggedOut: true,
       );
 }

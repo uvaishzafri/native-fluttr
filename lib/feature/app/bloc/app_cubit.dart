@@ -35,6 +35,11 @@ class AppCubit extends HydratedCubit<AppState> {
     return prefs.getBool('skippedOnBoarding') ?? false;
   }
 
+  Future<bool> _getTutorialCompletedPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('tutorialCompleted') ?? false;
+  }
+
   Future<String?> _getStoreUserIdToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('userIdToken');
@@ -47,6 +52,7 @@ class AppCubit extends HydratedCubit<AppState> {
 
   checkAuth() async {
     bool isSkipped = await _getStoreOnboardInfo();
+    bool isTutorialCompleted = await _getTutorialCompletedPref();
     String? idToken = await _getStoreUserIdToken();
 
     // _firebaseAuth.authStateChanges().listen((user) async {
@@ -64,13 +70,17 @@ class AppCubit extends HydratedCubit<AppState> {
           logout();
           return;
         } else {
-        emit(AppState.loggedIn(
-            isSkipped,
-            AuthResult(
-              user: user.User.fromJson(jsonDecode(userJson)),
-              isExpired: false,
-              expiry: 10000,
-            )));
+          emit(
+            AppState.loggedIn(
+              isSkipped,
+              isTutorialCompleted,
+              AuthResult(
+                user: user.User.fromJson(jsonDecode(userJson)),
+                isExpired: false,
+                expiry: 10000,
+              ),
+            ),
+          );
         return;
         }
       }
@@ -80,7 +90,7 @@ class AppCubit extends HydratedCubit<AppState> {
     //   hasSkippedOnboarding: isSkipped
     //   ));
 
-    emit(AppState.loggedOut(isSkipped));
+    emit(AppState.loggedOut(isSkipped, isTutorialCompleted));
   }
 
   logout() async {
@@ -91,7 +101,8 @@ class AppCubit extends HydratedCubit<AppState> {
     prefs.remove('notificationSettings');
     _firebaseAuth.signOut();
     bool isSkipped = await _getStoreOnboardInfo();
-    emit(AppState.loggedOut(isSkipped));
+    bool isTutorialCompleted = await _getTutorialCompletedPref();
+    emit(AppState.loggedOut(isSkipped, isTutorialCompleted));
   }
 
   Future<void> setThemeMode({required ThemeMode mode}) async {

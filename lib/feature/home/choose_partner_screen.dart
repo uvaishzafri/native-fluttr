@@ -8,6 +8,7 @@ import 'package:native/util/color_utils.dart';
 import 'package:native/widget/like_overlay.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class ChoosePartnerScreen extends StatelessWidget {
@@ -195,9 +196,13 @@ class ChoosePartnerScreen extends StatelessWidget {
       actions: [
         NativeButton(
           isEnabled: true,
-          onPressed: () {
-            context.router.pop();
-            context.router.replaceAll([const HomeWrapperRoute()]);
+          onPressed: () async {
+            final prefs = await SharedPreferences.getInstance();
+            prefs.setBool('tutorialCompleted', true);
+            if (context.mounted) {
+              context.router.pop();
+              context.router.replaceAll([const HomeWrapperRoute()]);
+            }
           },
           text: "Let's go",
         )

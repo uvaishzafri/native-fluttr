@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_holo_date_picker/date_picker_theme.dart';
@@ -137,20 +136,21 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
                     context.loaderOverlay.hide();
                   }
                   context.router.pop();
-                  var overlayItem = Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: NativeButton(
-                      isEnabled: true,
-                      text: 'Next',
-                      onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
-                    ),
-                  );
+                  // var overlayItem = Padding(
+                  //   padding: const EdgeInsets.all(24.0),
+                  //   child: NativeButton(
+                  //     isEnabled: true,
+                  //     text: 'Next',
+                  //     onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
+                  //   ),
+                  // );
                   final prefs = await SharedPreferences.getInstance();
                   final userJson = prefs.getString('user');
                   if (userJson != null) {
                     if (context.mounted) {
                       var user = User.fromJson(jsonDecode(userJson));
-                      context.router.push(NativeCardScaffold(user: user, overlayItem: overlayItem));
+                      // context.router.popUntilRoot();
+                      context.router.replaceAll([NativeCardScaffold(user: user, showNext: true)]);
                     }
                   }
                 },

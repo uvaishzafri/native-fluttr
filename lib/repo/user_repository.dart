@@ -36,8 +36,9 @@ class UserRepository {
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode))
+      if (!isSuccess(response.statusCode)) {
         return Left(RequestError('Request error'));
+      }
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(User.fromJson(response.data));
@@ -67,8 +68,9 @@ class UserRepository {
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode))
+      if (!isSuccess(response.statusCode)) {
         return Left(RequestError('Request error'));
+      }
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(NativeCard.fromJson(response.data['nativeCard']));
@@ -98,8 +100,9 @@ class UserRepository {
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode))
+      if (!isSuccess(response.statusCode)) {
         return Left(RequestError('Request error'));
+      }
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(NativeCard.fromJson(response.data['nativeCard']));
@@ -128,8 +131,9 @@ class UserRepository {
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode))
+      if (!isSuccess(response.statusCode)) {
         return Left(RequestError('Request error'));
+      }
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(User.fromJson(response.data));
@@ -319,8 +323,9 @@ class UserRepository {
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode))
+      if (!isSuccess(response.statusCode)) {
         return Left(RequestError('Request error'));
+      }
       if (response.data == null) return Left(NoResponseBody());
 
       List<AppNotification> appNotificationList = [];
@@ -360,8 +365,9 @@ class UserRepository {
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode))
+      if (!isSuccess(response.statusCode)) {
         return Left(RequestError('Request error'));
+      }
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(LikesModel.fromJson(response.data));
@@ -429,8 +435,9 @@ class UserRepository {
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode))
+      if (!isSuccess(response.statusCode)) {
         return Left(RequestError('Request error'));
+      }
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(
@@ -488,8 +495,9 @@ class UserRepository {
         options: Options(headers: headers),
       );
 
-      if (!isSuccess(response.statusCode))
+      if (!isSuccess(response.statusCode)) {
         return Left(RequestError('Request error'));
+      }
       if (response.data == null) return Left(NoResponseBody());
 
       return Right(
