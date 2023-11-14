@@ -23,14 +23,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class NativeCardDetailsScreen extends StatefulWidget {
-  const NativeCardDetailsScreen({super.key, required this.user, this.isDemoUser = false, this.showBackButton = false});
+  const NativeCardDetailsScreen(
+      {super.key,
+      required this.user,
+      this.isDemoUser = false,
+      this.showBackButton = false});
 
   final User user;
   final bool isDemoUser;
   final bool showBackButton;
 
   @override
-  State<NativeCardDetailsScreen> createState() => _NativeCardDetailsScreenState();
+  State<NativeCardDetailsScreen> createState() =>
+      _NativeCardDetailsScreenState();
 }
 
 class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
@@ -57,7 +62,8 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
       // var prefs = await SharedPreferences.getInstance();
       // user = User.fromJson(jsonDecode(prefs.getString('user')!));
       UserRepository userRepository = getIt<UserRepository>();
-      var response = await userRepository.getUserNativeCardDetails(userId: widget.user.uid!);
+      var response = await userRepository.getUserNativeCardDetails(
+          userId: widget.user.uid!);
       if (response.isRight) {
         nativeUser = response.right;
         final prefs = await SharedPreferences.getInstance();
@@ -84,74 +90,95 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: user == null
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? Center(
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.primaryContainer),
             )
           : Scaffold(
-              appBar: widget.showBackButton ? AppBar() : null,
-              body: Container(
-                decoration: const BoxDecoration(
-                  gradient: ColorUtils.nativeGradient,
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Image.asset("assets/ic_logo_dark.png"),
-                                const SizedBox(height: 20),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: ColorUtils.white,
+              // appBar: widget.showBackButton ? AppBar() : null,
+              body: Stack(children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: ColorUtils.nativeGradient,
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Image.asset("assets/ic_logo_dark.png"),
+                                  const SizedBox(height: 20),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: ColorUtils.white,
+                                    ),
+                                    child: BigNativeUserCard(
+                                      native: nativeUser!,
+                                      user: user!,
+                                      // userImage: Image.asset("assets/home/ic_test.png"),
+                                    ),
                                   ),
-                                  child: BigNativeUserCard(
-                                    native: nativeUser!,
-                                    user: user!,
-                                    // userImage: Image.asset("assets/home/ic_test.png"),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                needsParameterCard(),
-                                const SizedBox(height: 10),
-                                celebsCard(),
-                                const SizedBox(height: 10),
-                                personalityCard(),
-                                const SizedBox(height: 10),
-                                loveCard(),
-                                const SizedBox(height: 10),
-                                idealDatePlanCard(),
-                                const SizedBox(height: 10),
-                                idealPartnerCard(),
-                                const SizedBox(height: 10),
-                                adviceCard(),
-                                const SizedBox(height: 20),
-                              ],
+                                  const SizedBox(height: 10),
+                                  needsParameterCard(),
+                                  const SizedBox(height: 10),
+                                  celebsCard(),
+                                  const SizedBox(height: 10),
+                                  personalityCard(),
+                                  const SizedBox(height: 10),
+                                  loveCard(),
+                                  const SizedBox(height: 10),
+                                  idealDatePlanCard(),
+                                  const SizedBox(height: 10),
+                                  idealPartnerCard(),
+                                  const SizedBox(height: 10),
+                                  adviceCard(),
+                                  SizedBox(
+                                      height: widget.showBackButton ? 20 : 100),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        // SizedBox(height: 8),
-                        // NativeSimpleButton(
-                        //   isEnabled: true,
-                        //   text: 'Next',
-                        //   onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
-                        // )
-                      ],
+                          // SizedBox(height: 8),
+                          // NativeSimpleButton(
+                          //   isEnabled: true,
+                          //   text: 'Next',
+                          //   onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
+                          // )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+                Container(
+                    margin: const EdgeInsets.all(16),
+                    child: widget.showBackButton
+                        ? FloatingActionButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            backgroundColor: Theme.of(context).primaryColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40)),
+                            child: Icon(Icons.arrow_back_ios_new,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer),
+                          )
+                        : null),
+              ]),
             ),
     );
   }
 
   Widget needsParameterCard() {
     return Container(
-      decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(
+          color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
@@ -164,16 +191,27 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
             spacing: 25,
             runSpacing: 40,
             children: [
-              needsParameterItem('assets/native_card/payments.svg',
-                  ((nativeUser?.meta?.parameter?.finance ?? 0) * 100).toInt(), 'Financial'),
-              needsParameterItem('assets/native_card/paintbrush.svg',
-                  ((nativeUser?.meta?.parameter?.fun ?? 0) * 100).toInt(), 'Expression'),
-              needsParameterItem('assets/native_card/neurology.svg',
-                  ((nativeUser?.meta?.parameter?.knowledge ?? 0) * 100).toInt(), 'Curiosity'),
-              needsParameterItem('assets/native_card/accessibility.svg',
-                  ((nativeUser?.meta?.parameter?.independence ?? 0) * 100).toInt(), 'Independence'),
-              needsParameterItem('assets/native_card/running.svg',
-                  ((nativeUser?.meta?.parameter?.active ?? 0) * 100).toInt(), 'Activity'),
+              needsParameterItem(
+                  'assets/native_card/payments.svg',
+                  ((nativeUser?.meta?.parameter?.finance ?? 0) * 100).toInt(),
+                  'Financial'),
+              needsParameterItem(
+                  'assets/native_card/paintbrush.svg',
+                  ((nativeUser?.meta?.parameter?.fun ?? 0) * 100).toInt(),
+                  'Expression'),
+              needsParameterItem(
+                  'assets/native_card/neurology.svg',
+                  ((nativeUser?.meta?.parameter?.knowledge ?? 0) * 100).toInt(),
+                  'Curiosity'),
+              needsParameterItem(
+                  'assets/native_card/accessibility.svg',
+                  ((nativeUser?.meta?.parameter?.independence ?? 0) * 100)
+                      .toInt(),
+                  'Independence'),
+              needsParameterItem(
+                  'assets/native_card/running.svg',
+                  ((nativeUser?.meta?.parameter?.active ?? 0) * 100).toInt(),
+                  'Activity'),
             ],
           ),
         ],
@@ -187,11 +225,13 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
       celebList.removeRange(3, celebList.length);
     }
     return Container(
-      decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(
+          color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          cardHeader('assets/native_card/community.svg', 'Celebs with same personality'),
+          cardHeader('assets/native_card/community.svg',
+              'Celebs with same personality'),
           const SizedBox(height: 12),
           const DottedLine(),
           const SizedBox(height: 20),
@@ -205,7 +245,8 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
                     child: Column(
                       children: [
                         NativeHeadImage(
-                          Image.asset("assets/native_card/ariana.png"),
+                          Image.asset("assets/native_card/celebrity.png",
+                              color: Colors.white),
                           borderColor: ColorUtils.aquaGreen,
                           radius: 29,
                           borderRadius: 1,
@@ -279,7 +320,8 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
 
   Widget personalityCard() {
     return Container(
-      decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(
+          color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +358,8 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
 
   Widget loveCard() {
     return Container(
-      decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(
+          color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,12 +406,14 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
 
   Widget idealDatePlanCard() {
     return Container(
-      decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(
+          color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          cardHeader('assets/native_card/couple_with_heart.svg', 'Ideal Date Plan'),
+          cardHeader(
+              'assets/native_card/couple_with_heart.svg', 'Ideal Date Plan'),
           const SizedBox(height: 12),
           const DottedLine(),
           ...nativeUser!.ideasPlan!.descriptions!.map(
@@ -400,12 +445,14 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
 
   Widget idealPartnerCard() {
     return Container(
-      decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(
+          color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          cardHeader('assets/native_card/couple_with_heart.svg', 'Ideal Partner'),
+          cardHeader(
+              'assets/native_card/couple_with_heart.svg', 'Ideal Partner'),
           const SizedBox(height: 12),
           const DottedLine(),
           ...nativeUser!.partner!.descriptions!.map(
@@ -438,7 +485,8 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
 
   Widget adviceCard() {
     return Container(
-      decoration: BoxDecoration(color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(
+          color: ColorUtils.white, borderRadius: BorderRadius.circular(4)),
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
@@ -490,7 +538,8 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
       children: [
         SvgPicture.asset(
           assetPath,
-          colorFilter: color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
+          colorFilter:
+              color != null ? ColorFilter.mode(color, BlendMode.srcIn) : null,
         ),
         const SizedBox(width: 10),
         NativeMediumTitleText(
@@ -526,7 +575,8 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+        color:
+            Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(0.6),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(

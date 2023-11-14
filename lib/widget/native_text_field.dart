@@ -6,6 +6,7 @@ class NativeTextField extends StatelessWidget {
     this.hintText,
     this.prefixIcon,
     this.onChanged,
+    this.readOnly = false,
     this.maxLength,
     this.maxLines,
     this.onTap,
@@ -18,6 +19,7 @@ class NativeTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final int? maxLength;
   final int? maxLines;
+  final bool? readOnly;
   final VoidCallback? onTap;
 
   @override
@@ -27,6 +29,7 @@ class NativeTextField extends StatelessWidget {
         onChanged: onChanged,
         maxLength: maxLength,
         maxLines: maxLines,
+        readOnly: readOnly ?? false,
         decoration: InputDecoration(
           filled: true,
           fillColor: Theme.of(context).colorScheme.tertiaryContainer,
@@ -35,8 +38,14 @@ class NativeTextField extends StatelessWidget {
           // contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           hintText: hintText,
           prefixIcon: prefixIcon, //icon at head of input
-          hintStyle: const TextStyle(color: Color(0x321E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
-          labelStyle: const TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
+          hintStyle: const TextStyle(
+              color: Color(0x321E1E1E),
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
+          labelStyle: const TextStyle(
+              color: Color(0xff1E1E1E),
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
         ),
       );
 }

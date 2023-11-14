@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/model/user.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
@@ -15,7 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key /*, required this.imageUrl, required this.displayName*/});
+  const AccountScreen(
+      {super.key /*, required this.imageUrl, required this.displayName*/});
   // final String imageUrl;
   // final String displayName;
 
@@ -33,6 +35,14 @@ class _AccountScreenState extends State<AccountScreen> {
     imageUrl = '';
     displayName = '';
     refreshUserDetails();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateSystemUi();
+    });
+  }
+
+  _updateSystemUi() {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        ColorUtils.aquaGreen);
   }
 
   void refreshUserDetails() async {
@@ -51,6 +61,7 @@ class _AccountScreenState extends State<AccountScreen> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     Widget content = Column(
@@ -64,10 +75,9 @@ class _AccountScreenState extends State<AccountScreen> {
             alignment: AlignmentDirectional.centerEnd,
             child: Text(
               'Edit Profile',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(color: ColorUtils.purple, decoration: TextDecoration.underline),
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: ColorUtils.purple,
+                  decoration: TextDecoration.underline),
             ),
           ),
         ),
@@ -79,7 +89,9 @@ class _AccountScreenState extends State<AccountScreen> {
               color: ColorUtils.grey,
               image: imageUrl.isEmpty
                   ? null
-                  : DecorationImage(image: CachedNetworkImageProvider(imageUrl), fit: BoxFit.cover)),
+                  : DecorationImage(
+                      image: CachedNetworkImageProvider(imageUrl),
+                      fit: BoxFit.cover)),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -92,7 +104,8 @@ class _AccountScreenState extends State<AccountScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: () => context.router.push(const NotificationSettingsRoute()),
+                onTap: () =>
+                    context.router.push(const NotificationSettingsRoute()),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: NativeLargeBodyText('Notification settings'),

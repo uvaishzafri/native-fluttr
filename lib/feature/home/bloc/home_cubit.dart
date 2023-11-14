@@ -43,13 +43,10 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-
   @override
   Future<void> close() {
     // TODO: implement close
     // return super.close();
     return Future.value();
   }
-
-
 }

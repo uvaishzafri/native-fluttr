@@ -13,11 +13,12 @@ class AppNotification with _$AppNotification {
   factory AppNotification({
     @JsonKey(includeIfNull: false) String? id,
     @JsonKey(includeIfNull: false) String? fromUid,
-    @JsonKey(includeToJson: false) User? user,
+    @JsonKey(includeToJson: false) User? fromUser,
     @JsonKey(includeIfNull: false) @DatetimeSerializer() DateTime? timestamp,
     @JsonKey(includeIfNull: false) NotificationType? type,
     @JsonKey(includeIfNull: false) String? content,
   }) = _AppNotification;
 
-  factory AppNotification.fromJson(Map<String, dynamic> json) => _$AppNotificationFromJson(json);
+  factory AppNotification.fromJson(Map<String, dynamic> json) =>
+      _$AppNotificationFromJson(json);
 }

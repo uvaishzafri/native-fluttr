@@ -15,7 +15,9 @@ enum NotificationType {
   @JsonValue('MATCHED')
   matched,
   @JsonValue('BLOCKED')
-  blocked
+  blocked,
+  @JsonValue('CHAT')
+  chat
 }
 
 List<String> problems = [
@@ -27,9 +29,8 @@ List<String> problems = [
   'Others',
 ];
 
-
 final Map<String, List<String>> religions = {
-"Hindu": [],
+  "Hindu": [],
   "Muslim": [],
   "Christian": [],
   "Sikh": [],
@@ -56,7 +57,6 @@ List<String> languages = [
   "Marwari",
   "Others",
 ];
-
 
 List<String> locations = [
   'Bangalore',

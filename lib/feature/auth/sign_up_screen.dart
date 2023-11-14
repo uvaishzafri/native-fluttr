@@ -13,6 +13,7 @@ import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/auth/auth_scaffold.dart';
 import 'package:native/feature/auth/bloc/auth_cubit.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/native_text_field.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -92,13 +93,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _goToSignInScreen() {
-    context.router.replace(const SignInRoute());
+    context.router.replace(SignInRoute());
   }
 
-  // void _storeUserIdToken() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('userIdToken', "DEMO_ID_TOKEN");
-  // }
+  _updateSystemUi() {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        Theme.of(context).colorScheme.primary);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +108,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: BlocConsumer<AuthCubit, AuthState>(
           buildWhen: (p, c) => p != c && c is! AuthLoadingState,
           builder: (context, state) {
+            _updateSystemUi();
             final bloc = BlocProvider.of<AuthCubit>(context);
-
             if (state is AuthInputPincodeState ||
                 state is AuthErrorPincodeState) {
               return AuthScaffold(_inputPincode(
@@ -161,14 +162,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.exception.message)));
             }
-            if (state is AuthEmailVerificationCompleteState) {
-              if (context.loaderOverlay.visible) {
-                context.loaderOverlay.hide();
-              }
-              _checkEmailVerifiedTimer?.cancel();
-              // Navigator.pop(context);
-              _showEmailVerifiedDialog(context);
-            }
+            // if (state is AuthEmailVerificationCompleteState) {
+            //   if (context.loaderOverlay.visible) {
+            //     context.loaderOverlay.hide();
+            //   }
+            //   _checkEmailVerifiedTimer?.cancel();
+            //   // Navigator.pop(context);
+            //   _showEmailVerifiedDialog(context);
+            // }
             if (state is AuthEmailVerificationSentState) {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
@@ -176,7 +177,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               _checkEmailVerifiedTimer =
                   Timer.periodic(const Duration(seconds: 3), (_) {
                 final bloc = BlocProvider.of<AuthCubit>(context);
-                bloc.checkIfEmailVerified();
+                bloc.emailVerified();
               });
               _showSentVerificationEmailDialog(_emailController.text);
             }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,6 +12,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:native/repo/firestore_repository.dart';
+import 'package:native/model/user.dart' as user;
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:native/util/string_ext.dart';
@@ -86,7 +88,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       var userCredentials = await _firebaseRepository.signIn(credential);
       if (userCredentials.user != null) {
-        var idToken = await userCredentials.user!.getIdToken();
+        var idToken = await userCredentials.user!.getIdToken(true);
         if (idToken != null) {
           _storeUserIdToken(idToken);
           if (kDebugMode) {
@@ -155,7 +157,22 @@ class AuthCubit extends Cubit<AuthState> {
 
   void _storeUserIdToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Mark the start point of re-sign in window
+    if (prefs.getInt('userTokenTimestampInSeconds') == null) {
+      int currentTimestamp = Timestamp.now().seconds;
+      await prefs.setInt('userTokenTimestampInSeconds', currentTimestamp);
+    }
     await prefs.setString('userIdToken', token);
+  }
+
+  Future<user.User?> _getStoredUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('user');
+    if (userJson == null) {
+      return null;
+    }
+    return user.User.fromJson(jsonDecode(userJson));
   }
 
   // inputEmail() {
@@ -165,7 +182,14 @@ class AuthCubit extends Cubit<AuthState> {
   void verifyEmail(String email) async {
     emit(const AuthState.loading());
     try {
-      var verifyEmailResp = await _userRepository.verifyEmail(email);
+      final storedUser = await _getStoredUser();
+      if (storedUser == null) {
+        emit(AuthState.emailSendFailed(
+            exception: CustomException("User not signed in")));
+        return;
+      }
+      var verifyEmailResp =
+          await _userRepository.verifyEmail(email, storedUser.uid!);
       if (verifyEmailResp.isRight) {
         emit(const AuthState.emailVerificationSent());
       } else {
@@ -180,10 +204,8 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void checkIfEmailVerified() {
-    if (_firebaseRepository.isEmailVerified()) {
-      emit(const AuthState.emailVerificationComplete());
-    }
+  void emailVerified() {
+    emit(const AuthState.emailVerificationComplete());
   }
 
   initial() {

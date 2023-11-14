@@ -35,6 +35,7 @@ class Config with _$Config {
     required String firebaseIosBundleId,
     required String firebaseIosApiKey,
     required String firebaseIosAppId,
+    required int refreshTokenDurationInSeconds,
   }) = _Config;
 
   Config._();
@@ -70,6 +71,8 @@ class Config with _$Config {
     final firebaseIosBundleId = dotenv.env['FIREBASE_IOS_BUNDLE_ID'] ?? '';
     final firebaseIosApiKey = dotenv.env['FIREBASE_IOS_API_KEY'] ?? '';
     final firebaseIosAppId = dotenv.env['FIREBASE_IOS_APP_ID'] ?? '';
+    final refreshTokenDurationInSeconds = int.parse(
+        dotenv.env['REFRESH_TOKEN_DURATION'] ?? '1209600'); // Default 14 days
 
     final logLevelStr = dotenv.env['LOG_LEVEL'] ?? 'WARM';
     switch (logLevelStr) {
@@ -110,6 +113,7 @@ class Config with _$Config {
       firebaseIosBundleId: firebaseIosBundleId,
       firebaseIosApiKey: firebaseIosApiKey,
       firebaseIosAppId: firebaseIosAppId,
+      refreshTokenDurationInSeconds: refreshTokenDurationInSeconds,
     );
   }
 
