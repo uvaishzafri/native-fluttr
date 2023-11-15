@@ -511,4 +511,9 @@ class UserRepository {
       return Left(CustomException());
     }
   }
+
+  //TODO: Implement this
+  Future<List<FavCardItemModel>> getFavCardItems() async {
+    return Future.delayed(const Duration(seconds: 0), () => dummyFavCardItems);
+  }
 }
