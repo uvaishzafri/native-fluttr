@@ -1,5 +1,7 @@
 {
-    "title": "HackerNews",  
-    "best": "スコア順",
-    "top": "日時順"
-  }
+    "title": "HackerNews",
+    "best": "Ranked by score",
+    "top": "Ranked by date",
+    "myFavCard": "My fav card",
+    "search": "Search"
+}
