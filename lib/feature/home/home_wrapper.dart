@@ -72,6 +72,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
               const HomeRoute(),
               const LikesRoute(),
               const NotificationsRoute(),
+              const FavCardRoute(),
               const ChatsRoute(),
         AccountRoute(/*imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!*/),
             ],
@@ -94,6 +95,10 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                       activeIcon: Icon(Icons.favorite),
                       label: 'Likes',
                     ),
+                    const BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications_outlined),
+                        activeIcon: Icon(Icons.notifications),
+                        label: 'Notification'),
                     const BottomNavigationBarItem(
                         icon: Icon(Icons.notifications_outlined),
                         activeIcon: Icon(Icons.notifications),
