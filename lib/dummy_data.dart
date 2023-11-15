@@ -8,6 +8,8 @@ import 'package:native/model/native_type.dart';
 import 'package:native/model/user.dart';
 import 'package:native/repo/model/message.dart';
 import 'package:native/util/app_constants.dart';
+import 'package:native/model/fav_card/fav_card_items/fav_card_items.dart';
+import 'package:flutter/material.dart';
 
 // final List<Native> usersList = [
 //   Native(
@@ -676,4 +678,457 @@ final usersList = [
 //       NativeType.mist(),
 //       NativeType.mineral(),
 //     ],
+
+List<FavCardItemModel> dummyFavCardItems = [
+  FavCardItemModel(
+      id: "1",
+      name: "Drake",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn'
+          '.co/image/ab6761610000f1784293385d324db8558179afd9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Bad Bunny",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+  FavCardItemModel(
+      id: "1",
+      name: "Taylor Swift",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+  FavCardItemModel(
+      id: "1",
+      name: "The Weeknd",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ed Sheeran",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ariana Grande",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+  FavCardItemModel(
+      id: "1",
+      name: "Justin Bieber",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+  FavCardItemModel(
+      id: "1",
+      name: "Eminem",
+      categories: ["travel", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+  FavCardItemModel(
+      id: "1",
+      name: "BTS",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+  FavCardItemModel(
+      id: "1",
+      name: "Post Malone",
+      categories: ["bike", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+  FavCardItemModel(
+      id: "1",
+      name: "Kanye West",
+      categories: ["anime", "music"],
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+  FavCardItemModel(
+      id: "1",
+      name: "Drake",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn'
+          '.co/image/ab6761610000f1784293385d324db8558179afd9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Bad Bunny",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+  FavCardItemModel(
+      id: "1",
+      name: "Taylor Swift",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+  FavCardItemModel(
+      id: "1",
+      name: "The Weeknd",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ed Sheeran",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ariana Grande",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+  FavCardItemModel(
+      id: "1",
+      name: "Justin Bieber",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+  FavCardItemModel(
+      id: "1",
+      name: "Eminem",
+      categories: ["travel", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+  FavCardItemModel(
+      id: "1",
+      name: "BTS",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+  FavCardItemModel(
+      id: "1",
+      name: "Post Malone",
+      categories: ["bike", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+  FavCardItemModel(
+      id: "1",
+      name: "Kanye West",
+      categories: ["anime", "music"],
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+  FavCardItemModel(
+      id: "1",
+      name: "Drake",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn'
+          '.co/image/ab6761610000f1784293385d324db8558179afd9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Bad Bunny",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+  FavCardItemModel(
+      id: "1",
+      name: "Taylor Swift",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+  FavCardItemModel(
+      id: "1",
+      name: "The Weeknd",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ed Sheeran",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ariana Grande",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+  FavCardItemModel(
+      id: "1",
+      name: "Justin Bieber",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+  FavCardItemModel(
+      id: "1",
+      name: "Eminem",
+      categories: ["travel", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+  FavCardItemModel(
+      id: "1",
+      name: "BTS",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+  FavCardItemModel(
+      id: "1",
+      name: "Post Malone",
+      categories: ["bike", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+  FavCardItemModel(
+      id: "1",
+      name: "Kanye West",
+      categories: ["anime", "music"],
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+  FavCardItemModel(
+      id: "1",
+      name: "Drake",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn'
+          '.co/image/ab6761610000f1784293385d324db8558179afd9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Bad Bunny",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+  FavCardItemModel(
+      id: "1",
+      name: "Taylor Swift",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+  FavCardItemModel(
+      id: "1",
+      name: "The Weeknd",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ed Sheeran",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ariana Grande",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+  FavCardItemModel(
+      id: "1",
+      name: "Justin Bieber",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+  FavCardItemModel(
+      id: "1",
+      name: "Eminem",
+      categories: ["travel", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+  FavCardItemModel(
+      id: "1",
+      name: "BTS",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+  FavCardItemModel(
+      id: "1",
+      name: "Post Malone",
+      categories: ["bike", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+  FavCardItemModel(
+      id: "1",
+      name: "Kanye West",
+      categories: ["anime", "music"],
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+  FavCardItemModel(
+      id: "1",
+      name: "Drake",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn'
+          '.co/image/ab6761610000f1784293385d324db8558179afd9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Bad Bunny",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+  FavCardItemModel(
+      id: "1",
+      name: "Taylor Swift",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+  FavCardItemModel(
+      id: "1",
+      name: "The Weeknd",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ed Sheeran",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ariana Grande",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+  FavCardItemModel(
+      id: "1",
+      name: "Justin Bieber",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+  FavCardItemModel(
+      id: "1",
+      name: "Eminem",
+      categories: ["travel", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+  FavCardItemModel(
+      id: "1",
+      name: "BTS",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+  FavCardItemModel(
+      id: "1",
+      name: "Post Malone",
+      categories: ["bike", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+  FavCardItemModel(
+      id: "1",
+      name: "Kanye West",
+      categories: ["anime", "music"],
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+  FavCardItemModel(
+      id: "1",
+      name: "Drake",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn'
+          '.co/image/ab6761610000f1784293385d324db8558179afd9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Bad Bunny",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+  FavCardItemModel(
+      id: "1",
+      name: "Taylor Swift",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+  FavCardItemModel(
+      id: "1",
+      name: "The Weeknd",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ed Sheeran",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ariana Grande",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+  FavCardItemModel(
+      id: "1",
+      name: "Justin Bieber",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+  FavCardItemModel(
+      id: "1",
+      name: "Eminem",
+      categories: ["travel", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+  FavCardItemModel(
+      id: "1",
+      name: "BTS",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+  FavCardItemModel(
+      id: "1",
+      name: "Post Malone",
+      categories: ["bike", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+  FavCardItemModel(
+      id: "1",
+      name: "Kanye West",
+      categories: ["anime", "music"],
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+  FavCardItemModel(
+      id: "1",
+      name: "Drake",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn'
+          '.co/image/ab6761610000f1784293385d324db8558179afd9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Bad Bunny",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+  FavCardItemModel(
+      id: "1",
+      name: "Taylor Swift",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+  FavCardItemModel(
+      id: "1",
+      name: "The Weeknd",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ed Sheeran",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ariana Grande",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+  FavCardItemModel(
+      id: "1",
+      name: "Justin Bieber",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+  FavCardItemModel(
+      id: "1",
+      name: "Eminem",
+      categories: ["travel", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+  FavCardItemModel(
+      id: "1",
+      name: "BTS",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+  FavCardItemModel(
+      id: "1",
+      name: "Post Malone",
+      categories: ["bike", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+  FavCardItemModel(
+      id: "1",
+      name: "Kanye West",
+      categories: ["anime", "music"],
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+  FavCardItemModel(
+      id: "1",
+      name: "Drake",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn'
+          '.co/image/ab6761610000f1784293385d324db8558179afd9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Bad Bunny",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+  FavCardItemModel(
+      id: "1",
+      name: "Taylor Swift",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+  FavCardItemModel(
+      id: "1",
+      name: "The Weeknd",
+      categories: ["top", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ed Sheeran",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+  FavCardItemModel(
+      id: "1",
+      name: "Ariana Grande",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+  FavCardItemModel(
+      id: "1",
+      name: "Justin Bieber",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+  FavCardItemModel(
+      id: "1",
+      name: "Eminem",
+      categories: ["travel", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+  FavCardItemModel(
+      id: "1",
+      name: "BTS",
+      categories: ["travel", "music"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+  FavCardItemModel(
+      id: "1",
+      name: "Post Malone",
+      categories: ["bike", "anime"],
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+  FavCardItemModel(
+      id: "1",
+      name: "Kanye West",
+      categories: ["anime", "music"],
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+];
+
+
 
