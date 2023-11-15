@@ -12,6 +12,9 @@ import 'package:native/model/user_prefs.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../dummy_data.dart';
+import '../model/fav_card/fav_card_items/fav_card_items.dart';
+
 bool isSuccess(int? statusCode) =>
     statusCode != null && statusCode >= 200 && statusCode < 300;
 
