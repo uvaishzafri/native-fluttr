@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/text/native_large_title_text.dart';
 
@@ -15,6 +16,7 @@ class CommonScaffold extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         backgroundColor: ColorUtils.aquaGreen,
         appBar: CupertinoNavigationBar(
+          padding: const EdgeInsetsDirectional.only(top: 20),
           automaticallyImplyLeading: false,
           border: const Border(),
           backgroundColor: ColorUtils.aquaGreen,

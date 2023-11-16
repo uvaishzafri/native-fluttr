@@ -1,23 +1,21 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grouped_list/grouped_list.dart';
-import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/notifications/cubit/notification_cubit.dart';
 import 'package:native/feature/notifications/filter_by_bottom_sheet.dart';
 import 'package:native/model/app_notification.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 @RoutePage()
 class NotificationsScreen extends StatefulWidget {
@@ -38,6 +36,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     super.initState();
     // _searchController = TextEditingController();
     _fetchNotifications();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateSystemUi();
+    });
   }
 
   _fetchNotifications() {
@@ -45,10 +47,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     notificationBloc.fetchNotifications();
   }
 
+  _updateSystemUi() {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        ColorUtils.aquaGreen);
+  }
+
   @override
   void dispose() {
     // _searchController?.dispose();
     super.dispose();
+  }
+
+  String _timeagoFormat(DateTime time) {
+    final current = DateTime.now();
+    final diffDuration = current.difference(time);
+    if (current.day - time.day <= 1) {
+      return "${diffDuration.inHours} hours ago";
+    } else if (current.month - time.month <= 1) {
+      return "${diffDuration.inDays + 1} days ago";
+    } else {
+      int weeks = (diffDuration.inDays / 7).round();
+      return "$weeks weeks ago";
+    }
   }
 
   @override
@@ -90,15 +110,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               notificationList = state.notifications;
             } else if (isChatsSelected && isLikesSelected) {
               notificationList = state.notifications
-                  .where(
-                      (element) => element.type == NotificationType.liked || element.type == NotificationType.matched)
+                  .where((element) =>
+                      element.type == NotificationType.liked ||
+                      element.type == NotificationType.chat)
                   .toList();
             } else if (isChatsSelected) {
-              notificationList =
-                  state.notifications.where((element) => element.type == NotificationType.matched).toList();
+              notificationList = state.notifications
+                  .where((element) => element.type == NotificationType.chat)
+                  .toList();
             } else if (isLikesSelected) {
-              notificationList =
-                  state.notifications.where((element) => element.type == NotificationType.liked).toList();
+              notificationList = state.notifications
+                  .where((element) => element.type == NotificationType.liked)
+                  .toList();
             }
 
             return Column(
@@ -123,24 +146,26 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     groupBy: groupLikeList,
                     // groupBy: (element) => element.timestamp!,
                     // groupBy: (element) => likes.fromYou.firstWhere((ele) => element.uid == ele.userId).likedDate,
-                    groupSeparatorBuilder: (value) => NativeMediumTitleText(groupHeaderText(value)),
+                    groupSeparatorBuilder: (value) =>
+                        NativeMediumTitleText(groupHeaderText(value)),
                     // groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                     itemBuilder: (context, element) => ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
                         // backgroundImage: AssetImage(element.imageUrl),
-                        backgroundImage: CachedNetworkImageProvider(element.user?.photoURL! ?? ''),
+                        backgroundImage: CachedNetworkImageProvider(
+                            element.fromUser?.photoURL! ?? ''),
                       ),
                       title: Row(
                         children: [
                           NativeSmallBodyText(
-                            element.user?.displayName ?? '',
+                            element.fromUser?.displayName ?? '',
                             fontWeight: FontWeight.w500,
                             height: 22 / 12,
                           ),
                           const Spacer(),
                           NativeSmallBodyText(
-                            timeago.format(element.timestamp!),
+                            _timeagoFormat(element.timestamp!),
                             height: 22 / 12,
                           )
                         ],
@@ -152,7 +177,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 ? "Blocked you"
                                 : element.type == NotificationType.matched
                                     ? "Profile matched"
-                                    : "Requested chat",
+                                    : "${element.content}",
                         height: 22 / 12,
                       ),
                     ),
@@ -172,6 +197,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
 
     Widget trailing = IconButton(
+      padding: const EdgeInsets.all(0),
       onPressed: () {
         // context.router.pop();
         showModalBottomSheet(

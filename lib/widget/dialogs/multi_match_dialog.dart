@@ -10,7 +10,8 @@ import 'package:native/widget/native_button.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 
 class MultiMatchDialog extends StatefulWidget {
-  const MultiMatchDialog({super.key, required this.matchedUsers, required this.selfPhotoUrl});
+  const MultiMatchDialog(
+      {super.key, required this.matchedUsers, required this.selfPhotoUrl});
 
   final List<User> matchedUsers;
   final String selfPhotoUrl;
@@ -72,7 +73,9 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
                       ),
                 ),
               ),
-              IconButton(onPressed: () => context.router.pop(), icon: const Icon(Icons.close))
+              IconButton(
+                  onPressed: () => context.router.pop(),
+                  icon: const Icon(Icons.close))
             ],
           ),
           const SizedBox(height: 20),
@@ -107,7 +110,8 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
               Center(
                 child: CircleAvatar(
                   radius: 32,
-                  backgroundImage: CachedNetworkImageProvider(widget.selfPhotoUrl),
+                  backgroundImage:
+                      CachedNetworkImageProvider(widget.selfPhotoUrl),
                 ),
               ),
               ...widget.matchedUsers.map((e) {
@@ -123,39 +127,43 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
                 return count > 500
                     ? const SizedBox()
                     : Positioned.fromRect(
-                  rect: Rect.fromCenter(
-                    center: Offset(left, top),
-                    width: 60,
-                    height: 60,
-                  ),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: CachedNetworkImageProvider(e.photoURL ?? ''),
-                      ),
-                      const SizedBox(height: 4),
-                      ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: 50,
-                          ),
-                          child: Text(
-                            e.displayName!,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontSize: 10,
-                                  color: ColorUtils.black,
-                                  overflow: TextOverflow.ellipsis,
+                        rect: Rect.fromCenter(
+                          center: Offset(left, top),
+                          width: 60,
+                          height: 60,
+                        ),
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundImage:
+                                  CachedNetworkImageProvider(e.photoURL ?? ''),
+                            ),
+                            const SizedBox(height: 4),
+                            ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 50,
                                 ),
-                          )
-                      )
-                    ],
-                  ),
-                );
+                                child: Text(
+                                  e.displayName!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        fontSize: 10,
+                                        color: ColorUtils.black,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                ))
+                          ],
+                        ),
+                      );
               }).toList(),
             ],
           ),
           const SizedBox(height: 16),
-          NativeSmallTitleText('You have matched with ${widget.matchedUsers.length} people'),
+          NativeSmallTitleText(
+              'You have matched with ${widget.matchedUsers.length} people'),
         ],
       ),
       actions: [
@@ -163,7 +171,8 @@ class _MultiMatchDialogState extends State<MultiMatchDialog> {
           isEnabled: true,
           onPressed: () {
             Navigator.of(context).pop();
-            context.navigateTo(const HomeWrapperRoute(children: [ChatsRoute()]));
+            context
+                .navigateTo(const HomeWrapperRoute(children: [ChatsRoute()]));
           },
           text: "Chat",
         )

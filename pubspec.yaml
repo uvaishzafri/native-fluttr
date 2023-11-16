@@ -88,6 +88,7 @@ dependencies:
   syncfusion_flutter_sliders: ^23.1.42
   syncfusion_flutter_core: ^23.1.42
   firebase_crashlytics: ^3.4.3
+  uni_links: ^0.5.1
   
 dev_dependencies:
   flutter_test:

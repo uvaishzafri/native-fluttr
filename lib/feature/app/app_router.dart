@@ -57,7 +57,9 @@ class AppRouter extends $AppRouter {
 
 class FadeCustomRoute extends CustomRoute {
   FadeCustomRoute(
-      {required super.page, super.transitionsBuilder = TransitionsBuilders.fadeIn, super.durationInMilliseconds = 240});
+      {required super.page,
+      super.transitionsBuilder = TransitionsBuilders.fadeIn,
+      super.durationInMilliseconds = 240});
 }
 
 // class MyObserver extends AutoRouterObserver {

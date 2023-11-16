@@ -12,6 +12,7 @@ import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/likes/cubit/likes_cubit.dart';
 import 'package:native/model/liked_user.dart';
 import 'package:native/model/user.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
@@ -35,12 +36,20 @@ class _LikesScreenState extends State<LikesScreen> {
   void initState() {
     super.initState();
     // _searchController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateSystemUi();
+    });
   }
 
   @override
   void dispose() {
     // _searchController?.dispose();
     super.dispose();
+  }
+
+  _updateSystemUi() {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        ColorUtils.aquaGreen);
   }
 
   @override
@@ -88,22 +97,28 @@ class _LikesScreenState extends State<LikesScreen> {
                       borderRadius: BorderRadius.circular(40),
                     ),
                     child: ButtonsTabBar(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 24),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 24),
                       backgroundColor: ColorUtils.purple,
                       unselectedBackgroundColor: Colors.transparent,
-                      labelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: ColorUtils.white,
-                            fontWeight: FontWeight.w600,
-                            height: 22 / 14,
-                          ),
-                      unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            height: 22 / 14,
-                            color: ColorUtils.textLightGrey,
-                          ),
+                      labelStyle:
+                          Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: ColorUtils.white,
+                                fontWeight: FontWeight.w600,
+                                height: 22 / 14,
+                              ),
+                      unselectedLabelStyle:
+                          Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                height: 22 / 14,
+                                color: ColorUtils.textLightGrey,
+                              ),
                       borderColor: Colors.transparent,
                       unselectedBorderColor: Colors.transparent,
                       radius: 100,
-                      tabs: const [Tab(text: 'From you'), Tab(text: 'From others')],
+                      tabs: const [
+                        Tab(text: 'From you'),
+                        Tab(text: 'From others')
+                      ],
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -116,24 +131,33 @@ class _LikesScreenState extends State<LikesScreen> {
                                 order: GroupedListOrder.DESC,
                                 groupBy: groupLikeList,
                                 // padding: EdgeInsets.only(right: 4),
-                                groupSeparatorBuilder: (value) => NativeMediumTitleText(groupHeaderText(value)),
+                                groupSeparatorBuilder: (value) =>
+                                    NativeMediumTitleText(
+                                        groupHeaderText(value)),
                                 // NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                                 itemBuilder: (context, element) => ListTile(
-                                  onTap: () => context.router
-                                      .push(NativeCardScaffold(user: element.user!, showBackButton: true)),
+                                  onTap: () => context.router.push(
+                                      NativeCardScaffold(
+                                          user: element.user!,
+                                          showBackButton: true)),
                                   contentPadding: EdgeInsets.zero,
                                   leading: CircleAvatar(
                                     // backgroundImage: AssetImage(element.photoURL),
-                                    backgroundImage: CachedNetworkImageProvider(element.user!.photoURL!),
+                                    backgroundImage: CachedNetworkImageProvider(
+                                        element.user!.photoURL!),
                                   ),
                                   title: Row(
                                     children: [
                                       ConstrainedBox(
-                                        constraints: const BoxConstraints(maxWidth: 100),
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 100),
                                         child: Text(
                                           '${element.user!.displayName}',
                                           overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
                                                 fontWeight: FontWeight.w500,
                                                 height: 22 / 12,
                                               ),
@@ -164,25 +188,34 @@ class _LikesScreenState extends State<LikesScreen> {
                                 order: GroupedListOrder.DESC,
                                 groupBy: groupLikeList,
                                 // padding: EdgeInsets.only(right: 4),
-                                groupSeparatorBuilder: (value) => NativeMediumTitleText(groupHeaderText(value)),
+                                groupSeparatorBuilder: (value) =>
+                                    NativeMediumTitleText(
+                                        groupHeaderText(value)),
                                 // groupSeparatorBuilder: (value) => NativeMediumTitleText(value),
                                 // NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                                 itemBuilder: (context, element) => ListTile(
-                                  onTap: () => context.router
-                                      .push(NativeCardScaffold(user: element.user!, showBackButton: true)),
+                                  onTap: () => context.router.push(
+                                      NativeCardScaffold(
+                                          user: element.user!,
+                                          showBackButton: true)),
                                   contentPadding: EdgeInsets.zero,
                                   leading: CircleAvatar(
                                     // backgroundImage: AssetImage(element.imageUrl),
-                                    backgroundImage: CachedNetworkImageProvider(element.user!.photoURL!),
+                                    backgroundImage: CachedNetworkImageProvider(
+                                        element.user!.photoURL!),
                                   ),
                                   title: Row(
                                     children: [
                                       ConstrainedBox(
-                                        constraints: const BoxConstraints(maxWidth: 100),
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 100),
                                         child: Text(
                                           '${element.user!.displayName}',
                                           overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
                                                 fontWeight: FontWeight.w500,
                                                 height: 22 / 12,
                                               ),

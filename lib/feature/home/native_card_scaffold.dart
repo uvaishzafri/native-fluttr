@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/home/native_card_details_screen.dart';
 import 'package:native/model/user.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
 
@@ -23,26 +24,39 @@ class NativeCardScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    updateSystemUi(context, Theme.of(context).primaryColor,
+        Theme.of(context).primaryColor);
     return Scaffold(
-      backgroundColor: ColorUtils.white,
+      backgroundColor: Theme.of(context).primaryColor,
+      // body: NativeCardDetailsScreen(
+      //   user: user,
+      //   isDemoUser: isDemoUser,
+      //   showBackButton: showBackButton,
+      // ),
       body: Stack(
-        alignment: AlignmentDirectional.bottomCenter,
         children: [
           NativeCardDetailsScreen(
             user: user,
             isDemoUser: isDemoUser,
             showBackButton: showBackButton,
           ),
-          if (overlayItem != null) overlayItem!,
+          if (overlayItem != null)
+            Align(
+                alignment: AlignmentDirectional.bottomCenter,
+                child: overlayItem!),
           if (showNext)
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: NativeButton(
-                isEnabled: true,
-                text: 'Next',
-                onPressed: () => context.router.push(const HowToChoosePartnerLoaderRoute()),
+            Align(
+              alignment: AlignmentDirectional.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: NativeButton(
+                  isEnabled: true,
+                  text: 'Next',
+                  onPressed: () => context.router
+                      .push(const HowToChoosePartnerLoaderRoute()),
+                ),
               ),
-            ),
+            )
         ],
       ),
     );

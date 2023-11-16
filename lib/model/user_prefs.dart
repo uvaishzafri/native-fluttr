@@ -12,5 +12,6 @@ class UserPrefs with _$UserPrefs {
     @JsonKey(includeIfNull: false) LookingFor? lookingFor,
   }) = _UserPrefs;
 
-  factory UserPrefs.fromJson(Map<String, dynamic> json) => _$UserPrefsFromJson(json);
+  factory UserPrefs.fromJson(Map<String, dynamic> json) =>
+      _$UserPrefsFromJson(json);
 }

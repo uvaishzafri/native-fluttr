@@ -15,7 +15,9 @@ class Meta with _$Meta {
   factory Meta({
     @JsonKey(includeIfNull: false) String? slogan,
     @JsonKey(includeIfNull: false) @TypeConverter() NativeTypeEnum? type,
-    @JsonKey(includeIfNull: false) @TypeConverter() List<NativeTypeEnum?>? matchTypes,
+    @JsonKey(includeIfNull: false)
+    @TypeConverter()
+    List<NativeTypeEnum?>? matchTypes,
     @JsonKey(includeIfNull: false) Colour? color,
     @JsonKey(includeIfNull: false) int? energyScore,
     @JsonKey(includeIfNull: false) Parameter? parameter,

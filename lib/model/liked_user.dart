@@ -14,5 +14,6 @@ class LikedUser with _$LikedUser {
     @JsonKey(includeIfNull: false) @DatetimeSerializer() DateTime? updatedAt,
   }) = _LikedUser;
 
-  factory LikedUser.fromJson(Map<String, dynamic> json) => _$LikedUserFromJson(json);
+  factory LikedUser.fromJson(Map<String, dynamic> json) =>
+      _$LikedUserFromJson(json);
 }

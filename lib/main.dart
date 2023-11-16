@@ -61,6 +61,7 @@ Future<void> main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform(config),
       );
+      FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
       FlutterError.onError = (errorDetails) {
         FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);

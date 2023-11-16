@@ -78,10 +78,13 @@ class _ReportUserBottomSheetState extends State<ReportUserBottomSheet> {
                                 _selectedProblem = problems[index];
                               });
                             },
-                            leading: _selectedProblem == problems[index] ? const Icon(Icons.check) : const SizedBox(),
+                            leading: _selectedProblem == problems[index]
+                                ? const Icon(Icons.check)
+                                : const SizedBox(),
                             title: NativeMediumBodyText(problems[index]),
                           ),
-                      separatorBuilder: (context, index) => const SizedBox(height: 2),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 2),
                       itemCount: problems.length),
                 ),
                 // const SizedBox(height: 20),
@@ -93,7 +96,8 @@ class _ReportUserBottomSheetState extends State<ReportUserBottomSheet> {
                     onPressed: () {
                       if (problems.indexOf(_selectedProblem!) < 5) {
                         // context.router.pop();
-                        bloc.reportUser(widget.userId, 'CHAT', _selectedProblem!);
+                        bloc.reportUser(
+                            widget.userId, 'CHAT', _selectedProblem!);
                         // Navigator.pop(context);
                         // showModalBottomSheet(
                         //   context: context,
@@ -105,7 +109,8 @@ class _ReportUserBottomSheetState extends State<ReportUserBottomSheet> {
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          builder: (context) => OtherProblemBottomSheet(userId: widget.userId),
+                          builder: (context) =>
+                              OtherProblemBottomSheet(userId: widget.userId),
                         );
                       }
                     },

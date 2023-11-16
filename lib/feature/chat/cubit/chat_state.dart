@@ -7,6 +7,7 @@ class ChatState with _$ChatState {
   const factory ChatState.error({required AppException appException}) = Error;
   // const factory ChatState.chatCreated() = ChatCreated;
   // const factory ChatState.chatMessageCreated() = ChatMessageCreated;
-  const factory ChatState.chatRoomsFetched({required List<ChatRoom> chatRooms}) = ChatRoomFetched;
+  const factory ChatState.chatRoomsFetched(
+      {required List<ChatRoom> chatRooms}) = ChatRoomFetched;
   // const factory ChatState.chatMessagesFetched({required List<types.TextMessage> chatMessages}) = ChatMessagesFetched;
 }

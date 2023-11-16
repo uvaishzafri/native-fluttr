@@ -13,5 +13,6 @@ class Birthday with _$Birthday {
     @JsonKey(includeIfNull: false) num? day,
   }) = _Birthday;
 
-  factory Birthday.fromJson(Map<String, dynamic> json) => _$BirthdayFromJson(json);
+  factory Birthday.fromJson(Map<String, dynamic> json) =>
+      _$BirthdayFromJson(json);
 }

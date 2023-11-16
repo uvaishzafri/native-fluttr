@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -9,7 +12,9 @@ import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
+import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/i18n/translations.g.dart';
+import 'package:uni_links/uni_links.dart';
 
 class App extends StatelessWidget {
   App({super.key});
@@ -76,12 +81,15 @@ class AppWrapper extends StatefulWidget {
 
 class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
   final GlobalKey _key = GlobalKey();
+  StreamSubscription? _sub;
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    Future.delayed(const Duration(milliseconds: 10), () => {context.read<AppCubit>().checkAuth()});
+    initUniLinks();
+    Future.delayed(const Duration(milliseconds: 10),
+        () => {context.read<AppCubit>().checkAuth()});
     // context.read<AppCubit>().changeStoryListType(type: StoryListType.best);
   }
 
@@ -89,6 +97,34 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  Future<void> initUniLinks() async {
+    try {
+      _sub = linkStream.listen((String? link) async {
+        if (link != null) {
+          final uri = Uri.parse(link);
+          if (uri.hasQuery) {
+            String? uid = uri.queryParameters['uid'];
+            if (uid != null) {
+              final appCubit = context.read<AppCubit>();
+              final isEmailVerified =
+                  await appCubit.checkIfEmailVerifiedByUid(uid);
+              if (isEmailVerified) {
+                appCubit.logout(isVerifiedEmail: true);
+              }
+            }
+          }
+        }
+      }, onError: (err) {
+        // No-op
+      });
+
+      // Parse the link and warn the user, if it is not correct,
+      // but keep in mind it could be `null`.
+    } on PlatformException {
+      // return?
+    }
   }
 
   @override
@@ -107,7 +143,8 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
               if (state.authResult!.user.customClaims?.birthday == null) {
                 context.router.replace(const BasicDetailsRoute());
               } else if (!state.hasCompletedTutorial) {
-                context.router.replace(NativeCardScaffold(user: state.authResult!.user, showNext: true));
+                context.router.replace(NativeCardScaffold(
+                    user: state.authResult!.user, showNext: true));
                 // context.router.replace(const HomeWrapperRoute());
               } else {
                 // context.router.replace(const BasicDetailsRoute());
@@ -117,7 +154,8 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
               (state.hasSkippedOnboarding == false)
                   ? context.router.replace(OnboardingRoute())
                   // : context.router.replace(const HomeWrapperRoute());
-                  : context.router.replaceAll([const SignInRoute()]);
+                  : context.router.replaceAll(
+                      [SignInRoute(isVerifiedEmail: state.hasVerifiedEmail)]);
             }
           },
           child: RepaintBoundary(

@@ -12,5 +12,6 @@ class UpdateUserReq with _$UpdateUserReq {
     String? displayName,
   }) = _UpdateUserReq;
 
-  factory UpdateUserReq.fromJson(Map<String, dynamic> json) => _$UpdateUserReqFromJson(json);
+  factory UpdateUserReq.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserReqFromJson(json);
 }

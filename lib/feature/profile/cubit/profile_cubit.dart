@@ -28,7 +28,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   //   });
   // }
 
-  bool validateBasicDetails(String displayName, String about, String? location) {
+  bool validateBasicDetails(
+      String displayName, String about, String? location) {
     //validate info
     if (displayName.isEmpty) {
       return false;
@@ -64,7 +65,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(const ProfileState.profileUpdated());
     });
   }
-  
+
   void updateOtherDetails(User user) async {
     emit(const ProfileState.loading());
     var response = await _userRepository.updateUser(user);

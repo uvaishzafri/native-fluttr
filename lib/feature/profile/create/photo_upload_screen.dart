@@ -62,7 +62,9 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                 width: 231,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: widget.gender == Gender.female ? null : Border.all(color: ColorUtils.aquaGreen, width: 2)),
+                    border: widget.gender == Gender.female
+                        ? null
+                        : Border.all(color: ColorUtils.aquaGreen, width: 2)),
                 child: _imageFile != null
                     ? Image.file(
                         _imageFile!,
@@ -97,7 +99,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                       shape: BoxShape.circle,
                       color: ColorUtils.purple,
                     ),
-                    child: const Icon(Icons.camera_alt_outlined, color: ColorUtils.white),
+                    child: const Icon(Icons.camera_alt_outlined,
+                        color: ColorUtils.white),
                   ),
                 ),
               )
@@ -177,5 +180,4 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       ),
     );
   }
-
 }

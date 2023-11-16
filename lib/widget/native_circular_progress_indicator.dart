@@ -25,10 +25,13 @@ class NativeCircularProgressIndicator extends StatefulWidget {
   final Gradient? baseGradient;
 
   @override
-  State<NativeCircularProgressIndicator> createState() => _NativeCircularProgressIndicatorState();
+  State<NativeCircularProgressIndicator> createState() =>
+      _NativeCircularProgressIndicatorState();
 }
 
-class _NativeCircularProgressIndicatorState extends State<NativeCircularProgressIndicator> with SingleTickerProviderStateMixin {
+class _NativeCircularProgressIndicatorState
+    extends State<NativeCircularProgressIndicator>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller = AnimationController(vsync: this);
   double progressNull = 0;
   bool isReverse = false;
@@ -106,7 +109,8 @@ class _NativeCircularProgressIndicatorState extends State<NativeCircularProgress
                   size: widget.size,
                   stokeWidth: widget.stokeWidth,
                   startAngle: progress == null ? startAngle : 0,
-                  sweepAngle: progress == null ? progressNull : (pi * 2) * progress,
+                  sweepAngle:
+                      progress == null ? progressNull : (pi * 2) * progress,
                   color: widget.color ?? Colors.blue,
                   gradient: widget.gradient,
                 ),
