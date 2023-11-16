@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:native/util/color_utils.dart';
 
 class NativeSimpleButton extends StatelessWidget {
-  const NativeSimpleButton({super.key, required this.isEnabled, required this.text, this.onPressed, this.fontSize, this.fontWeight});
+  const NativeSimpleButton(
+      {super.key,
+      required this.isEnabled,
+      required this.text,
+      this.onPressed,
+      this.fontSize,
+      this.fontWeight});
   final bool isEnabled;
   final String text;
   final Function()? onPressed;

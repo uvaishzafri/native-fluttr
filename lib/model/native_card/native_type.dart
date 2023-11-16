@@ -12,5 +12,6 @@ class NativeType with _$NativeType {
     @JsonKey(includeIfNull: false) String? ja,
   }) = _NativeType;
 
-  factory NativeType.fromJson(Map<String, dynamic> json) => _$NativeTypeFromJson(json);
+  factory NativeType.fromJson(Map<String, dynamic> json) =>
+      _$NativeTypeFromJson(json);
 }

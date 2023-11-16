@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 
 class NativeButton extends StatelessWidget {
   const NativeButton(
-      {super.key, required this.isEnabled, required this.text, this.onPressed, this.fontSize});
+      {super.key,
+      required this.isEnabled,
+      required this.text,
+      this.onPressed,
+      this.fontSize});
   final bool isEnabled;
   final String text;
   final Function()? onPressed;

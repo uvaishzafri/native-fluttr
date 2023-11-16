@@ -43,7 +43,8 @@ class HowToChoosePartnerLoaderScreen extends StatelessWidget {
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  text: "Let's learn how to choose your partner and get matched with a ",
+                  text:
+                      "Let's learn how to choose your partner and get matched with a ",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: ColorUtils.textGrey,
                         height: 30 / 16,

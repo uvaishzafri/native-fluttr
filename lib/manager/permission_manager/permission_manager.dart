@@ -56,7 +56,8 @@ class PermissionManager {
       }
     } else {
       // iOS
-      if (initialStatus == PermissionStatus.denied || initialStatus == PermissionStatus.permanentlyDenied) {
+      if (initialStatus == PermissionStatus.denied ||
+          initialStatus == PermissionStatus.permanentlyDenied) {
         // _handleDeniedNotificationPermission(context, source, initialStatus == PermissionStatus.permanentlyDenied);
       } else if (initialStatus == PermissionStatus.granted) {
         // notificationManager.init();

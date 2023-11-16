@@ -6,7 +6,8 @@ class CommonScaffoldWithPadding extends StatelessWidget {
   final Widget content;
   final String title;
   final Widget? trailing;
-  const CommonScaffoldWithPadding(this.title, this.content, {super.key, this.trailing});
+  const CommonScaffoldWithPadding(this.title, this.content,
+      {super.key, this.trailing});
 
   @override
   Widget build(BuildContext context) {

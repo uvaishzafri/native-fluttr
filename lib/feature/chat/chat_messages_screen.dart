@@ -26,7 +26,11 @@ import 'package:native/widget/text/native_small_body_text.dart';
 @RoutePage()
 class ChatMessagesScreen extends StatefulWidget {
   const ChatMessagesScreen(
-      {super.key, required this.chatRoomDocId, required this.name, required this.imageUrl, required this.userId});
+      {super.key,
+      required this.chatRoomDocId,
+      required this.name,
+      required this.imageUrl,
+      required this.userId});
   final String chatRoomDocId;
   final String name;
   final String imageUrl;
@@ -56,7 +60,8 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
     super.dispose();
   }
 
-  void _handleSendPressed(types.PartialText message, ChatMessagesCubit chatMessageCubit) {
+  void _handleSendPressed(
+      types.PartialText message, ChatMessagesCubit chatMessageCubit) {
     final textMessage = types.TextMessage(
       author: types.User(id: FirebaseAuth.instance.currentUser!.uid),
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -68,8 +73,10 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
     _updateLastMsgDetails(textMessage);
   }
 
-  void _addMessage(types.TextMessage message, ChatMessagesCubit chatMessagesCubit) {
-    chatMessagesCubit.createChatMessage(widget.chatRoomDocId, Message.fromTextMessage(message));
+  void _addMessage(
+      types.TextMessage message, ChatMessagesCubit chatMessagesCubit) {
+    chatMessagesCubit.createChatMessage(
+        widget.chatRoomDocId, Message.fromTextMessage(message));
   }
 
   void _updateMsgReadTime() {
@@ -87,7 +94,8 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
     Widget content = MultiBlocProvider(
       providers: [
         BlocProvider<ChatMessagesCubit>.value(
-          value: getIt<ChatMessagesCubit>()..getChatMessages(widget.chatRoomDocId),
+          value: getIt<ChatMessagesCubit>()
+            ..getChatMessages(widget.chatRoomDocId),
         ),
         BlocProvider<BlockUserCubit>.value(
           value: getIt<BlockUserCubit>(),
@@ -155,12 +163,14 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
             },
             builder: (context, state) {
               if (state is ChatMessagesFetched) {
-                final chatMessageCubit = BlocProvider.of<ChatMessagesCubit>(context);
+                final chatMessageCubit =
+                    BlocProvider.of<ChatMessagesCubit>(context);
                 // return _renderMessageList();
                 return flutterchat.Chat(
                   showUserAvatars: true,
                   inputOptions: const flutterchat.InputOptions(
-                    sendButtonVisibilityMode: flutterchat.SendButtonVisibilityMode.always,
+                    sendButtonVisibilityMode:
+                        flutterchat.SendButtonVisibilityMode.always,
                   ),
                   // dateIsUtc: true,
                   dateHeaderBuilder: (p0) {
@@ -168,7 +178,8 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
                       child: Container(
                         // alignment: AlignmentDirectional.center,
                         margin: const EdgeInsets.symmetric(vertical: 8),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: ColorUtils.aquaGreen,
@@ -192,7 +203,9 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
                     inputTextColor: Colors.black,
                     inputPadding: EdgeInsets.zero,
                     inputTextDecoration: InputDecoration(
-                        filled: true, fillColor: ColorUtils.textLightGrey.withOpacity(0.1), border: InputBorder.none),
+                        filled: true,
+                        fillColor: ColorUtils.textLightGrey.withOpacity(0.1),
+                        border: InputBorder.none),
                     // inputContainerDecoration: BoxDecoration(color: Colors.amber),
                     inputBackgroundColor: ColorUtils.white,
                     // inputBackgroundColor: ColorUtils.textLightGrey.withOpacity(0.1),
@@ -233,7 +246,8 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
                       padding: const EdgeInsets.all(2.0),
                       child: CircleAvatar(
                         radius: 14,
-                        backgroundImage: CachedNetworkImageProvider(widget.imageUrl),
+                        backgroundImage:
+                            CachedNetworkImageProvider(widget.imageUrl),
                       ),
                     );
                   },
@@ -313,7 +327,8 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
                     showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
-                      builder: (context) => ReportUserBottomSheet(userId: widget.userId),
+                      builder: (context) =>
+                          ReportUserBottomSheet(userId: widget.userId),
                     );
                   }
                   setState(() {});
@@ -370,7 +385,8 @@ class _ChatMessagesScreenState extends State<ChatMessagesScreen> {
                         // ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 15, left: 0, right: 0),
+                        padding:
+                            const EdgeInsets.only(top: 15, left: 0, right: 0),
                         child: content,
                       ),
                     ),

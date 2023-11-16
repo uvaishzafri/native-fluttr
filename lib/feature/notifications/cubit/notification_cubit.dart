@@ -10,7 +10,8 @@ part 'notification_cubit.freezed.dart';
 
 @lazySingleton
 class NotificationCubit extends Cubit<NotificationState> {
-  NotificationCubit(this.userRepository) : super(const NotificationState.initial());
+  NotificationCubit(this.userRepository)
+      : super(const NotificationState.initial());
 
   final UserRepository userRepository;
 

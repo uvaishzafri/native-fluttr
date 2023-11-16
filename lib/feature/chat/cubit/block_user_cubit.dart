@@ -9,14 +9,16 @@ part 'block_user_cubit.freezed.dart';
 
 @lazySingleton
 class BlockUserCubit extends Cubit<BlockUserState> {
-  BlockUserCubit(this._firestoreRepository) : super(const BlockUserState.initial());
+  BlockUserCubit(this._firestoreRepository)
+      : super(const BlockUserState.initial());
 
   final FirestoreRepository _firestoreRepository;
 
   blockUser(String chatRoomDocId) async {
     emit(const BlockUserState.loading());
 
-    var notificationsList = await _firestoreRepository.markChatRoomBlocked(chatRoomDocId);
+    var notificationsList =
+        await _firestoreRepository.markChatRoomBlocked(chatRoomDocId);
     notificationsList.fold(
       (left) => emit(BlockUserState.errorState(appException: left)),
       (right) => emit(const BlockUserState.successState()),

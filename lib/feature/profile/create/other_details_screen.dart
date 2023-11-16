@@ -31,8 +31,10 @@ class OtherDetailsScreen extends StatefulWidget {
 class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
   String? selectedReligion;
   String? selectedCommunity;
-  final TextEditingController religionSearchController = TextEditingController();
-  final TextEditingController communitySearchController = TextEditingController();
+  final TextEditingController religionSearchController =
+      TextEditingController();
+  final TextEditingController communitySearchController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -89,18 +91,18 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
           const NativeSmallBodyText('Language'),
           const SizedBox(height: 8),
           NativeDropdown(
-              onChanged: (value) {
-                setState(() {
-                  selectedCommunity = value;
-                });
-              },
-              value: selectedCommunity,
-              searchController: communitySearchController,
+            onChanged: (value) {
+              setState(() {
+                selectedCommunity = value;
+              });
+            },
+            value: selectedCommunity,
+            searchController: communitySearchController,
             items: languages
-                      .map((item) => DropdownMenuItem(
-                            value: item,
-                            child: NativeMediumBodyText(item),
-                          ))
+                .map((item) => DropdownMenuItem(
+                      value: item,
+                      child: NativeMediumBodyText(item),
+                    ))
                 .toList(),
           ),
           const Spacer(),
@@ -172,7 +174,8 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
                         // context.router.pop();
                         if (context.mounted) {
                           Navigator.pop(context);
-                          context.router.replaceAll([const BasicPrefrencesRoute()]);
+                          context.router
+                              .replaceAll([const BasicPrefrencesRoute()]);
                         }
                       });
                       return _profileSuccessfullyCreatedDialog();
@@ -198,7 +201,8 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: SimpleDialog(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
         children: <Widget>[
           Container(
             padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 42),
@@ -211,7 +215,10 @@ class _OtherDetailsScreenState extends State<OtherDetailsScreen> {
                 const Text(
                   "Profile successfully created!",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xff1E1E1E), fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      color: Color(0xff1E1E1E),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
                 ),
               ],
             ),

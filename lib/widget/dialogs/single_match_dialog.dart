@@ -9,7 +9,10 @@ import 'package:native/widget/text/native_small_title_text.dart';
 
 class SingleMatchDialog extends StatelessWidget {
   const SingleMatchDialog(
-      {super.key, required this.userName, required this.matchedUserPhotoUrl, required this.selfPhotoUrl});
+      {super.key,
+      required this.userName,
+      required this.matchedUserPhotoUrl,
+      required this.selfPhotoUrl});
 
   final String userName;
   final String matchedUserPhotoUrl;
@@ -39,7 +42,9 @@ class SingleMatchDialog extends StatelessWidget {
                       ),
                 ),
               ),
-              IconButton(onPressed: () => context.router.pop(), icon: const Icon(Icons.close))
+              IconButton(
+                  onPressed: () => context.router.pop(),
+                  icon: const Icon(Icons.close))
             ],
           ),
           const SizedBox(height: 20),
@@ -78,7 +83,8 @@ class SingleMatchDialog extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 36,
-                        backgroundImage: CachedNetworkImageProvider(selfPhotoUrl),
+                        backgroundImage:
+                            CachedNetworkImageProvider(selfPhotoUrl),
                       ),
                       const SizedBox(height: 4),
                       const NativeSmallTitleText(
@@ -98,7 +104,8 @@ class SingleMatchDialog extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 36,
-                        backgroundImage: CachedNetworkImageProvider(matchedUserPhotoUrl),
+                        backgroundImage:
+                            CachedNetworkImageProvider(matchedUserPhotoUrl),
                       ),
                       const SizedBox(height: 4),
                       NativeSmallTitleText(
@@ -120,7 +127,8 @@ class SingleMatchDialog extends StatelessWidget {
           isEnabled: true,
           onPressed: () {
             Navigator.of(context).pop();
-            context.navigateTo(const HomeWrapperRoute(children: [ChatsRoute()]));
+            context
+                .navigateTo(const HomeWrapperRoute(children: [ChatsRoute()]));
           },
           text: "Chat",
         )

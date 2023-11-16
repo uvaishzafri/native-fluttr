@@ -19,7 +19,8 @@ class PhotoPickerWidget extends StatelessWidget {
             onTap: () async {
               // context.router.pop();
               final imagePicker = ImagePicker();
-              final imageXFile = await imagePicker.pickImage(source: ImageSource.gallery);
+              final imageXFile =
+                  await imagePicker.pickImage(source: ImageSource.gallery);
               if (imageXFile != null) {
                 var _imageFile = File(imageXFile.path);
                 // setState(() {});
@@ -37,7 +38,8 @@ class PhotoPickerWidget extends StatelessWidget {
             onTap: () async {
               // context.router.pop();
               final imagePicker = ImagePicker();
-              final imageXFile = await imagePicker.pickImage(source: ImageSource.camera);
+              final imageXFile =
+                  await imagePicker.pickImage(source: ImageSource.camera);
               if (imageXFile != null) {
                 var _imageFile = File(imageXFile.path);
                 // setState(() {});

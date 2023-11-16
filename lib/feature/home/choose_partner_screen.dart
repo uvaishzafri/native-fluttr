@@ -40,10 +40,11 @@ class ChoosePartnerScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: 'LIKE',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: ColorUtils.purple,
-                                height: 30 / 16,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: ColorUtils.purple,
+                                    height: 30 / 16,
+                                  ),
                         ),
                       ],
                     ),
@@ -90,13 +91,16 @@ class ChoosePartnerScreen extends StatelessWidget {
             var overlayItem = LikeOverlay(
               onPressedLike: () {
                 showDialog(
-                            context: context,
+                  context: context,
                   builder: (context) => likeDialog(context),
                 );
               },
               isTutorial: true,
             );
-            context.router.push(NativeCardScaffold(user: usersList[index], overlayItem: overlayItem, isDemoUser: true));
+            context.router.push(NativeCardScaffold(
+                user: usersList[index],
+                overlayItem: overlayItem,
+                isDemoUser: true));
           },
           child: NativeUserCard(
             native: usersList[index],
@@ -185,7 +189,8 @@ class ChoosePartnerScreen extends StatelessWidget {
                   SizedBox(width: 24),
                   CircleAvatar(
                     radius: 36,
-                    backgroundImage: AssetImage('assets/home/ic_profile_pic2.png'),
+                    backgroundImage:
+                        AssetImage('assets/home/ic_profile_pic2.png'),
                   ),
                 ],
               )

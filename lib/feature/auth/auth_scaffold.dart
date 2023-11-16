@@ -51,11 +51,15 @@ class AuthScaffold extends StatelessWidget {
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     const Text(
                       'By continuing you agree to ',
-                      style: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          color: Color(0xff1E1E1E),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
                     ),
                     GradientText(
                       'native.',
-                      style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),
+                      style: const TextStyle(
+                          fontSize: 14.0, fontWeight: FontWeight.w400),
                       colors: const [
                         Color(0xFFBE94C6),
                         Color(0xFF7BC6CC),
@@ -75,7 +79,10 @@ class AuthScaffold extends StatelessWidget {
                       )),
                       Text(
                         ' & ',
-                        style: TextStyle(color: Color(0xff1E1E1E), fontSize: 14, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            color: Color(0xff1E1E1E),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
                       ),
                       Text.rich(
                         TextSpan(

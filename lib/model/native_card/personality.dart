@@ -13,5 +13,6 @@ class Personality with _$Personality {
     @JsonKey(includeIfNull: false) String? sameKindCelebrity,
   }) = _Personality;
 
-  factory Personality.fromJson(Map<String, dynamic> json) => _$PersonalityFromJson(json);
+  factory Personality.fromJson(Map<String, dynamic> json) =>
+      _$PersonalityFromJson(json);
 }
