@@ -4,7 +4,9 @@ post-checkout:
     code-generate:
       run: task generate
 pre-commit:
-  parallel: false
+  piped: true
   commands:
-    code-format:
-      run: dart format lib
+    1_code-format:
+      run: find . -name {staged_files} ! -path '*.yml' ! -path '*.yaml' | tr '\n' ' ' | xargs dart format
+    2_attach-files:
+      run: git add -u
