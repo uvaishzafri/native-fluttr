@@ -51,6 +51,18 @@ $ npm install -g @go-task/cli
 # Using shell script
 $ sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
 ```
+- [lefthook](https://github.com/evilmartians/lefthook), you can install with following ways
+```
+# Using Homebrew
+$ brew install lefthook
+
+# Using NPM
+$ npm install -g lefthook
+
+# After installed lefthook, you should run the follwing command to install the git hooks
+lefthook install
+
+```
 - [Xcode](https://developer.apple.com/xcode/)
 - [Android SDK](https://developer.android.com/tools/releases/platform-tools) or install [Android Studio](https://developer.android.com/studio)
 
