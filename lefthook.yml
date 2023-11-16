@@ -1,0 +1,10 @@
+post-checkout:
+  parallel: false
+  commands:
+    code-generate:
+      run: task generate
+pre-commit:
+  parallel: false
+  commands:
+    code-format:
+      run: dart format lib
