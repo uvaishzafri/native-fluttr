@@ -4,7 +4,8 @@ import 'package:native/util/color_utils.dart';
 /// fontsize - 16pt fontweight - 500 height - 24pt
 class NativeMediumTitleText extends StatelessWidget {
   /// fontsize - 16pt fontweight - 500 height - 24pt
-  const NativeMediumTitleText(this.text, {super.key, this.color, this.fontWeight, this.height, this.fontSize});
+  const NativeMediumTitleText(this.text,
+      {super.key, this.color, this.fontWeight, this.height, this.fontSize});
   final String text;
   final Color? color;
   final double? fontSize;

@@ -23,5 +23,6 @@ class NativeCard with _$NativeCard {
     @JsonKey(includeIfNull: false) Advice? ideasPlan,
   }) = _NativeCard;
 
-  factory NativeCard.fromJson(Map<String, dynamic> json) => _$NativeCardFromJson(json);
+  factory NativeCard.fromJson(Map<String, dynamic> json) =>
+      _$NativeCardFromJson(json);
 }

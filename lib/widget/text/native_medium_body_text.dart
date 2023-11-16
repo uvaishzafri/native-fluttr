@@ -5,8 +5,13 @@ import 'package:native/util/color_utils.dart';
 class NativeMediumBodyText extends StatelessWidget {
   /// fontsize - 14pt fontweight - 400 height - 20pt
   const NativeMediumBodyText(this.text,
-      {super.key, this.color, this.fontWeight, this.height, this.letterSpacing, this.textAlign});
-  
+      {super.key,
+      this.color,
+      this.fontWeight,
+      this.height,
+      this.letterSpacing,
+      this.textAlign});
+
   final String text;
   final Color? color;
   final FontWeight? fontWeight;

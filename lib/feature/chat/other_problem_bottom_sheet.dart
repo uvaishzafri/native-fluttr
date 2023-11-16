@@ -16,7 +16,8 @@ class OtherProblemBottomSheet extends StatefulWidget {
   final String userId;
 
   @override
-  State<OtherProblemBottomSheet> createState() => _OtherProblemBottomSheetState();
+  State<OtherProblemBottomSheet> createState() =>
+      _OtherProblemBottomSheetState();
 }
 
 class _OtherProblemBottomSheetState extends State<OtherProblemBottomSheet> {
@@ -79,8 +80,11 @@ class _OtherProblemBottomSheetState extends State<OtherProblemBottomSheet> {
           return SizedBox(
             // height: 400,
             child: Padding(
-              padding:
-                  EdgeInsets.only(top: 32, left: 32, right: 32, bottom: MediaQuery.of(context).viewInsets.bottom + 12),
+              padding: EdgeInsets.only(
+                  top: 32,
+                  left: 32,
+                  right: 32,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 12),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -93,7 +97,8 @@ class _OtherProblemBottomSheetState extends State<OtherProblemBottomSheet> {
                       setState(() {});
                     },
                     maxLines: 6,
-                    hintText: 'Your concern matters to us, please let us know why you would like to report the user',
+                    hintText:
+                        'Your concern matters to us, please let us know why you would like to report the user',
                   ),
                   // Spacer(),
                   const SizedBox(height: 20),
@@ -101,7 +106,8 @@ class _OtherProblemBottomSheetState extends State<OtherProblemBottomSheet> {
                     isEnabled: _otherReasonTextController.text.isNotEmpty,
                     text: 'Submit',
                     onPressed: () {
-                      bloc.reportUser(widget.userId, "CHAT", _otherReasonTextController.text);
+                      bloc.reportUser(widget.userId, "CHAT",
+                          _otherReasonTextController.text);
                       // Navigator.pop(context);
                       // showModalBottomSheet(
                       //   context: context,

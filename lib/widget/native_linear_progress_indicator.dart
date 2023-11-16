@@ -41,7 +41,8 @@ class NativeLinearProgressIndicator extends StatelessWidget {
                   borderRadius: borderRadius ?? BorderRadius.zero,
                   child: LinearProgressIndicator(
                     backgroundColor: Colors.transparent,
-                    valueColor: AlwaysStoppedAnimation<Color>(baseColor ?? Colors.blue),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(baseColor ?? Colors.blue),
                   ),
                 ),
               )
@@ -63,9 +64,11 @@ class NativeLinearProgressIndicator extends StatelessWidget {
                     curve: Curves.linear,
                     tween: Tween<double>(begin: 0, end: progress),
                     duration: animatedDuration ?? const Duration(seconds: 0),
-                    builder: (BuildContext context, double value, Widget? child) {
+                    builder:
+                        (BuildContext context, double value, Widget? child) {
                       return LayoutBuilder(
-                        builder: (BuildContext context, BoxConstraints boxConstraints) {
+                        builder: (BuildContext context,
+                            BoxConstraints boxConstraints) {
                           return Container(
                             width: value * boxConstraints.maxWidth,
                             height: height,

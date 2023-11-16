@@ -32,15 +32,20 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final TextEditingController locationSearchTextController = TextEditingController();
+  final TextEditingController locationSearchTextController =
+      TextEditingController();
   String? selectedLocation;
 
   String? selectedReligion;
   String? selectedCommunity;
-  final TextEditingController religionSearchController = TextEditingController();
-  final TextEditingController communitySearchController = TextEditingController();
-  final TextEditingController nameTextEditingController = TextEditingController();
-  final TextEditingController aboutYouTextEditingController = TextEditingController();
+  final TextEditingController religionSearchController =
+      TextEditingController();
+  final TextEditingController communitySearchController =
+      TextEditingController();
+  final TextEditingController nameTextEditingController =
+      TextEditingController();
+  final TextEditingController aboutYouTextEditingController =
+      TextEditingController();
   File? _imageFile;
   // Future<User?>? _user;
   bool valueChanged = false;
@@ -268,7 +273,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   text: 'Save',
                   onPressed: () {
                     // context.router.push(const );
-                    var editProfileBloc = BlocProvider.of<EditProfileCubit>(context);
+                    var editProfileBloc =
+                        BlocProvider.of<EditProfileCubit>(context);
                     User? user;
                     if (valueChanged) {
                       user = _user!.copyWith(
@@ -280,7 +286,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             about: aboutYouTextEditingController.text),
                       );
                     }
-                    editProfileBloc.updateUserProfile(user: user, imageFile: _imageFile);
+                    editProfileBloc.updateUserProfile(
+                        user: user, imageFile: _imageFile);
                   },
                 ),
                 const SizedBox(height: 40),

@@ -6,7 +6,11 @@ import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 
 class FilterByBottomSheet extends StatefulWidget {
-  const FilterByBottomSheet({super.key, required this.isLikesSelected, required this.isChatsSelected, required this.onSubmit});
+  const FilterByBottomSheet(
+      {super.key,
+      required this.isLikesSelected,
+      required this.isChatsSelected,
+      required this.onSubmit});
   final bool isLikesSelected;
   final bool isChatsSelected;
   final Function(bool, bool) onSubmit;
@@ -102,6 +106,8 @@ class _FilterByBottomSheetState extends State<FilterByBottomSheet> {
 class CustomMaterialStateBorderSide extends MaterialStateBorderSide {
   @override
   BorderSide? resolve(Set<MaterialState> states) {
-    return states.contains(MaterialState.selected) ? BorderSide(color: ColorUtils.purple, width: 2) : BorderSide(color: ColorUtils.textGrey.withOpacity(0.8), width: 2);
+    return states.contains(MaterialState.selected)
+        ? BorderSide(color: ColorUtils.purple, width: 2)
+        : BorderSide(color: ColorUtils.textGrey.withOpacity(0.8), width: 2);
   }
 }

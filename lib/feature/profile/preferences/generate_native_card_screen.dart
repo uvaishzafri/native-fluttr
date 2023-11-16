@@ -28,7 +28,8 @@ class GenerateNativeCardScreen extends StatefulWidget {
   const GenerateNativeCardScreen({super.key});
 
   @override
-  State<GenerateNativeCardScreen> createState() => _GenerateNativeCardScreenState();
+  State<GenerateNativeCardScreen> createState() =>
+      _GenerateNativeCardScreenState();
 }
 
 class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
@@ -45,7 +46,8 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
               const NativeLargeBodyText('Generate '),
               GradientText(
                 'native.',
-                style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400),
+                style: const TextStyle(
+                    fontSize: 14.0, fontWeight: FontWeight.w400),
                 colors: const [
                   Color(0xFFBE94C6),
                   Color(0xFF7BC6CC),
@@ -76,7 +78,10 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
                 dateFormat: 'MMM/d/y',
                 pickerTheme: DateTimePickerTheme(
                   dividerColor: ColorUtils.textLightGrey.withOpacity(0.5),
-                  itemTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(color: ColorUtils.purple),
+                  itemTextStyle: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .copyWith(color: ColorUtils.purple),
                 ),
               )),
           const Spacer(),
@@ -85,8 +90,9 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
             text: 'Generate',
             onPressed: () {
               if (!isDateValid(_selectedDate)) {
-                return ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text('Age should be greater than 18 and less than 50 yrs')));
+                return ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text(
+                        'Age should be greater than 18 and less than 50 yrs')));
               }
               showDialog(
                 context: context,
@@ -150,7 +156,8 @@ class _GenerateNativeCardScreenState extends State<GenerateNativeCardScreen> {
                     if (context.mounted) {
                       var user = User.fromJson(jsonDecode(userJson));
                       // context.router.popUntilRoot();
-                      context.router.replaceAll([NativeCardScaffold(user: user, showNext: true)]);
+                      context.router.replaceAll(
+                          [NativeCardScaffold(user: user, showNext: true)]);
                     }
                   }
                 },

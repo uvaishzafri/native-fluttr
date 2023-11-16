@@ -3,9 +3,9 @@ import 'package:native/util/color_utils.dart';
 
 /// fontsize - 22pt fontweight - 400 height - 28pt
 class NativeLargeTitleText extends StatelessWidget {
-
   /// fontsize - 22pt fontweight - 400 height - 28pt
-  const NativeLargeTitleText(this.text, {super.key, this.color, this.fontWeight, this.height});
+  const NativeLargeTitleText(this.text,
+      {super.key, this.color, this.fontWeight, this.height});
 
   final String text;
   final Color? color;
@@ -17,11 +17,10 @@ class NativeLargeTitleText extends StatelessWidget {
     return Text(
       text,
       style: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: color ?? ColorUtils.textGrey,
+          color: color ?? ColorUtils.textGrey,
           // fontFamily: 'poppins',
-            fontWeight: fontWeight,
-          height: height
-          ),
+          fontWeight: fontWeight,
+          height: height),
     );
   }
 }

@@ -24,11 +24,14 @@ class BasicPrefrencesScreen extends StatefulWidget {
 
 class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
   Gender _selectedGender = Gender.male;
-  final TextEditingController locationSearchTextController = TextEditingController();
+  final TextEditingController locationSearchTextController =
+      TextEditingController();
   SfRangeValues minMaxAge = const SfRangeValues(22, 40);
   String? selectedLocation;
-  final TextEditingController _rangeStartController = TextEditingController(text: '22');
-  final TextEditingController _rangeEndController = TextEditingController(text: '44');
+  final TextEditingController _rangeStartController =
+      TextEditingController(text: '22');
+  final TextEditingController _rangeEndController =
+      TextEditingController(text: '44');
 
   @override
   void dispose() {
@@ -99,7 +102,10 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
                         width: 100,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7),
-                          border: Border.all(color: _selectedGender == e ? ColorUtils.aquaGreen : ColorUtils.grey),
+                          border: Border.all(
+                              color: _selectedGender == e
+                                  ? ColorUtils.aquaGreen
+                                  : ColorUtils.grey),
                         ),
                         child: Column(
                           children: [
@@ -115,10 +121,13 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
                                       }
                                     });
                                   },
-                                  fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                  fillColor:
+                                      MaterialStateProperty.resolveWith<Color>(
+                                          (Set<MaterialState> states) {
                                     return ColorUtils.aquaGreen;
                                   }),
-                                  visualDensity: const VisualDensity(horizontal: -4),
+                                  visualDensity:
+                                      const VisualDensity(horizontal: -4),
                                 ),
                                 NativeMediumBodyText(
                                   e.name.capitalize(),
@@ -159,7 +168,8 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
               },
               onChanged: (SfRangeValues newValues) {
                 setState(() {
-                  _rangeStartController.text = newValues.start.toInt().toString();
+                  _rangeStartController.text =
+                      newValues.start.toInt().toString();
                   _rangeEndController.text = newValues.end.toInt().toString();
                   minMaxAge = newValues;
                 });
@@ -189,12 +199,14 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
             text: 'Next',
             onPressed: () {
               if (selectedLocation?.isEmpty ?? true) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Kindly select a location')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Kindly select a location')));
               }
               context.router.push(
                 OtherPreferencesRoute(
                     gender: _selectedGender,
-                    minMaxAge: RangeValues(minMaxAge.start.toDouble(), minMaxAge.end.toDouble()),
+                    minMaxAge: RangeValues(
+                        minMaxAge.start.toDouble(), minMaxAge.end.toDouble()),
                     location: selectedLocation!),
               );
             },

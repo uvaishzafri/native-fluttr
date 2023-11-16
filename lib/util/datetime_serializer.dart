@@ -6,11 +6,13 @@ class DatetimeSerializer implements JsonConverter<DateTime?, dynamic> {
   const DatetimeSerializer();
 
   @override
-  DateTime? fromJson(dynamic timestamp) =>
-      timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch((timestamp as int));
+  DateTime? fromJson(dynamic timestamp) => timestamp == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch((timestamp as int));
 
   @override
-  int? toJson(DateTime? date) => date == null ? null : (date.millisecondsSinceEpoch);
+  int? toJson(DateTime? date) =>
+      date == null ? null : (date.millisecondsSinceEpoch);
 }
 
 class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
@@ -38,5 +40,6 @@ class TypeConverter implements JsonConverter<NativeTypeEnum?, Map?> {
   }
 
   @override
-  Map? toJson(NativeTypeEnum? nativeTypeEnum) => nativeTypeEnum == null ? null : {'en': nativeTypeEnum.name};
+  Map? toJson(NativeTypeEnum? nativeTypeEnum) =>
+      nativeTypeEnum == null ? null : {'en': nativeTypeEnum.name};
 }

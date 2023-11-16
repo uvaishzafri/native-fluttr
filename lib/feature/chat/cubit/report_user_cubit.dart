@@ -9,14 +9,16 @@ part 'report_user_cubit.freezed.dart';
 
 @lazySingleton
 class ReportUserCubit extends Cubit<ReportUserState> {
-  ReportUserCubit(this._userRepository) : super(const ReportUserState.initial());
+  ReportUserCubit(this._userRepository)
+      : super(const ReportUserState.initial());
 
   final UserRepository _userRepository;
 
   reportUser(String userId, String reasonCategory, String? reasonDesc) async {
     emit(const ReportUserState.loading());
 
-    var notificationsList = await _userRepository.reportUser(userId, reasonCategory, reasonDesc);
+    var notificationsList =
+        await _userRepository.reportUser(userId, reasonCategory, reasonDesc);
     notificationsList.fold(
       (left) => emit(ReportUserState.errorState(appException: left)),
       (right) => emit(const ReportUserState.successState()),

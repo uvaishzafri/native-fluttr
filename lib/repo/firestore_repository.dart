@@ -21,7 +21,8 @@ class FirestoreRepository {
         .orderBy('participants.$userId')
         // .where('participants', arrayContains: "5v4PoKCawiazfNwBWoUNWi2WFDo2")
         .withConverter(
-          fromFirestore: (snapshot, options) => ChatRoom.fromJson(snapshot.id, snapshot.data()!),
+          fromFirestore: (snapshot, options) =>
+              ChatRoom.fromJson(snapshot.id, snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
         )
         .snapshots()
@@ -31,7 +32,8 @@ class FirestoreRepository {
       for (var element in event) {
         var data = element.data();
         // if (data.lastReadTime?[userId] != null) {
-        final count = await getUnreadMsgCount(data.firestoreDocId!, data.lastReadTime?[userId]?.millisecondsSinceEpoch);
+        final count = await getUnreadMsgCount(data.firestoreDocId!,
+            data.lastReadTime?[userId]?.millisecondsSinceEpoch);
         if (count.isRight) {
           data = data.copyWith(unreadCount: count.right);
         }
@@ -58,7 +60,8 @@ class FirestoreRepository {
           .doc('chats')
           .collection('chat_rooms')
           .withConverter<ChatRoom>(
-            fromFirestore: (snapshot, options) => ChatRoom.fromJson(snapshot.id, snapshot.data()!),
+            fromFirestore: (snapshot, options) =>
+                ChatRoom.fromJson(snapshot.id, snapshot.data()!),
             toFirestore: (value, options) => value.toJson(),
           )
           .add(chat);
@@ -77,7 +80,8 @@ class FirestoreRepository {
         .collection('message')
         .orderBy('creationDate', descending: true)
         .withConverter(
-          fromFirestore: (snapshot, options) => Message.fromJson(snapshot.id, snapshot.data()!),
+          fromFirestore: (snapshot, options) =>
+              Message.fromJson(snapshot.id, snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
         )
         .snapshots()
@@ -85,7 +89,8 @@ class FirestoreRepository {
         .map((document) => document.map((e) => e.data()).toList());
   }
 
-  Future<Either<AppException, bool>> createChatMessage(String chatRoomDocId, Message message) async {
+  Future<Either<AppException, bool>> createChatMessage(
+      String chatRoomDocId, Message message) async {
     try {
       await _firestore
           .collection('inAppUsers')
@@ -94,7 +99,8 @@ class FirestoreRepository {
           .doc(chatRoomDocId)
           .collection('message')
           .withConverter<Message>(
-            fromFirestore: (snapshot, options) => Message.fromJson(snapshot.id, snapshot.data()!),
+            fromFirestore: (snapshot, options) =>
+                Message.fromJson(snapshot.id, snapshot.data()!),
             toFirestore: (value, options) => value.toJson(),
           )
           .add(message);
@@ -104,9 +110,15 @@ class FirestoreRepository {
     }
   }
 
-  Future<Either<AppException, bool>> updateUserDeviceToken(String userId, String deviceId, String deviceToken) async {
+  Future<Either<AppException, bool>> updateUserDeviceToken(
+      String userId, String deviceId, String deviceToken) async {
     try {
-      await _firestore.collection('inAppUsers').doc(userId).collection('device').doc('deviceTokens').set(
+      await _firestore
+          .collection('inAppUsers')
+          .doc(userId)
+          .collection('device')
+          .doc('deviceTokens')
+          .set(
         {deviceId: deviceToken},
         SetOptions(merge: true),
       );
@@ -116,7 +128,8 @@ class FirestoreRepository {
     }
   }
 
-  Future<Either<AppException, bool>> markChatRoomBlocked(String chatRoomDocId) async {
+  Future<Either<AppException, bool>> markChatRoomBlocked(
+      String chatRoomDocId) async {
     try {
       await _firestore
           .collection('inAppUsers')
@@ -130,9 +143,15 @@ class FirestoreRepository {
     }
   }
 
-  Future<Either<AppException, bool>> updateMsgReadTime(String chatRoomDocId, String userId) async {
+  Future<Either<AppException, bool>> updateMsgReadTime(
+      String chatRoomDocId, String userId) async {
     try {
-      await _firestore.collection('inAppUsers').doc('chats').collection('chat_rooms').doc(chatRoomDocId).update(
+      await _firestore
+          .collection('inAppUsers')
+          .doc('chats')
+          .collection('chat_rooms')
+          .doc(chatRoomDocId)
+          .update(
         {
           'lastReadTime.$userId': DateTime.now().millisecondsSinceEpoch,
         },
@@ -143,9 +162,15 @@ class FirestoreRepository {
     }
   }
 
-  Future<Either<AppException, bool>> updateLastMsgDetails(String chatRoomDocId, String message) async {
+  Future<Either<AppException, bool>> updateLastMsgDetails(
+      String chatRoomDocId, String message) async {
     try {
-      await _firestore.collection('inAppUsers').doc('chats').collection('chat_rooms').doc(chatRoomDocId).set({
+      await _firestore
+          .collection('inAppUsers')
+          .doc('chats')
+          .collection('chat_rooms')
+          .doc(chatRoomDocId)
+          .set({
         "lastMessage": message,
         "lastMessageTime": DateTime.now().millisecondsSinceEpoch,
       }, SetOptions(merge: true));
@@ -155,7 +180,8 @@ class FirestoreRepository {
     }
   }
 
-  Future<Either<AppException, int>> getUnreadMsgCount(String chatRoomDocId, int? lastReadTime) async {
+  Future<Either<AppException, int>> getUnreadMsgCount(
+      String chatRoomDocId, int? lastReadTime) async {
     try {
       final query = await _firestore
           .collection('inAppUsers')
