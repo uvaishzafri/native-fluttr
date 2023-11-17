@@ -133,15 +133,23 @@ class _SignInScreenState extends State<SignInScreen> {
                   context, bloc, _number.phoneNumber ?? "", state));
             } else if (state is AuthInputEmailState ||
                 state is AuthEmailSendFailedState ||
-                state is AuthEmailVerificationSentState ||
-                state is AuthEmailVerificationCompleteState) {
+                state is AuthEmailVerificationSentState) {
               return AuthScaffold(
                   _inputEmail(context, bloc, _number.phoneNumber ?? "", state));
             } else {
-              if (state is AuthInitialState) {
+              if (state is AuthInitialState ||
+                  state is AuthEmailVerificationCompleteState) {
                 final args = context.router.current.args as SignInRouteArgs;
-                if (args.isVerifiedEmail != null && args.isVerifiedEmail!) {
-                  bloc.emailVerified();
+                if (args.isVerifiedEmail != null &&
+                    args.isVerifiedEmail! &&
+                    state is AuthEmailVerificationCompleteState) {
+                  if (context.loaderOverlay.visible) {
+                    context.loaderOverlay.hide();
+                  }
+                  _checkEmailVerifiedTimer?.cancel();
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    _showEmailVerifiedDialog(context);
+                  });
                 }
               }
               return AuthScaffold(_inputPhone(context, bloc));
@@ -185,14 +193,14 @@ class _SignInScreenState extends State<SignInScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.exception.message)));
             }
-            if (state is AuthEmailVerificationCompleteState) {
-              if (context.loaderOverlay.visible) {
-                context.loaderOverlay.hide();
-              }
-              _checkEmailVerifiedTimer?.cancel();
-              // Navigator.pop(context);
-              _showEmailVerifiedDialog(context);
-            }
+            // if (state is AuthEmailVerificationCompleteState) {
+            //   if (context.loaderOverlay.visible) {
+            //     context.loaderOverlay.hide();
+            //   }
+            //   _checkEmailVerifiedTimer?.cancel();
+            //   // Navigator.pop(context);
+            //   _showEmailVerifiedDialog(context);
+            // }
             if (state is AuthEmailVerificationSentState) {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
@@ -671,25 +679,26 @@ class _SignInScreenState extends State<SignInScreen> {
         });
   }
 
+  bool _isDialogShown = false;
+  _isThereCurrentDialogShowing(BuildContext context) => _isDialogShown;
+
   Future<void> _showEmailVerifiedDialog(BuildContext ctx) async {
+    if (_isThereCurrentDialogShowing(ctx)) return;
+    _isDialogShown = true;
+    Future.delayed(const Duration(seconds: 3), () {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        _isDialogShown = false;
+      }
+      if (ctx.mounted) {
+        BlocProvider.of<AuthCubit>(ctx).initial();
+      }
+    });
     await showDialog<void>(
-        context: context,
+        context: ctx,
         useRootNavigator: false,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          Future.delayed(const Duration(seconds: 3), () {
-            if (context.mounted) {
-              Navigator.of(context)
-                ..pop()
-                ..pop();
-              BlocProvider.of<AppCubit>(context).logout();
-            }
-            // var authBloc = getIt<AuthCubit>();
-            // authBloc.initial();
-            if (ctx.mounted) {
-              BlocProvider.of<AuthCubit>(ctx).initial();
-            }
-          });
           return WillPopScope(
               onWillPop: () => Future.value(false),
               child: SimpleDialog(

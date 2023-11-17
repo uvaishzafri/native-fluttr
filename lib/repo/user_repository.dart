@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logger/logger.dart';
 import 'package:native/config.dart';
 import 'package:native/manager/refresh_token_manager.dart';
 import 'package:native/model/app_notification.dart';
@@ -14,7 +15,7 @@ import 'package:native/util/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool isSuccess(int? statusCode) =>
-    statusCode != null && statusCode >= 200 && statusCode < 300;
+    statusCode != null && statusCode >= 200 && statusCode < 400;
 
 @lazySingleton
 class UserRepository {
@@ -145,6 +146,39 @@ class UserRepository {
       }
       return Left(CustomException(err.message));
     } catch (e) {
+      return Left(CustomException());
+    }
+  }
+
+  Future<Either<AppException, bool>> checkEmailRefId(String refId) async {
+    try {
+      final response = await _dioClient.get('/public/verify?refId=$refId',
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => status != null && status < 400,
+          ));
+
+      if (!isSuccess(response.statusCode)) {
+        if (response.statusCode == 404) {
+          return const Right(false);
+        }
+        return Left(RequestError(response.statusMessage ?? ''));
+      }
+      final location = response.headers['Location'];
+      if (location == null || location.isEmpty) return Left(NoResponseBody());
+      final uri = Uri.parse(location[0]);
+      if (uri.hasQuery == false) return Left(NoResponseBody());
+      String? uid = uri.queryParameters['uid'];
+      if (uid == null) return Left(NoResponseBody());
+
+      return await checkUserEmailVerified(uid);
+    } on DioException catch (ex) {
+      if (ex.response?.data['code'] == 'USER_NOT_FOUND') {
+        return const Right(false);
+      } else {
+        return Left(ApiException(ex.response?.data['code']));
+      }
+    } catch (ex) {
       return Left(CustomException());
     }
   }

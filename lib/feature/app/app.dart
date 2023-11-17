@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:logger/logger.dart';
 import 'package:native/config.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.dart';
@@ -81,6 +83,7 @@ class AppWrapper extends StatefulWidget {
 
 class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
   final GlobalKey _key = GlobalKey();
+  final _logger = getIt<Logger>();
   StreamSubscription? _sub;
 
   @override
@@ -99,22 +102,47 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  _handleLink(Uri uri) async {
+    if (uri.hasQuery) {
+      String? uid = uri.queryParameters['uid'];
+      String? refId = uri.queryParameters['refId'];
+      final appCubit = context.read<AppCubit>();
+      if (uid != null) {
+        final isEmailVerified = await appCubit.checkIfEmailVerifiedByUid(uid);
+        if (isEmailVerified) {
+          appCubit.logout(isVerifiedEmail: true);
+        }
+      } else if (refId != null) {
+        final isEmailVerified =
+            await appCubit.checkIfEmailVerifiedByRefId(refId);
+        if (isEmailVerified) {
+          appCubit.logout(isVerifiedEmail: true);
+        }
+      }
+    }
+  }
+
   Future<void> initUniLinks() async {
     try {
+      // Check if you received the link via `getInitialLink` first
+      final PendingDynamicLinkData? initialLink =
+          await FirebaseDynamicLinks.instance.getInitialLink();
+
+      if (initialLink != null) {
+        final Uri deepLink = initialLink.link;
+        _handleLink(deepLink);
+      }
+
+      FirebaseDynamicLinks.instance.onLink.listen(
+        (pendingDynamicLinkData) {
+          final Uri deepLink = pendingDynamicLinkData.link;
+          _handleLink(deepLink);
+        },
+      );
       _sub = linkStream.listen((String? link) async {
         if (link != null) {
           final uri = Uri.parse(link);
-          if (uri.hasQuery) {
-            String? uid = uri.queryParameters['uid'];
-            if (uid != null) {
-              final appCubit = context.read<AppCubit>();
-              final isEmailVerified =
-                  await appCubit.checkIfEmailVerifiedByUid(uid);
-              if (isEmailVerified) {
-                appCubit.logout(isVerifiedEmail: true);
-              }
-            }
-          }
+          _handleLink(uri);
         }
       }, onError: (err) {
         // No-op
@@ -140,7 +168,11 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
               // if (!(state.authResult!.user.emailVerified ?? false)) {
               //   context.router.replace(const BasicDetailsRoute());
               // } else
-              if (state.authResult!.user.customClaims?.birthday == null) {
+              if (state.loggedOut == true) {
+                context.router.replaceAll(
+                    [SignInRoute(isVerifiedEmail: state.hasVerifiedEmail)]);
+              } else if (state.authResult!.user.customClaims?.birthday ==
+                  null) {
                 context.router.replace(const BasicDetailsRoute());
               } else if (!state.hasCompletedTutorial) {
                 context.router.replace(NativeCardScaffold(
@@ -151,11 +183,20 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
                 context.router.replace(const HomeWrapperRoute());
               }
             } else {
-              (state.hasSkippedOnboarding == false)
-                  ? context.router.replace(OnboardingRoute())
-                  // : context.router.replace(const HomeWrapperRoute());
-                  : context.router.replaceAll(
-                      [SignInRoute(isVerifiedEmail: state.hasVerifiedEmail)]);
+              if (state.loggedOut == true) {
+                // context.router.popUntilRoot();
+                context.router.replaceAll(
+                    [SignInRoute(isVerifiedEmail: state.hasVerifiedEmail)],
+                    onFailure: (failure) => _logger.d(failure.toString()));
+              } else {
+                (state.hasSkippedOnboarding == false)
+                    ? context.router.replace(OnboardingRoute(),
+                        onFailure: (failure) => _logger.d(failure.toString()))
+                    // : context.router.replace(const HomeWrapperRoute());
+                    : context.router.replaceAll(
+                        [SignInRoute(isVerifiedEmail: state.hasVerifiedEmail)],
+                        onFailure: (failure) => _logger.d(failure.toString()));
+              }
             }
           },
           child: RepaintBoundary(

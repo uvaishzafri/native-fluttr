@@ -75,6 +75,17 @@ class AppCubit extends HydratedCubit<AppState> {
     return false;
   }
 
+  Future<bool> checkIfEmailVerifiedByRefId(String refId) async {
+    // emit(const AuthState.checkEmailVerification());
+    var checkUser = await _userRepository.checkEmailRefId(refId);
+    if (checkUser.isRight && checkUser.right) {
+      // emit(const AuthState.emailVerificationComplete());
+      return true;
+    }
+
+    return false;
+  }
+
   checkAuth() async {
     bool isSkipped = await _getStoreOnboardInfo();
     bool isTutorialCompleted = await _getTutorialCompletedPref();

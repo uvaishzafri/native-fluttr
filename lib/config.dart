@@ -36,6 +36,9 @@ class Config with _$Config {
     required String firebaseIosApiKey,
     required String firebaseIosAppId,
     required int refreshTokenDurationInSeconds,
+    required String termsAndConditionsUrl,
+    required String privacyPolicyUrl,
+    required String nativePricingUrl,
   }) = _Config;
 
   Config._();
@@ -73,6 +76,10 @@ class Config with _$Config {
     final firebaseIosAppId = dotenv.env['FIREBASE_IOS_APP_ID'] ?? '';
     final refreshTokenDurationInSeconds = int.parse(
         dotenv.env['REFRESH_TOKEN_DURATION'] ?? '1209600'); // Default 14 days
+
+    final termsAndConditionsUrl = dotenv.env['TERMS_CONDITIONS_URL'] ?? '';
+    final privacyPolicyUrl = dotenv.env['PRIVACY_POLICY_URL'] ?? '';
+    final nativePricingUrl = dotenv.env['NATIVE_PRICING_URL'] ?? '';
 
     final logLevelStr = dotenv.env['LOG_LEVEL'] ?? 'WARM';
     switch (logLevelStr) {
@@ -114,6 +121,9 @@ class Config with _$Config {
       firebaseIosApiKey: firebaseIosApiKey,
       firebaseIosAppId: firebaseIosAppId,
       refreshTokenDurationInSeconds: refreshTokenDurationInSeconds,
+      termsAndConditionsUrl: termsAndConditionsUrl,
+      privacyPolicyUrl: privacyPolicyUrl,
+      nativePricingUrl: nativePricingUrl,
     );
   }
 

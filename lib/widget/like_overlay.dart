@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:native/util/color_utils.dart';
 
 class LikeOverlay extends StatelessWidget {
@@ -49,13 +50,15 @@ class LikeOverlay extends StatelessWidget {
           ),
         ),
         if (isTutorial)
-          const Positioned(
-              bottom: -30,
-              right: 90,
-              child: Icon(
-                Icons.touch_app_outlined,
-                size: 80,
-              )),
+          Positioned(
+            bottom: -0,
+            right: 60,
+            child: SvgPicture.asset(
+              'assets/home/ic_hand_point.svg',
+              width: 80,
+              height: 80,
+            ),
+          ),
       ],
     );
   }

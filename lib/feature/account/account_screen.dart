@@ -4,6 +4,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:native/config.dart';
+import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/model/user.dart';
@@ -13,6 +15,7 @@ import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class AccountScreen extends StatefulWidget {
@@ -28,6 +31,8 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   late String imageUrl;
   late String displayName;
+
+  final Config _config = getIt<Config>();
 
   @override
   void initState() {
@@ -59,6 +64,12 @@ class _AccountScreenState extends State<AccountScreen> {
       if (context.mounted) {
         setState(() {});
       }
+    }
+  }
+
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 
@@ -133,7 +144,9 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  _launchUrl(Uri.parse(_config.nativePricingUrl));
+                },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: Row(
@@ -149,12 +162,32 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  _launchUrl(Uri.parse(_config.termsAndConditionsUrl));
+                },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: Row(
                     children: [
                       NativeLargeBodyText('Terms & Conditions'),
+                      Icon(
+                        Icons.open_in_new_rounded,
+                        size: 16,
+                        color: ColorUtils.purple,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  _launchUrl(Uri.parse(_config.privacyPolicyUrl));
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                  child: Row(
+                    children: [
+                      NativeLargeBodyText('Privacy Policy'),
                       Icon(
                         Icons.open_in_new_rounded,
                         size: 16,
