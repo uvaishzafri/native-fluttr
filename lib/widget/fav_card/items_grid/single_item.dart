@@ -32,6 +32,7 @@ class SingleItem extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: Text(
               item.name.capitalize,
+              overflow: TextOverflow.ellipsis,
               style: GoogleFonts.poppins().copyWith(
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
