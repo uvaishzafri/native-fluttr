@@ -14,7 +14,8 @@ class SingleCategoryGrid extends StatelessWidget {
   final FavCardCategoryModel selectedCategory;
   final List<FavCardItemModel> items;
 
-  const SingleCategoryGrid({super.key, required this.selectedCategory, required this.items});
+  const SingleCategoryGrid(
+      {super.key, required this.selectedCategory, required this.items});
 
   @override
   Widget build(BuildContext context) {

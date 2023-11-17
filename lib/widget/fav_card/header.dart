@@ -15,7 +15,9 @@ class Header extends StatelessWidget {
       padding: const EdgeInsets.only(top: 70),
       child: Stack(
         children: [
-          Align(alignment: Alignment.center, child: NativeMediumTitleText(t.strings.myFavCard)),
+          Align(
+              alignment: Alignment.center,
+              child: NativeMediumTitleText(t.strings.myFavCard)),
           Align(
             alignment: Alignment.centerRight,
             child: SvgPicture.asset(

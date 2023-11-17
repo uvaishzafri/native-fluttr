@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/account/cubit/edit_profile_cubit.dart';
 import 'package:native/feature/app/app_router.gr.dart';
@@ -24,6 +22,7 @@ const _assetFolder = 'assets/home';
 @RoutePage()
 class HomeWrapperScreen extends StatefulWidget {
   const HomeWrapperScreen({Key? key}) : super(key: key);
+
   @override
   State<HomeWrapperScreen> createState() => _HomeWrapperScreenState();
 }
@@ -66,17 +65,17 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
 
   @override
   Widget build(BuildContext context) {
-          return AutoTabsScaffold(
-            // inheritNavigatorObservers: false,
-            routes: [
-              const HomeRoute(),
-              const LikesRoute(),
-              const NotificationsRoute(),
-              const FavCardRoute(),
-              const ChatsRoute(),
+    return AutoTabsScaffold(
+      // inheritNavigatorObservers: false,
+      routes: [
+        const HomeRoute(),
+        const LikesRoute(),
+        const NotificationsRoute(),
+        const FavCardRoute(),
+        const ChatsRoute(),
         AccountRoute(/*imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!*/),
-            ],
-            bottomNavigationBuilder: (_, tabsRouter) {
+      ],
+      bottomNavigationBuilder: (_, tabsRouter) {
         return FutureBuilder<User?>(
             future: futureUser,
             builder: (context, snapshot) {
@@ -88,21 +87,18 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   items: <BottomNavigationBarItem>[
-                    const BottomNavigationBarItem(
-                        icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home_filled), label: 'Home'),
+                    const BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home_filled), label: 'Home'),
                     const BottomNavigationBarItem(
                       icon: Icon(Icons.favorite_border_outlined),
                       activeIcon: Icon(Icons.favorite),
                       label: 'Likes',
                     ),
                     const BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications_outlined),
-                        activeIcon: Icon(Icons.notifications),
-                        label: 'Notification'),
-                    const BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications_outlined),
-                        activeIcon: Icon(Icons.notifications),
-                        label: 'Notification'),
+                        icon: Icon(Icons.notifications_outlined), activeIcon: Icon(Icons.notifications), label: 'Notification'),
+                    BottomNavigationBarItem(
+                        icon: SvgPicture.asset("assets/fav_card/fav_category/top.svg", color: Colors.black),
+                        activeIcon: SvgPicture.asset("assets/fav_card/fav_category/top.svg"),
+                        label: 'Fav Card'),
                     const BottomNavigationBarItem(
                       icon: Icon(Icons.chat_outlined),
                       activeIcon: Icon(Icons.chat),
@@ -153,8 +149,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
   void _listenForLocalNotifications() {
     _localNotificationManager.data.addListener(() {
       if (_localNotificationManager.data.value != null) {
-        _notificationNavigator.navigateNotification(
-            context: context, data: jsonDecode(_localNotificationManager.data.value!));
+        _notificationNavigator.navigateNotification(context: context, data: jsonDecode(_localNotificationManager.data.value!));
       }
     });
   }

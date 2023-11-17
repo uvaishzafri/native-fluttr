@@ -9,7 +9,8 @@ class ItemsGrid extends StatelessWidget {
   final FavCardCategoryModel selectedCategory;
   final List<FavCardItemModel> items;
 
-  const ItemsGrid({super.key, required this.selectedCategory, required this.items});
+  const ItemsGrid(
+      {super.key, required this.selectedCategory, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +19,16 @@ class ItemsGrid extends StatelessWidget {
         children: [
           SingleCategoryGrid(
               selectedCategory: recommendedListModel,
-              items: filterItems(selectedCategory: selectedCategory.name.stringify().toUpperCase(), items: items)),
+              items: filterItems(
+                  selectedCategory:
+                      selectedCategory.name.stringify().toUpperCase(),
+                  items: items)),
           SingleCategoryGrid(
               selectedCategory: popularListModel,
-              items: filterItems(selectedCategory: selectedCategory.name.stringify().toUpperCase(), items: items))
+              items: filterItems(
+                  selectedCategory:
+                      selectedCategory.name.stringify().toUpperCase(),
+                  items: items))
         ],
       );
     } else {
@@ -29,13 +36,18 @@ class ItemsGrid extends StatelessWidget {
         children: [
           SingleCategoryGrid(
               selectedCategory: selectedCategory,
-              items: filterItems(selectedCategory: selectedCategory.name.stringify().toUpperCase(), items: items))
+              items: filterItems(
+                  selectedCategory:
+                      selectedCategory.name.stringify().toUpperCase(),
+                  items: items))
         ],
       );
     }
   }
 
-  List<FavCardItemModel> filterItems({required String selectedCategory, required List<FavCardItemModel> items}) {
+  List<FavCardItemModel> filterItems(
+      {required String selectedCategory,
+      required List<FavCardItemModel> items}) {
     List<FavCardItemModel> result = [];
     for (int i = 0; i < items.length; i++) {
       for (int j = 0; j < items[i].categories.length; j++) {

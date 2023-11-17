@@ -89,7 +89,9 @@ class _FavCardScreenState extends State<FavCardScreen> {
   Widget _searchBar() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 28, top: 36),
-      child: NativeTextField(_searchController, hintText: t.strings.search, prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E))),
+      child: NativeTextField(_searchController,
+          hintText: t.strings.search,
+          prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E))),
     );
   }
 }

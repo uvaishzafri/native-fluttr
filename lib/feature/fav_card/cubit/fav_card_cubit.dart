@@ -24,10 +24,13 @@ class FavCardCubit extends Cubit<FavCardState> {
 
     List<FavCardItemModel> celebs = await _userRepository.getFavCardItems();
 
-    emit(FavCardState.data(items: celebs, selectedCategory: favCardCategories[0]));
+    emit(FavCardState.data(
+        items: celebs, selectedCategory: favCardCategories[0]));
   }
 
-  void addRemoveCategory({required FavCardCategoryModel category, required List<FavCardItemModel> items}) async {
+  void addRemoveCategory(
+      {required FavCardCategoryModel category,
+      required List<FavCardItemModel> items}) async {
     emit(FavCardState.data(items: items, selectedCategory: category));
   }
 }

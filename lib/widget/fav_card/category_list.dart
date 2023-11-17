@@ -15,12 +15,15 @@ class CategoryList extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 28),
         child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal, child: Row(children: categoriesList(cubit: favCardCubit, state: state))),
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                children: categoriesList(cubit: favCardCubit, state: state))),
       );
     });
   }
 
-  List<Widget> categoriesList({required FavCardCubit cubit, required FavCardState state}) {
+  List<Widget> categoriesList(
+      {required FavCardCubit cubit, required FavCardState state}) {
     List<Widget> categoriesList = [];
     for (int i = 0; i < favCardCategories.length; i++) {
       categoriesList.add(GestureDetector(
@@ -34,7 +37,9 @@ class CategoryList extends StatelessWidget {
             model: favCardCategories[i],
             radius: 26,
             isCaps: true,
-            isSelected: (state is Data) ? (state.selectedCategory == favCardCategories[i]) : false,
+            isSelected: (state is Data)
+                ? (state.selectedCategory == favCardCategories[i])
+                : false,
           ),
         ),
       ));
