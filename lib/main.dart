@@ -92,10 +92,8 @@ Future<void> main() async {
       return runApp(TranslationProvider(child: App()));
     },
     (exception, stackTrace) async {
-      getIt<Logger>()
-          .e("Unexpected error during initialization", exception, stackTrace);
-      FirebaseCrashlytics.instance.recordError(exception, stackTrace,
-          fatal: true, reason: "Unexpected error during initialization");
+      getIt<Logger>().e("Unexpected error", exception, stackTrace);
+      FirebaseCrashlytics.instance.recordError(exception, stackTrace);
     },
   );
 }

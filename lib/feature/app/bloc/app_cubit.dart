@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -106,6 +107,9 @@ class AppCubit extends HydratedCubit<AppState> {
           logout();
           return;
         } else {
+          if (storedUser.uid != null) {
+            FirebaseCrashlytics.instance.setUserIdentifier(storedUser.uid!);
+          }
           emit(
             AppState.loggedIn(
               isSkipped,
@@ -137,6 +141,7 @@ class AppCubit extends HydratedCubit<AppState> {
     prefs.remove('userTokenTimestampInSeconds');
     prefs.remove('notificationSettings');
     _firebaseAuth.signOut();
+    FirebaseCrashlytics.instance.setUserIdentifier('');
     bool isSkipped = await _getStoreOnboardInfo();
     bool isTutorialCompleted = await _getTutorialCompletedPref();
     emit(AppState.loggedOut(isSkipped, isTutorialCompleted, isVerifiedEmail));

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -133,6 +134,9 @@ class AuthCubit extends Cubit<AuthState> {
             } else if (user.customClaims?.birthday == null) {
               emit(const AuthState.createProfile());
             } else {
+              if (user.uid != null) {
+                FirebaseCrashlytics.instance.setUserIdentifier(user.uid!);
+              }
               emit(AuthState.authorized(user: userCredentials.user!));
             }
             // user.emailVerified ?? false ? emit(AuthState.authorized(user: userCredentials.user!)) : emit(const AuthState.inputEmail());
