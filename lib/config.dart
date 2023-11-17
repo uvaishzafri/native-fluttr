@@ -39,6 +39,7 @@ class Config with _$Config {
     required String termsAndConditionsUrl,
     required String privacyPolicyUrl,
     required String nativePricingUrl,
+    required String nativeAppSupportEmail,
   }) = _Config;
 
   Config._();
@@ -80,6 +81,7 @@ class Config with _$Config {
     final termsAndConditionsUrl = dotenv.env['TERMS_CONDITIONS_URL'] ?? '';
     final privacyPolicyUrl = dotenv.env['PRIVACY_POLICY_URL'] ?? '';
     final nativePricingUrl = dotenv.env['NATIVE_PRICING_URL'] ?? '';
+    final nativeAppSupportEmail = dotenv.env['NATIVE_APP_SUPPORT_EMAIL'] ?? '';
 
     final logLevelStr = dotenv.env['LOG_LEVEL'] ?? 'WARM';
     switch (logLevelStr) {
@@ -124,6 +126,7 @@ class Config with _$Config {
       termsAndConditionsUrl: termsAndConditionsUrl,
       privacyPolicyUrl: privacyPolicyUrl,
       nativePricingUrl: nativePricingUrl,
+      nativeAppSupportEmail: nativeAppSupportEmail,
     );
   }
 

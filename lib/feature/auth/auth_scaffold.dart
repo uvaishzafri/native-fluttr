@@ -36,12 +36,17 @@ class AuthScaffold extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text.rich(TextSpan(
                         text: 'Contact Support',
-                        style: TextStyle(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            emailLauncher(_config.nativeAppSupportEmail,
+                                "Need support for natve.");
+                          },
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                           decoration: TextDecoration.underline,

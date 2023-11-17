@@ -34,8 +34,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final Logger logger = getIt<Logger>();
-  final String _initialCountry = 'IN';
-  PhoneNumber _number = PhoneNumber(isoCode: 'IN');
+  final String _initialCountry = 'JP';
+  PhoneNumber _number = PhoneNumber(isoCode: 'JP');
   bool _isEnabledSubmitPhoneButton = false;
   static const int initialTimerValue = 30;
   final Config _config = getIt<Config>();
