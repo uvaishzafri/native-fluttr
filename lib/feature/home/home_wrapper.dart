@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/account/cubit/edit_profile_cubit.dart';
 import 'package:native/feature/app/app_router.gr.dart';
@@ -17,7 +15,6 @@ import 'package:native/manager/notification_manager/notification_navigator.dart'
 import 'package:native/manager/permission_manager/permission_manager.dart';
 import 'package:native/model/user.dart';
 import 'package:native/theme/theme.dart';
-import 'package:native/util/color_utils.dart';
 import 'package:native/widget/images.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,6 +68,14 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
         Theme.of(context).colorScheme.primaryContainer);
   }
 
+  final _labelList = const <String>[
+    'Home',
+    'Likes',
+    'Notification',
+    'Chat',
+    'Account'
+  ];
+
   @override
   Widget build(BuildContext context) {
     _updateSystemUi();
@@ -92,27 +97,31 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: BottomNavigationBar(
                   currentIndex: tabsRouter.activeIndex,
-                  onTap: tabsRouter.setActiveIndex,
+                  onTap: (idx) {
+                    FirebaseAnalytics.instance
+                        .logScreenView(screenName: _labelList[idx]);
+                    tabsRouter.setActiveIndex(idx);
+                  },
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   items: <BottomNavigationBarItem>[
-                    const BottomNavigationBarItem(
-                        icon: Icon(Icons.home_outlined),
-                        activeIcon: Icon(Icons.home_filled),
-                        label: 'Home'),
-                    const BottomNavigationBarItem(
-                      icon: Icon(Icons.favorite_border_outlined),
-                      activeIcon: Icon(Icons.favorite),
-                      label: 'Likes',
+                    BottomNavigationBarItem(
+                        icon: const Icon(Icons.home_outlined),
+                        activeIcon: const Icon(Icons.home_filled),
+                        label: _labelList[0]),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.favorite_border_outlined),
+                      activeIcon: const Icon(Icons.favorite),
+                      label: _labelList[1],
                     ),
-                    const BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications_outlined),
-                        activeIcon: Icon(Icons.notifications),
-                        label: 'Notification'),
-                    const BottomNavigationBarItem(
-                      icon: Icon(Icons.chat_outlined),
-                      activeIcon: Icon(Icons.chat),
-                      label: 'Chat',
+                    BottomNavigationBarItem(
+                        icon: const Icon(Icons.notifications_outlined),
+                        activeIcon: const Icon(Icons.notifications),
+                        label: _labelList[2]),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.chat_outlined),
+                      activeIcon: const Icon(Icons.chat),
+                      label: _labelList[3],
                     ),
                     BottomNavigationBarItem(
                       icon: BlocProvider<EditProfileCubit>.value(
@@ -141,7 +150,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                                   : Placeholder(),
                         ),
                       ),
-                      label: 'Account',
+                      label: _labelList[4],
                     ),
                   ],
                   type: BottomNavigationBarType.fixed,

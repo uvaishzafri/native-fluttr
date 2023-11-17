@@ -34,7 +34,7 @@ tasks:
   build-apk:
     label: 'Build APK'
     cmds:
-      - flutter build apk --flavor {{.CLI_ARGS}}
+      - flutter build apk --flavor {{.CLI_ARGS}} --dart-define=FLAVOR={{.CLI_ARGS}}
   build-ipa:
     label: 'Build IPA'
     cmds:

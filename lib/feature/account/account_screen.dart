@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:native/config.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
@@ -11,6 +13,7 @@ import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/model/user.dart';
 import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/launcher.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
@@ -32,6 +35,7 @@ class _AccountScreenState extends State<AccountScreen> {
   late String imageUrl;
   late String displayName;
 
+  final InAppReview _inAppReview = InAppReview.instance;
   final Config _config = getIt<Config>();
 
   @override
@@ -64,12 +68,6 @@ class _AccountScreenState extends State<AccountScreen> {
       if (context.mounted) {
         setState(() {});
       }
-    }
-  }
-
-  Future<void> _launchUrl(Uri url) async {
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
     }
   }
 
@@ -137,7 +135,14 @@ class _AccountScreenState extends State<AccountScreen> {
               //   ),
               // ),
               GestureDetector(
-                onTap: () {},
+                onTap: () async {
+                  if (await _inAppReview.isAvailable()) {
+                    _inAppReview.requestReview();
+                  }
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'clicked_user_feedback',
+                  );
+                },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: NativeLargeBodyText('Feedback'),
@@ -145,7 +150,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  _launchUrl(Uri.parse(_config.nativePricingUrl));
+                  launcher(Uri.parse(_config.nativePricingUrl));
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
@@ -163,7 +168,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  _launchUrl(Uri.parse(_config.termsAndConditionsUrl));
+                  launcher(Uri.parse(_config.termsAndConditionsUrl));
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
@@ -181,7 +186,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  _launchUrl(Uri.parse(_config.privacyPolicyUrl));
+                  launcher(Uri.parse(_config.privacyPolicyUrl));
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),

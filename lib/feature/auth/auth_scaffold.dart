@@ -1,13 +1,17 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:native/config.dart';
+import 'package:native/util/launcher.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 const _assetFolder = 'assets/auth';
 
 class AuthScaffold extends StatelessWidget {
   final Widget content;
-  const AuthScaffold(this.content, {super.key});
+  final Config _config;
 
+  const AuthScaffold(this.content, this._config, {super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,18 +70,22 @@ class AuthScaffold extends StatelessWidget {
                       ],
                     ),
                   ]),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text.rich(TextSpan(
-                        text: 'terms of use',
-                        style: TextStyle(
+                        text: 'terms and conditions',
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            launcher(Uri.parse(_config.termsAndConditionsUrl));
+                          },
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                           decoration: TextDecoration.underline,
                         ),
                       )),
-                      Text(
+                      const Text(
                         ' & ',
                         style: TextStyle(
                             color: Color(0xff1E1E1E),
@@ -87,7 +95,11 @@ class AuthScaffold extends StatelessWidget {
                       Text.rich(
                         TextSpan(
                           text: 'privacy policy',
-                          style: TextStyle(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              launcher(Uri.parse(_config.privacyPolicyUrl));
+                            },
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.normal,
                             decoration: TextDecoration.underline,

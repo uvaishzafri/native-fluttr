@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -59,6 +60,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   void verificationCompleted(PhoneAuthCredential credential) async {
     _logger.d("verificationCompleted");
+    FirebaseAnalytics.instance.logSignUp(signUpMethod: 'phone');
     await signIn(credential);
   }
 
@@ -136,6 +138,7 @@ class AuthCubit extends Cubit<AuthState> {
             } else {
               if (user.uid != null) {
                 FirebaseCrashlytics.instance.setUserIdentifier(user.uid!);
+                FirebaseAnalytics.instance.setUserId(id: user.uid!);
               }
               emit(AuthState.authorized(user: userCredentials.user!));
             }

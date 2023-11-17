@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -142,6 +143,7 @@ class AppCubit extends HydratedCubit<AppState> {
     prefs.remove('notificationSettings');
     _firebaseAuth.signOut();
     FirebaseCrashlytics.instance.setUserIdentifier('');
+
     bool isSkipped = await _getStoreOnboardInfo();
     bool isTutorialCompleted = await _getTutorialCompletedPref();
     emit(AppState.loggedOut(isSkipped, isTutorialCompleted, isVerifiedEmail));

@@ -43,7 +43,7 @@ class App extends StatelessWidget {
               child: MaterialApp.router(
                 /// Theme configuration.
                 theme: state.theme.light,
-                darkTheme: state.theme.dark,
+                darkTheme: state.theme.light, // TODO: need to support dark mode
                 themeMode: state.theme.mode,
                 title: t.strings.title,
 

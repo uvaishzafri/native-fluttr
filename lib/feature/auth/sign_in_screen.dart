@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart';
+import 'package:native/config.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
@@ -44,6 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
   PhoneNumber _number = PhoneNumber(isoCode: 'IN');
   bool _isEnabledSubmitPhoneButton = false;
   static const int initialTimerValue = 30;
+  final Config _config = getIt<Config>();
 
   Timer? _timer;
   int _start = initialTimerValue;
@@ -130,13 +132,16 @@ class _SignInScreenState extends State<SignInScreen> {
 
             if (state is AuthInputPincodeState ||
                 state is AuthErrorPincodeState) {
-              return AuthScaffold(_inputPincode(
-                  context, bloc, _number.phoneNumber ?? "", state));
+              return AuthScaffold(
+                  _inputPincode(
+                      context, bloc, _number.phoneNumber ?? "", state),
+                  _config);
             } else if (state is AuthInputEmailState ||
                 state is AuthEmailSendFailedState ||
                 state is AuthEmailVerificationSentState) {
               return AuthScaffold(
-                  _inputEmail(context, bloc, _number.phoneNumber ?? "", state));
+                  _inputEmail(context, bloc, _number.phoneNumber ?? "", state),
+                  _config);
             } else {
               if (state is AuthInitialState ||
                   state is AuthEmailVerificationCompleteState) {
@@ -153,7 +158,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   });
                 }
               }
-              return AuthScaffold(_inputPhone(context, bloc));
+              return AuthScaffold(_inputPhone(context, bloc), _config);
             }
           },
           listener: (BuildContext context, AuthState state) async {
