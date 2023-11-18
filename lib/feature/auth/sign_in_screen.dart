@@ -41,11 +41,12 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final Logger logger = getIt<Logger>();
-  final String _initialCountry = 'JP';
-  PhoneNumber _number = PhoneNumber(isoCode: 'JP');
+  final Config _config = getIt<Config>();
+
+  String _initialCountry = 'IN';
+  PhoneNumber _number = PhoneNumber(isoCode: 'IN');
   bool _isEnabledSubmitPhoneButton = false;
   static const int initialTimerValue = 30;
-  final Config _config = getIt<Config>();
 
   Timer? _timer;
   int _start = initialTimerValue;
@@ -57,6 +58,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void initState() {
+    _initialCountry = _config.supportedPhoneCountry;
+    _number = PhoneNumber(isoCode: _config.supportedPhoneCountry);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _updateSystemUi();

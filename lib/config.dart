@@ -40,6 +40,7 @@ class Config with _$Config {
     required String privacyPolicyUrl,
     required String nativePricingUrl,
     required String nativeAppSupportEmail,
+    required String supportedPhoneCountry,
   }) = _Config;
 
   Config._();
@@ -82,6 +83,7 @@ class Config with _$Config {
     final privacyPolicyUrl = dotenv.env['PRIVACY_POLICY_URL'] ?? '';
     final nativePricingUrl = dotenv.env['NATIVE_PRICING_URL'] ?? '';
     final nativeAppSupportEmail = dotenv.env['NATIVE_APP_SUPPORT_EMAIL'] ?? '';
+    final supportedPhoneCountry = dotenv.env['SUPPORTED_PHONE_COUNTRY'] ?? 'IN';
 
     final logLevelStr = dotenv.env['LOG_LEVEL'] ?? 'WARM';
     switch (logLevelStr) {
@@ -106,28 +108,28 @@ class Config with _$Config {
     }
 
     return Config(
-      build: build,
-      flavor: flavor,
-      httpClientTimeout: httpClientTimeout,
-      nativeBaseUrl: nativeBaseUrl,
-      debugShowCheckedModeBanner: false,
-      // debugShowCheckedModeBanner: build == Build.debug,
-      debugShowMaterialGrid: false,
-      verifyEmailRedirectUrl: verifyEmailRedirectUrl!,
-      firebaseProjectId: firebaseProjectId,
-      firebaseStorageBucket: firebaseStorageBucket,
-      firebaseMessagingSenderId: firebaseMessagningSenderId,
-      firebaseAndroidApiKey: firebaseAndroidApiKey,
-      firebaseAndroidAppId: firebaseAndroidAppId,
-      firebaseIosBundleId: firebaseIosBundleId,
-      firebaseIosApiKey: firebaseIosApiKey,
-      firebaseIosAppId: firebaseIosAppId,
-      refreshTokenDurationInSeconds: refreshTokenDurationInSeconds,
-      termsAndConditionsUrl: termsAndConditionsUrl,
-      privacyPolicyUrl: privacyPolicyUrl,
-      nativePricingUrl: nativePricingUrl,
-      nativeAppSupportEmail: nativeAppSupportEmail,
-    );
+        build: build,
+        flavor: flavor,
+        httpClientTimeout: httpClientTimeout,
+        nativeBaseUrl: nativeBaseUrl,
+        debugShowCheckedModeBanner: false,
+        // debugShowCheckedModeBanner: build == Build.debug,
+        debugShowMaterialGrid: false,
+        verifyEmailRedirectUrl: verifyEmailRedirectUrl!,
+        firebaseProjectId: firebaseProjectId,
+        firebaseStorageBucket: firebaseStorageBucket,
+        firebaseMessagingSenderId: firebaseMessagningSenderId,
+        firebaseAndroidApiKey: firebaseAndroidApiKey,
+        firebaseAndroidAppId: firebaseAndroidAppId,
+        firebaseIosBundleId: firebaseIosBundleId,
+        firebaseIosApiKey: firebaseIosApiKey,
+        firebaseIosAppId: firebaseIosAppId,
+        refreshTokenDurationInSeconds: refreshTokenDurationInSeconds,
+        termsAndConditionsUrl: termsAndConditionsUrl,
+        privacyPolicyUrl: privacyPolicyUrl,
+        nativePricingUrl: nativePricingUrl,
+        nativeAppSupportEmail: nativeAppSupportEmail,
+        supportedPhoneCountry: supportedPhoneCountry);
   }
 
   bool get isDebug => build == Build.debug;
