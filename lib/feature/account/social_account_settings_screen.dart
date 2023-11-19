@@ -11,17 +11,20 @@ class SocialAccountSettingsScreen extends StatefulWidget {
   const SocialAccountSettingsScreen({super.key});
 
   @override
-  State<SocialAccountSettingsScreen> createState() => _SocialAccountSettingsScreenState();
+  State<SocialAccountSettingsScreen> createState() =>
+      _SocialAccountSettingsScreenState();
 }
 
-class _SocialAccountSettingsScreenState extends State<SocialAccountSettingsScreen> {
+class _SocialAccountSettingsScreenState
+    extends State<SocialAccountSettingsScreen> {
   bool _instagramSelected = true;
   bool _twitterSelected = true;
   @override
   Widget build(BuildContext context) {
     Widget content = Column(
       children: [
-        const NativeMediumTitleText('Connect or deactivate your social media accounts here'),
+        const NativeMediumTitleText(
+            'Connect or deactivate your social media accounts here'),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Row(

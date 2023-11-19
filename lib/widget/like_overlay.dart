@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:native/util/color_utils.dart';
 
 class LikeOverlay extends StatelessWidget {
-  const LikeOverlay({super.key, required this.onPressedLike, this.isTutorial = false});
+  const LikeOverlay(
+      {super.key, required this.onPressedLike, this.isTutorial = false});
   final VoidCallback onPressedLike;
   final bool isTutorial;
 
@@ -26,7 +27,8 @@ class LikeOverlay extends StatelessWidget {
               children: [
                 FloatingActionButton(
                   // radius: 30,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40)),
                   onPressed: () {
                     context.router.pop();
                   },
@@ -35,7 +37,8 @@ class LikeOverlay extends StatelessWidget {
                 const SizedBox(width: 48),
                 FloatingActionButton(
                   onPressed: onPressedLike,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40)),
                   child: const Icon(
                     Icons.thumb_up_alt_outlined,
                     color: ColorUtils.purple,

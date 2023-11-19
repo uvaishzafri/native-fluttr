@@ -6,7 +6,13 @@ import 'package:native/widget/native_text_field.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 
 class NativeDropdown<T> extends StatelessWidget {
-  const NativeDropdown({super.key, required this.items, this.hintText, this.value, required this.onChanged, this.searchController});
+  const NativeDropdown(
+      {super.key,
+      required this.items,
+      this.hintText,
+      this.value,
+      required this.onChanged,
+      this.searchController});
   final List<DropdownMenuItem<T>>? items;
   final String? hintText;
   final T? value;
@@ -51,7 +57,8 @@ class NativeDropdown<T> extends StatelessWidget {
                 searchInnerWidget: Container(
                   height: 50,
                   color: ColorUtils.textLightGrey.withOpacity(0.05),
-                  padding: const EdgeInsets.only(top: 8, bottom: 4, right: 8, left: 8),
+                  padding: const EdgeInsets.only(
+                      top: 8, bottom: 4, right: 8, left: 8),
                   child: NativeTextField(
                     searchController,
                     hintText: 'Search',
@@ -62,7 +69,10 @@ class NativeDropdown<T> extends StatelessWidget {
                   ),
                 ),
                 searchMatchFn: (item, searchValue) {
-                  return item.value.toString().toLowerCase().contains(searchValue.toLowerCase());
+                  return item.value
+                      .toString()
+                      .toLowerCase()
+                      .contains(searchValue.toLowerCase());
                 },
               )
             : null,

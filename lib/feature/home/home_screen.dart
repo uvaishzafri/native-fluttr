@@ -12,6 +12,7 @@ import 'package:native/feature/home/bloc/home_cubit.dart';
 import 'package:native/feature/likes/cubit/likes_cubit.dart';
 import 'package:native/model/user.dart';
 import 'package:native/repo/user_repository.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:native/widget/dialogs/multi_match_dialog.dart';
 import 'package:native/widget/dialogs/single_match_dialog.dart';
@@ -29,7 +30,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutoRouteAwareStateMixin<HomeScreen> {
   TextEditingController? _searchController;
   User? _user;
   @override
@@ -42,7 +44,14 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
     });
   }
 
+  @override
+  didUpdateWidget(HomeScreen homeScreen) {
+    super.didUpdateWidget(homeScreen);
+    _updateSystemUi();
+  }
+
   initUser() async {
+    _updateSystemUi();
     var prefs = await SharedPreferences.getInstance();
     var user = prefs.getString('user');
     if (user != null) {
@@ -63,53 +72,72 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
 
   @override
   void didChangeTabRoute(TabPageRoute previousRoute) {
+    _updateSystemUi();
     getMatches();
+  }
+
+  _updateSystemUi() {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        Theme.of(context).colorScheme.primaryContainer);
   }
 
   getMatches() {
     final userRepo = getIt<UserRepository>();
-    userRepo.getMatches().then((value) => value.fold((left) => null, (right) async {
-          if (right.isNotEmpty) {
-            Widget dialog;
-            var prefs = await SharedPreferences.getInstance();
-            var userJson = prefs.getString('user');
-            if (userJson != null) {
-              var currUser = User.fromJson(jsonDecode(userJson));
-              if (right.length > 1) {
-                dialog = MultiMatchDialog(matchedUsers: right, selfPhotoUrl: currUser.photoURL ?? '');
-              } else {
-                dialog = SingleMatchDialog(
-                    userName: right.first.displayName!,
-                    matchedUserPhotoUrl: right.first.photoURL ?? '',
-                    selfPhotoUrl: currUser.photoURL ?? '');
+    userRepo
+        .getMatches()
+        .then((value) => value.fold((left) => null, (right) async {
+              if (right.isNotEmpty) {
+                Widget dialog;
+                var prefs = await SharedPreferences.getInstance();
+                var userJson = prefs.getString('user');
+                if (userJson != null) {
+                  var currUser = User.fromJson(jsonDecode(userJson));
+                  if (right.length > 1) {
+                    dialog = MultiMatchDialog(
+                        matchedUsers: right,
+                        selfPhotoUrl: currUser.photoURL ?? '');
+                  } else {
+                    dialog = SingleMatchDialog(
+                        userName: right.first.displayName!,
+                        matchedUserPhotoUrl: right.first.photoURL ?? '',
+                        selfPhotoUrl: currUser.photoURL ?? '');
+                  }
+                  if (context.mounted) {
+                    return showDialog(
+                        context: context, builder: (context) => dialog);
+                  }
+                }
               }
-              if (context.mounted) {
-                return showDialog(context: context, builder: (context) => dialog);
-              }
-            }
-          }
-        }));
+            }));
   }
 
   @override
   Widget build(BuildContext context) {
+    _updateSystemUi();
     return BlocProvider.value(
       value: getIt<HomeCubit>()..fetchRecommendations(),
       child: BlocConsumer<HomeCubit, HomeState>(
           buildWhen: (p, c) => p != c && c is HomeSuccessState,
           builder: (context, state) {
+            _updateSystemUi();
             final bloc = BlocProvider.of<HomeCubit>(context);
             return SafeArea(
               child: GestureDetector(
                 onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
                 child: Scaffold(
-                  appBar: AppBar(
-                    toolbarHeight: 100,
-                    centerTitle: true,
-                    title: SvgPicture.asset('assets/home/ic_logo_black.svg'),
-                  ),
+                  // appBar: AppBar(
+                  //   toolbarHeight: 100,
+                  //   centerTitle: true,
+                  //   title: SvgPicture.asset('assets/home/ic_logo_black.svg'),
+                  // ),
                   body: CustomScrollView(
                     slivers: [
+                      SliverAppBar(
+                        toolbarHeight: 100,
+                        centerTitle: true,
+                        title:
+                            SvgPicture.asset('assets/home/ic_logo_black.svg'),
+                      ),
                       SliverPadding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         sliver: SliverToBoxAdapter(
@@ -117,7 +145,8 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
                         ),
                       ),
                       SliverPadding(
-                          padding: const EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
+                          padding: const EdgeInsets.all(12),
+                          sliver: SliverToBoxAdapter(child: _nativeCard())),
                       SliverPadding(
                         padding: const EdgeInsets.all(12),
                         sliver: state is HomeSuccessState
@@ -165,7 +194,8 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
                 if (context.loaderOverlay.visible) {
                   context.loaderOverlay.hide();
                 }
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Like Sent')));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content: Text('Like Sent')));
               },
             );
           }),
@@ -174,9 +204,14 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
 
   Widget _searchBar() {
     return NativeTextField(
-      onTap: () => context.router.push(const AccountPlansRoute()),
+      onTap: () async {
+        context.router
+            .push(const AccountPlansRoute())
+            .then((_) => _updateSystemUi());
+      },
       _searchController,
       hintText: 'Search',
+      readOnly: true,
       prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E)),
     );
   }
@@ -185,6 +220,7 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
     return _user != null
         ? ExpandableNativeCard(
             native: _user!,
+            returnCallback: () => _updateSystemUi(),
           )
         : const SizedBox();
   }
@@ -210,7 +246,10 @@ class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<H
                 likesBloc.fetchLikesReport();
               },
             );
-            await context.router.push(NativeCardScaffold(user: users[index], overlayItem: overlayItem));
+            await context.router
+                .push(NativeCardScaffold(
+                    user: users[index], overlayItem: overlayItem))
+                .then((_) => _updateSystemUi());
             getMatches();
           },
           child: NativeUserCard(

@@ -18,7 +18,8 @@ class CustomClaims with _$CustomClaims {
     @JsonKey(includeIfNull: false) String? about,
   }) = _CustomClaims;
 
-  factory CustomClaims.fromJson(Map<String, dynamic> json) => _$CustomClaimsFromJson(json);
+  factory CustomClaims.fromJson(Map<String, dynamic> json) =>
+      _$CustomClaimsFromJson(json);
 
 // @override
 //   Map<String, dynamic> toJson() {

@@ -10,6 +10,7 @@ import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/chat/cubit/chat_cubit.dart';
 import 'package:native/model/chat_room.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
@@ -38,12 +39,20 @@ class _ChatsScreenState extends State<ChatsScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateSystemUi();
+    });
   }
 
   @override
   void dispose() {
     _searchController?.dispose();
     super.dispose();
+  }
+
+  _updateSystemUi() {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        ColorUtils.aquaGreen);
   }
 
   @override
@@ -147,34 +156,57 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                 if (!(_chats[index].blocked ?? false)) {
                                   context.router.push(
                                     ChatMessagesRoute(
-                                      chatRoomDocId: _chats[index].firestoreDocId!,
+                                      chatRoomDocId:
+                                          _chats[index].firestoreDocId!,
                                       userId: _chats[index]
                                           .participants
                                           .keys
-                                          .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid),
-                                      name: _chats[index].participants[_chats[index].participants.keys.firstWhere(
-                                          (element) => element != FirebaseAuth.instance.currentUser?.uid)]![0],
-                                      imageUrl: _chats[index].participants[_chats[index].participants.keys.firstWhere(
-                                          (element) => element != FirebaseAuth.instance.currentUser?.uid)]![1],
+                                          .firstWhere((element) =>
+                                              element !=
+                                              FirebaseAuth
+                                                  .instance.currentUser?.uid),
+                                      name: _chats[index].participants[
+                                          _chats[index]
+                                              .participants
+                                              .keys
+                                              .firstWhere((element) =>
+                                                  element !=
+                                                  FirebaseAuth.instance
+                                                      .currentUser?.uid)]![0],
+                                      imageUrl: _chats[index].participants[
+                                          _chats[index]
+                                              .participants
+                                              .keys
+                                              .firstWhere((element) =>
+                                                  element !=
+                                                  FirebaseAuth.instance
+                                                      .currentUser?.uid)]![1],
                                     ),
                                   );
                                 }
                               },
                               contentPadding: const EdgeInsets.only(right: 10),
                               leading: CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(_chats[index].participants[_chats[index]
+                                backgroundImage: CachedNetworkImageProvider(
+                                    _chats[index].participants[_chats[index]
                                             .participants
                                             .keys
-                                            .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]
-                                        ?[1] ??
-                                    ''),
+                                            .firstWhere((element) =>
+                                                element !=
+                                                FirebaseAuth.instance
+                                                    .currentUser?.uid)]?[1] ??
+                                        ''),
                               ),
                               title: Row(
                                 children: [
-                                  NativeMediumTitleText(_chats[index].participants[_chats[index]
-                                      .participants
-                                      .keys
-                                      .firstWhere((element) => element != FirebaseAuth.instance.currentUser?.uid)]![0]),
+                                  NativeMediumTitleText(
+                                      _chats[index].participants[_chats[index]
+                                          .participants
+                                          .keys
+                                          .firstWhere((element) =>
+                                              element !=
+                                              FirebaseAuth.instance.currentUser
+                                                  ?.uid)]![0]),
                                   const SizedBox(width: 8),
                                   (_chats[index].unreadCount ?? 0) > 0
                                       ? Badge.count(
@@ -188,7 +220,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      _chats[index].lastMessage ?? "No conversation yet",
+                                      _chats[index].lastMessage ??
+                                          "No conversation yet",
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                     ),
@@ -196,15 +229,19 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                   // NativeMediumBodyText(_chats[index].lastMessage ?? "No conversation yet"),
                                   const SizedBox(width: 6),
                                   _chats[index].lastMessageTime != null
-                                      ? NativeMediumBodyText(timeago.format(_chats[index].lastMessageTime!))
+                                      ? NativeMediumBodyText(timeago.format(
+                                          _chats[index].lastMessageTime!))
                                       : const SizedBox(),
                                 ],
                               ),
                               trailing: _chats[index].blocked ?? false
                                   ? Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 3),
                                       decoration: BoxDecoration(
-                                          color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
+                                          color: ColorUtils.purple,
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
                                       child: const NativeSmallBodyText(
                                         'Blocked',
                                         color: ColorUtils.white,
@@ -215,9 +252,12 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                   : _chats[index].lastMessageTime != null
                                       ? null
                                       : Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 3),
                                           decoration: BoxDecoration(
-                                              color: ColorUtils.purple, borderRadius: BorderRadius.circular(20)),
+                                              color: ColorUtils.purple,
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
                                           child: const NativeSmallBodyText(
                                             'Start now',
                                             color: ColorUtils.white,

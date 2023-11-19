@@ -7,15 +7,18 @@ import 'package:native/repo/firestore_repository.dart';
 class NotificationManager {
   NotificationManager();
 
-  void setForegroundMessageCallback(void Function(RemoteMessage remoteMessage) handler) {
+  void setForegroundMessageCallback(
+      void Function(RemoteMessage remoteMessage) handler) {
     FirebaseMessaging.onMessage.listen(handler);
   }
 
-  void setBackgroundMessageOpenedCallback(void Function(RemoteMessage remoteMessage) handler) {
+  void setBackgroundMessageOpenedCallback(
+      void Function(RemoteMessage remoteMessage) handler) {
     FirebaseMessaging.onMessageOpenedApp.listen(handler);
   }
 
-  void setBackgroundMessageCallback(Future<void> Function(RemoteMessage remoteMessage) handler) {
+  void setBackgroundMessageCallback(
+      Future<void> Function(RemoteMessage remoteMessage) handler) {
     FirebaseMessaging.onBackgroundMessage(handler);
   }
 }

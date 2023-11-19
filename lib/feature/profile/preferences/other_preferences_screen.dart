@@ -21,7 +21,11 @@ import 'package:native/widget/text/native_small_body_text.dart';
 
 @RoutePage()
 class OtherPreferencesScreen extends StatefulWidget {
-  const OtherPreferencesScreen({super.key, required this.gender, required this.minMaxAge, required this.location});
+  const OtherPreferencesScreen(
+      {super.key,
+      required this.gender,
+      required this.minMaxAge,
+      required this.location});
   final Gender gender;
   final RangeValues minMaxAge;
   final String location;
@@ -33,8 +37,10 @@ class OtherPreferencesScreen extends StatefulWidget {
 class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
   String? selectedReligion;
   String? selectedCommunity;
-  final TextEditingController religionSearchController = TextEditingController();
-  final TextEditingController communitySearchController = TextEditingController();
+  final TextEditingController religionSearchController =
+      TextEditingController();
+  final TextEditingController communitySearchController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -89,23 +95,24 @@ class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
           const NativeSmallBodyText('Language'),
           const SizedBox(height: 8),
           NativeDropdown(
-              onChanged: (value) {
-                setState(() {
-                  selectedCommunity = value;
-                });
-              },
-              value: selectedCommunity,
-              searchController: communitySearchController,
+            onChanged: (value) {
+              setState(() {
+                selectedCommunity = value;
+              });
+            },
+            value: selectedCommunity,
+            searchController: communitySearchController,
             items: languages
-                      .map((item) => DropdownMenuItem(
-                            value: item,
-                            child: NativeMediumBodyText(item),
-                          ))
+                .map((item) => DropdownMenuItem(
+                      value: item,
+                      child: NativeMediumBodyText(item),
+                    ))
                 .toList(),
           ),
           const Spacer(),
           NativeButton(
-            isEnabled: profileCubit.validateOtherDetails(selectedReligion, selectedCommunity),
+            isEnabled: profileCubit.validateOtherDetails(
+                selectedReligion, selectedCommunity),
             text: 'Next',
             onPressed: () {
               final userPrefs = UserPrefs(

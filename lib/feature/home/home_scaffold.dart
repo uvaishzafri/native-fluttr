@@ -30,8 +30,11 @@ class HomeScaffold extends StatelessWidget {
                     ),
                   )),
               SliverList(
-                delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                  return Container(margin: const EdgeInsets.only(top: 15, left: 32, right: 32),
+                delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  return Container(
+                      margin:
+                          const EdgeInsets.only(top: 15, left: 32, right: 32),
                       child: content);
                 }, childCount: 1),
               ),

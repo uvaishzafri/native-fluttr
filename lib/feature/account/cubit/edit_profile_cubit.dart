@@ -14,7 +14,8 @@ part 'edit_profile_cubit.freezed.dart';
 
 @lazySingleton
 class EditProfileCubit extends Cubit<EditProfileState> {
-  EditProfileCubit(this._userRepository) : super(const EditProfileState.initial());
+  EditProfileCubit(this._userRepository)
+      : super(const EditProfileState.initial());
 
   final UserRepository _userRepository;
 
@@ -48,12 +49,14 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       final prefs = await SharedPreferences.getInstance();
       String? userJson = prefs.getString('user');
       if (userJson != null) {
-        User user = User.fromJson(jsonDecode(userJson)).copyWith(photoURL: imageUrl);
+        User user =
+            User.fromJson(jsonDecode(userJson)).copyWith(photoURL: imageUrl);
         prefs.setString('user', jsonEncode(user.toJson()));
         emit(EditProfileState.success(user: user));
         return;
       } else {
-        emit(EditProfileState.error(appException: CustomException('User not found')));
+        emit(EditProfileState.error(
+            appException: CustomException('User not found')));
         return;
       }
     }

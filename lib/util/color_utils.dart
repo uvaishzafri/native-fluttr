@@ -9,8 +9,5 @@ class ColorUtils {
   static const grey = Color(0xFFF8F8F8);
   static const textGrey = Color(0xFF1E1E1E);
   static const textLightGrey = Color(0xFF7B7B7B);
-  static const nativeGradient = LinearGradient(colors: [
-    purple,
-    aquaGreen
-  ]);
+  static const nativeGradient = LinearGradient(colors: [purple, aquaGreen]);
 }

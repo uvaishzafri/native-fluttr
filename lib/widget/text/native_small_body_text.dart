@@ -4,7 +4,8 @@ import 'package:native/util/color_utils.dart';
 /// fontsize - 12pt fontweight - 400 height - 16pt
 class NativeSmallBodyText extends StatelessWidget {
   /// fontsize - 12pt fontweight - 400 height - 16pt
-  const NativeSmallBodyText(this.text, {super.key, this.color, this.fontWeight, this.height, this.fontSize});
+  const NativeSmallBodyText(this.text,
+      {super.key, this.color, this.fontWeight, this.height, this.fontSize});
 
   final String text;
   final Color? color;

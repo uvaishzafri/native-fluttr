@@ -5,8 +5,10 @@
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:native/util/color_utils.dart';
 
 final _appThemeDataLight = FlexThemeData.light(
   colors: const FlexSchemeColor(
@@ -121,19 +123,37 @@ ThemeData getThemeData(ThemeMode mode) {
   }
 }
 
+updateSystemUi(
+    BuildContext context, Color navigationBarColor, Color statusBarColor) {
+  final systemModeIsDark =
+      SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
+
+  final isDark = systemModeIsDark;
+  final navColor = ElevationOverlay.colorWithOverlay(
+      navigationBarColor, Colors.transparent, 10);
+  final statusColor =
+      ElevationOverlay.colorWithOverlay(statusBarColor, Colors.transparent, 10);
+  SystemChrome.setSystemUIOverlayStyle(createOverlayStyle(
+    brightness: isDark ? Brightness.dark : Brightness.light,
+    navColor: navColor,
+    statusColor: statusColor,
+  ));
+}
+
 SystemUiOverlayStyle createOverlayStyle({
   required Brightness brightness,
-  required Color primaryColor,
+  required Color navColor,
+  Color statusColor = Colors.transparent,
 }) {
   final isDark = brightness == Brightness.dark;
 
   return SystemUiOverlayStyle(
-    systemNavigationBarColor: primaryColor,
+    systemNavigationBarColor: navColor,
     systemNavigationBarContrastEnforced: false,
     systemStatusBarContrastEnforced: false,
     systemNavigationBarIconBrightness:
         isDark ? Brightness.light : Brightness.dark,
-    statusBarColor: Colors.transparent,
+    statusBarColor: statusColor,
     statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
     statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
   );

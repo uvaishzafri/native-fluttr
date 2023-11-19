@@ -1,9 +1,7 @@
 import 'package:native/model/chat_room.dart';
 import 'package:native/model/custom_claims.dart';
-import 'package:native/model/likes_model.dart';
 import 'package:native/model/native_card/meta.dart';
 import 'package:native/model/native_card/native_card.dart';
-import 'package:native/model/native_card/native_type.dart';
 import 'package:native/model/native_type.dart';
 import 'package:native/model/user.dart';
 import 'package:native/repo/model/message.dart';
@@ -117,12 +115,30 @@ List<ChatRoom> dummyChatList = [
 ];
 
 List<Message> dummyMessages = [
-  Message(senderId: '5v4PoKCawiazfNwBWoUNWi2WFDo2', creationDate: DateTime(2023, 10, 15, 11), text: 'Cant wait to meet you'),
-  Message(senderId: '5v4PoKCawiazfNwBWoUNWi2WFDo2', creationDate: DateTime(2023, 10, 15, 12), text: 'Hi'),
-  Message(senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2', creationDate: DateTime(2023, 10, 15, 13, 30), text: 'Hell'),
-  Message(senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2', creationDate: DateTime(2023, 10, 15, 14, 50, 20), text: '💬 '),
-  Message(senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2', creationDate: DateTime(2023, 10, 15, 15, 10), text: 'Dinner'),
-  Message(senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2', creationDate: DateTime(2023, 10, 15, 16, 50, 20), text: 'tonight?'),
+  Message(
+      senderId: '5v4PoKCawiazfNwBWoUNWi2WFDo2',
+      creationDate: DateTime(2023, 10, 15, 11),
+      text: 'Cant wait to meet you'),
+  Message(
+      senderId: '5v4PoKCawiazfNwBWoUNWi2WFDo2',
+      creationDate: DateTime(2023, 10, 15, 12),
+      text: 'Hi'),
+  Message(
+      senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2',
+      creationDate: DateTime(2023, 10, 15, 13, 30),
+      text: 'Hell'),
+  Message(
+      senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2',
+      creationDate: DateTime(2023, 10, 15, 14, 50, 20),
+      text: '💬 '),
+  Message(
+      senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2',
+      creationDate: DateTime(2023, 10, 15, 15, 10),
+      text: 'Dinner'),
+  Message(
+      senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2',
+      creationDate: DateTime(2023, 10, 15, 16, 50, 20),
+      text: 'tonight?'),
 ];
 
 // LikesModel likes = LikesModel(fromYou: [
@@ -154,7 +170,8 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity":
+          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -177,10 +194,20 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
-        "rgb": {"b": 211, "r": 242, "g": 201}
+        "hsv": {
+          "s": 16.94214876033058,
+          "v": 94.90196078431372,
+          "h": 345.3658536585366
+        },
+        "rgb": {"b": 211, "r": 242, "g": 201},
       },
-      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "parameter": {
+        "active": 0.7,
+        "independence": 0.1,
+        "finance": 0,
+        "fun": 0.2,
+        "knowledge": 0
+      },
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -209,7 +236,8 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity":
+          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -232,10 +260,20 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "hsv": {
+          "s": 16.94214876033058,
+          "v": 94.90196078431372,
+          "h": 345.3658536585366
+        },
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "parameter": {
+        "active": 0.7,
+        "independence": 0.1,
+        "finance": 0,
+        "fun": 0.2,
+        "knowledge": 0
+      },
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -264,7 +302,8 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity":
+          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -287,10 +326,20 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "hsv": {
+          "s": 16.94214876033058,
+          "v": 94.90196078431372,
+          "h": 345.3658536585366
+        },
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "parameter": {
+        "active": 0.7,
+        "independence": 0.1,
+        "finance": 0,
+        "fun": 0.2,
+        "knowledge": 0
+      },
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -319,7 +368,8 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity":
+          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -342,10 +392,20 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "hsv": {
+          "s": 16.94214876033058,
+          "v": 94.90196078431372,
+          "h": 345.3658536585366
+        },
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "parameter": {
+        "active": 0.7,
+        "independence": 0.1,
+        "finance": 0,
+        "fun": 0.2,
+        "knowledge": 0
+      },
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -374,7 +434,8 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity":
+          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -397,10 +458,20 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "hsv": {
+          "s": 16.94214876033058,
+          "v": 94.90196078431372,
+          "h": 345.3658536585366
+        },
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "parameter": {
+        "active": 0.7,
+        "independence": 0.1,
+        "finance": 0,
+        "fun": 0.2,
+        "knowledge": 0
+      },
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -429,7 +500,8 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity":
+          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -452,10 +524,20 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
+        "hsv": {
+          "s": 16.94214876033058,
+          "v": 94.90196078431372,
+          "h": 345.3658536585366
+        },
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
+      "parameter": {
+        "active": 0.7,
+        "independence": 0.1,
+        "finance": 0,
+        "fun": 0.2,
+        "knowledge": 0
+      },
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },

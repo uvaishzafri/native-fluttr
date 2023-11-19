@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
 import 'package:native/config.dart';
+import 'package:native/manager/refresh_token_manager.dart';
 import 'package:native/model/app_notification.dart';
 import 'package:native/model/likes_model.dart';
 import 'package:native/model/native_card/native_card.dart';
@@ -20,10 +21,10 @@ bool isSuccess(int? statusCode) => statusCode != null && statusCode >= 200 && st
 
 @lazySingleton
 class UserRepository {
-  UserRepository(this._dioClient, this._config);
-
+  UserRepository(this._dioClient, this._config, this._refreshTokenManager);
   final Dio _dioClient;
   final Config _config;
+  final RefreshTokenManager _refreshTokenManager;
 
   Future<Either<AppException, User>> getCurrentUserDetails() async {
     try {
@@ -137,6 +138,34 @@ class UserRepository {
     }
   }
 
+  Future<Either<AppException, bool>> checkUserEmailVerified(String uid) async {
+    try {
+      var data = jsonEncode({"uid": uid});
+      final response = await _dioClient.post('/public/checkUser', data: data);
+
+      if (!isSuccess(response.statusCode)) {
+        if (response.statusCode == 404) {
+          return const Right(false);
+        }
+        return Left(RequestError(response.statusMessage ?? ''));
+      }
+      if (response.data == null) return Left(NoResponseBody());
+      if (response.data['emailVerified'] ?? false) {
+        return const Right(true);
+      } else {
+        return const Right(false);
+      }
+    } on DioException catch (ex) {
+      if (ex.response?.data['code'] == 'USER_NOT_FOUND') {
+        return const Right(false);
+      } else {
+        return Left(ApiException(ex.response?.data['code']));
+      }
+    } catch (ex) {
+      return Left(CustomException());
+    }
+  }
+
   Future<Either<AppException, bool>> checkUser(String phoneNumber) async {
     try {
       var data = jsonEncode({"phoneNumber": phoneNumber});
@@ -241,7 +270,8 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, bool>> verifyEmail(String email) async {
+  Future<Either<AppException, bool>> verifyEmail(
+      String email, String uid) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
@@ -251,7 +281,7 @@ class UserRepository {
       var data = jsonEncode({
         'email': email,
         'actionCodeSettings': {
-          'url': _config.verifyEmailRedirectUrl,
+          'url': "${_config.verifyEmailRedirectUrl}?uid=$uid",
           'handleCodeInApp': false,
           'androidInstallApp': true,
           'androidPackageName': 'me.benative.mobile',
@@ -277,6 +307,7 @@ class UserRepository {
 
   Future<String?> _getStoreUserIdToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    await _refreshTokenManager.refreshToken();
     return prefs.getString('userIdToken');
   }
 
@@ -288,7 +319,7 @@ class UserRepository {
       }
       var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
-        '/users/me/notifications',
+        '/users/me/notifications?size=10',
         options: Options(headers: headers),
       );
 
@@ -300,10 +331,12 @@ class UserRepository {
       List<AppNotification> appNotificationList = [];
       for (var notification in response.data) {
         var appNotification = AppNotification.fromJson(notification);
-        if (appNotification.fromUid != null) {
+        if (appNotification.fromUser != null) {
+          // no-op
+        } else if (appNotification.fromUid != null) {
           var user = await getUserDetails(appNotification.fromUid!);
           if (user.isRight) {
-            appNotification = appNotification.copyWith(user: user.right);
+            appNotification = appNotification.copyWith(fromUser: user.right);
           }
         }
         appNotificationList.add(appNotification);
@@ -327,7 +360,7 @@ class UserRepository {
       }
       var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
-        '/users/me/likes',
+        '/users/me/likes?size=10',
         options: Options(headers: headers),
       );
 

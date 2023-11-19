@@ -15,5 +15,6 @@ class Parameter with _$Parameter {
     @JsonKey(includeIfNull: false) num? independence,
   }) = _Parameter;
 
-  factory Parameter.fromJson(Map<String, dynamic> json) => _$ParameterFromJson(json);
+  factory Parameter.fromJson(Map<String, dynamic> json) =>
+      _$ParameterFromJson(json);
 }

@@ -17,5 +17,6 @@ class LookingFor with _$LookingFor {
     @JsonKey(includeIfNull: false) num? maxAge,
   }) = _LookingFor;
 
-  factory LookingFor.fromJson(Map<String, dynamic> json) => _$LookingForFromJson(json);
+  factory LookingFor.fromJson(Map<String, dynamic> json) =>
+      _$LookingForFromJson(json);
 }

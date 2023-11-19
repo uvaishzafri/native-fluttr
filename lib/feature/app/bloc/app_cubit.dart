@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native/di/di.dart';
 import 'package:native/model/auth_result.dart';
 import 'package:native/model/user.dart' as user;
+import 'package:native/repo/user_repository.dart';
 import 'package:native/theme/theme.dart';
 import 'package:native/theme/theme_model.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -20,7 +21,10 @@ part 'app_state.dart';
 
 @lazySingleton
 class AppCubit extends HydratedCubit<AppState> {
-  AppCubit(this._firebaseAuth) : super(AppState(theme: ThemeModel.initial())) {
+  AppCubit(
+    this._firebaseAuth,
+    this._userRepository,
+  ) : super(AppState(theme: ThemeModel.initial())) {
     // Pretend initialization
     // Future.delayed(const Duration(milliseconds: 10),
     //     () => {changeStoryListType(type: StoryListType.top)});
@@ -29,6 +33,7 @@ class AppCubit extends HydratedCubit<AppState> {
   }
 
   final FirebaseAuth _firebaseAuth;
+  final UserRepository _userRepository;
 
   Future<bool> _getStoreOnboardInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,9 +50,29 @@ class AppCubit extends HydratedCubit<AppState> {
     return prefs.getString('userIdToken');
   }
 
-  Future<String?> _getStoredUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('user');
+  // Future<String?> _getStoredUser() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   return prefs.getString('user');
+  // }
+
+  Future<user.User?> _getStoredUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('user');
+    if (userJson == null) {
+      return null;
+    }
+    return user.User.fromJson(jsonDecode(userJson));
+  }
+
+  Future<bool> checkIfEmailVerifiedByUid(String uid) async {
+    // emit(const AuthState.checkEmailVerification());
+    var checkUser = await _userRepository.checkUserEmailVerified(uid);
+    if (checkUser.isRight && checkUser.right) {
+      // emit(const AuthState.emailVerificationComplete());
+      return true;
+    }
+
+    return false;
   }
 
   checkAuth() async {
@@ -64,9 +89,9 @@ class AppCubit extends HydratedCubit<AppState> {
     // });
 
     if (idToken != null) {
-      String? userJson = await _getStoredUser();
-      if (userJson != null) {
-        if (!(user.User.fromJson(jsonDecode(userJson)).emailVerified ?? false)) {
+      user.User? storedUser = await _getStoredUser();
+      if (storedUser != null) {
+        if (!(storedUser.emailVerified ?? false)) {
           logout();
           return;
         } else {
@@ -75,13 +100,13 @@ class AppCubit extends HydratedCubit<AppState> {
               isSkipped,
               isTutorialCompleted,
               AuthResult(
-                user: user.User.fromJson(jsonDecode(userJson)),
+                user: storedUser,
                 isExpired: false,
                 expiry: 10000,
               ),
             ),
           );
-        return;
+          return;
         }
       }
     }
@@ -90,19 +115,20 @@ class AppCubit extends HydratedCubit<AppState> {
     //   hasSkippedOnboarding: isSkipped
     //   ));
 
-    emit(AppState.loggedOut(isSkipped, isTutorialCompleted));
+    emit(AppState.loggedOut(isSkipped, isTutorialCompleted, false));
   }
 
-  logout() async {
+  logout({bool isVerifiedEmail = false}) async {
     emit(AppState.initial());
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('user');
     prefs.remove('userIdToken');
+    prefs.remove('userTokenTimestampInSeconds');
     prefs.remove('notificationSettings');
     _firebaseAuth.signOut();
     bool isSkipped = await _getStoreOnboardInfo();
     bool isTutorialCompleted = await _getTutorialCompletedPref();
-    emit(AppState.loggedOut(isSkipped, isTutorialCompleted));
+    emit(AppState.loggedOut(isSkipped, isTutorialCompleted, isVerifiedEmail));
   }
 
   Future<void> setThemeMode({required ThemeMode mode}) async {
@@ -117,16 +143,18 @@ class AppCubit extends HydratedCubit<AppState> {
   }
 
   void updateSystemOverlay() {
-    final systemModeIsDark = SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
+    final systemModeIsDark =
+        SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
 
-    final isDark = state.theme.mode == ThemeMode.system ? systemModeIsDark : state.theme.mode == ThemeMode.dark;
-    final colorScheme = isDark ? state.theme.dark.colorScheme : state.theme.light.colorScheme;
-    final primaryColor = ElevationOverlay.colorWithOverlay(colorScheme.surface, colorScheme.primary, 3);
-
+    final isDark = state.theme.mode == ThemeMode.system
+        ? systemModeIsDark
+        : state.theme.mode == ThemeMode.dark;
+    final colorScheme =
+        isDark ? state.theme.dark.colorScheme : state.theme.light.colorScheme;
     SystemChrome.setSystemUIOverlayStyle(
       createOverlayStyle(
         brightness: isDark ? Brightness.dark : Brightness.light,
-        primaryColor: primaryColor,
+        navColor: colorScheme.primaryContainer,
       ),
     );
   }

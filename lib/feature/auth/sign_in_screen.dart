@@ -15,6 +15,7 @@ import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/auth/auth_scaffold.dart';
 import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/model/user.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/string_ext.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_text_field.dart';
@@ -27,7 +28,8 @@ const _assetFolder = 'assets/auth';
 
 @RoutePage()
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  final bool? isVerifiedEmail;
+  const SignInScreen({super.key, @queryParam this.isVerifiedEmail});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -53,6 +55,15 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateSystemUi();
+    });
+  }
+
+  @override
+  didUpdateWidget(SignInScreen signInScreen) {
+    super.didUpdateWidget(signInScreen);
+    _updateSystemUi();
   }
 
   @override
@@ -101,6 +112,11 @@ class _SignInScreenState extends State<SignInScreen> {
   //   context.router.replace(const SignInRoute());
   // }
 
+  _updateSystemUi() {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        Theme.of(context).colorScheme.primary);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -108,6 +124,7 @@ class _SignInScreenState extends State<SignInScreen> {
         child: BlocConsumer<AuthCubit, AuthState>(
           buildWhen: (p, c) => p != c && c is! AuthLoadingState,
           builder: (context, state) {
+            _updateSystemUi();
             final bloc = BlocProvider.of<AuthCubit>(context);
 
             if (state is AuthInputPincodeState ||
@@ -121,6 +138,12 @@ class _SignInScreenState extends State<SignInScreen> {
               return AuthScaffold(
                   _inputEmail(context, bloc, _number.phoneNumber ?? "", state));
             } else {
+              if (state is AuthInitialState) {
+                final args = context.router.current.args as SignInRouteArgs;
+                if (args.isVerifiedEmail != null && args.isVerifiedEmail!) {
+                  bloc.emailVerified();
+                }
+              }
               return AuthScaffold(_inputPhone(context, bloc));
             }
           },
@@ -174,11 +197,7 @@ class _SignInScreenState extends State<SignInScreen> {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
               }
-              _checkEmailVerifiedTimer =
-                  Timer.periodic(const Duration(seconds: 3), (_) {
-                final bloc = BlocProvider.of<AuthCubit>(context);
-                bloc.checkIfEmailVerified();
-              });
+
               _showSentVerificationEmailDialog(_emailController.text);
             }
             if (state is AuthCreateProfileState) {
@@ -197,7 +216,8 @@ class _SignInScreenState extends State<SignInScreen> {
               if (!(isTutorialCompleted ?? false) && userJson != null) {
                 final user = User.fromJson(jsonDecode(userJson));
                 if (context.mounted) {
-                  context.router.replaceAll([NativeCardScaffold(user: user, showNext: true)]);
+                  context.router.replaceAll(
+                      [NativeCardScaffold(user: user, showNext: true)]);
                 }
               } else {
                 if (context.mounted) {

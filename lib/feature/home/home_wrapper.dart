@@ -14,6 +14,8 @@ import 'package:native/manager/notification_manager/notification_manager.dart';
 import 'package:native/manager/notification_manager/notification_navigator.dart';
 import 'package:native/manager/permission_manager/permission_manager.dart';
 import 'package:native/model/user.dart';
+import 'package:native/theme/theme.dart';
+import 'package:native/util/color_utils.dart';
 import 'package:native/widget/images.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -63,6 +65,11 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
     super.dispose();
   }
 
+  _updateSystemUi() {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        Theme.of(context).colorScheme.primaryContainer);
+  }
+
   @override
   Widget build(BuildContext context) {
     return AutoTabsScaffold(
@@ -87,7 +94,10 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   items: <BottomNavigationBarItem>[
-                    const BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home_filled), label: 'Home'),
+                    const BottomNavigationBarItem(
+                        icon: Icon(Icons.home_outlined),
+                        activeIcon: Icon(Icons.home_filled),
+                        label: 'Home'),
                     const BottomNavigationBarItem(
                       icon: Icon(Icons.favorite_border_outlined),
                       activeIcon: Icon(Icons.favorite),
@@ -115,13 +125,15 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                               // setState(() {});
                             }
                           },
-                          child: snapshot.connectionState != ConnectionState.done
+                          child: snapshot.connectionState !=
+                                  ConnectionState.done
                               ? CircularProgressIndicator()
                               : snapshot.data!.photoURL != null
                                   ? NativeHeadImage(
                                       // Image.asset("$_assetFolder/ic_test.png"),
                                       Image.network(snapshot.data!.photoURL!),
-                                      borderColor: Theme.of(context).colorScheme.primary,
+                                      borderColor:
+                                          Theme.of(context).colorScheme.primary,
                                       radius: 14,
                                       borderRadius: 2,
                                       isGradientBorder: false,
@@ -149,17 +161,21 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
   void _listenForLocalNotifications() {
     _localNotificationManager.data.addListener(() {
       if (_localNotificationManager.data.value != null) {
-        _notificationNavigator.navigateNotification(context: context, data: jsonDecode(_localNotificationManager.data.value!));
+        _notificationNavigator.navigateNotification(
+            context: context,
+            data: jsonDecode(_localNotificationManager.data.value!));
       }
     });
   }
 
   void _registerNotificationCallbacks() {
-    _notificationManager.setBackgroundMessageCallback(_firebaseMessagingBackgroundHandler);
+    _notificationManager
+        .setBackgroundMessageCallback(_firebaseMessagingBackgroundHandler);
     _notificationManager.setForegroundMessageCallback((RemoteMessage message) {
       _localNotificationManager.showLocalNotification(message: message);
     });
-    _notificationManager.setBackgroundMessageOpenedCallback((RemoteMessage message) {
+    _notificationManager
+        .setBackgroundMessageOpenedCallback((RemoteMessage message) {
       _notificationNavigator.navigateNotification(
         context: context,
         data: message.data,

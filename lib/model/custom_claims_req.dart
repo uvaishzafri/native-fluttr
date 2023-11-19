@@ -13,5 +13,6 @@ class CustomClaimsReq with _$CustomClaimsReq {
     String? birthday,
   }) = _CustomClaimsReq;
 
-  factory CustomClaimsReq.fromJson(Map<String, dynamic> json) => _$CustomClaimsReqFromJson(json);
+  factory CustomClaimsReq.fromJson(Map<String, dynamic> json) =>
+      _$CustomClaimsReqFromJson(json);
 }

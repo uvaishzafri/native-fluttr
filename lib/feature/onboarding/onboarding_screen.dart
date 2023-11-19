@@ -45,7 +45,7 @@ class OnboardingScreen extends StatelessWidget {
 
   _navigateToSignIn(BuildContext context) {
     _storeOnboardInfo();
-    context.router.replace(const SignInRoute());
+    context.router.replace(SignInRoute());
   }
 
   @override

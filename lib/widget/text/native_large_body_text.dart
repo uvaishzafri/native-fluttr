@@ -4,7 +4,8 @@ import 'package:native/util/color_utils.dart';
 /// fontsize - 16pt fontweight - 400 height - 24pt
 class NativeLargeBodyText extends StatelessWidget {
   /// fontsize - 16pt fontweight - 400 height - 24pt
-  const NativeLargeBodyText(this.text, {super.key, this.color, this.fontWeight, this.height, this.textAlign});
+  const NativeLargeBodyText(this.text,
+      {super.key, this.color, this.fontWeight, this.height, this.textAlign});
 
   final String text;
   final Color? color;
@@ -18,11 +19,10 @@ class NativeLargeBodyText extends StatelessWidget {
       text,
       textAlign: textAlign,
       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-            color: color ?? ColorUtils.textGrey,
+          color: color ?? ColorUtils.textGrey,
           // fontFamily: 'poppins',
-            fontWeight: fontWeight,
-          height: height
-          ),
+          fontWeight: fontWeight,
+          height: height),
     );
   }
 }
