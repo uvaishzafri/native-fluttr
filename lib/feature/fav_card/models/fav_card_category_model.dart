@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native/util/fav_card/fav_card_constants.dart';
 
-part 'fav_card_category.freezed.dart';
+part 'fav_card_category_model.freezed.dart';
 
 @freezed
 class FavCardCategoryModel with _$FavCardCategoryModel {

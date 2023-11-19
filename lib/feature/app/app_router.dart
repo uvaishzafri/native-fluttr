@@ -33,6 +33,7 @@ class AppRouter extends $AppRouter {
         FadeCustomRoute(page: ChatMessagesRoute.page),
         FadeCustomRoute(page: NotificationsRoute.page),
         FadeCustomRoute(page: LikesRoute.page),
+        FadeCustomRoute(page: ItemDetailRoute.page),
         CustomRoute(
           path: 'home',
           page: HomeWrapperRoute.page,

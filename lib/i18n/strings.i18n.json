@@ -3,5 +3,9 @@
     "best": "Ranked by score",
     "top": "Ranked by date",
     "myFavCard": "My fav card",
-    "search": "Search"
+    "search": "Search",
+    "whatFavCard": "My Fav card is a feature that makes it easy to express what you like",
+    "whatFavCardShort": "What is Fav Card?",
+    "learnMore": "Learn More",
+    "peopleLike": "people like this artist"
 }

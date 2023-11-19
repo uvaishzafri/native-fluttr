@@ -10,5 +10,6 @@ class FavCardItemModel with _$FavCardItemModel {
     required String name,
     required List<String> categories,
     required Image image,
+    required int likes,
   }) = _FavCardItemModel;
 }

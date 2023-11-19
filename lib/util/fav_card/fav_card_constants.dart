@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:native/model/fav_card/fav_card_category.dart';
+import 'package:native/feature/fav_card/models/fav_card_category_model.dart';
 
 enum FavCardCategoryEnum {
   @JsonValue('TOP')

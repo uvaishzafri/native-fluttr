@@ -8,8 +8,9 @@ import 'package:native/model/native_type.dart';
 import 'package:native/model/user.dart';
 import 'package:native/repo/model/message.dart';
 import 'package:native/util/app_constants.dart';
-import 'package:native/model/fav_card/fav_card_items/fav_card_items.dart';
 import 'package:flutter/material.dart';
+
+import 'feature/fav_card/models/fav_card_items/fav_card_items.dart';
 
 // final List<Native> usersList = [
 //   Native(
@@ -89,14 +90,8 @@ import 'package:flutter/material.dart';
 List<ChatRoom> dummyChatList = [
   ChatRoom(
       participants: {
-        'CAFGy5wD0gOG2NXSp5goSVMOVQe2': [
-          'test user',
-          'https://picsum.photos/id/237/200/300'
-        ],
-        '5v4PoKCawiazfNwBWoUNWi2WFDo2': [
-          'test user 2',
-          'https://picsum.photos/id/230/200/300'
-        ],
+        'CAFGy5wD0gOG2NXSp5goSVMOVQe2': ['test user', 'https://picsum.photos/id/237/200/300'],
+        '5v4PoKCawiazfNwBWoUNWi2WFDo2': ['test user 2', 'https://picsum.photos/id/230/200/300'],
       },
       lastMessageTime: DateTime(2023, 10, 12),
       lastMessage: 'Hello',
@@ -109,14 +104,8 @@ List<ChatRoom> dummyChatList = [
       firestoreDocId: '1'),
   ChatRoom(
       participants: {
-        'CAFGy5wD0gOG2NXSp5goSVMOVQe2': [
-          'test user',
-          'https://picsum.photos/id/237/200/300'
-        ],
-        '5v4PoKCawiazfNwBWoUNWi2WFDo2': [
-          'test user 3',
-          'https://picsum.photos/id/231/200/300'
-        ],
+        'CAFGy5wD0gOG2NXSp5goSVMOVQe2': ['test user', 'https://picsum.photos/id/237/200/300'],
+        '5v4PoKCawiazfNwBWoUNWi2WFDo2': ['test user 3', 'https://picsum.photos/id/231/200/300'],
       },
       creationTime: DateTime(2023, 10, 15),
       creatorId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2',
@@ -128,30 +117,12 @@ List<ChatRoom> dummyChatList = [
 ];
 
 List<Message> dummyMessages = [
-  Message(
-      senderId: '5v4PoKCawiazfNwBWoUNWi2WFDo2',
-      creationDate: DateTime(2023, 10, 15, 11),
-      text: 'Cant wait to meet you'),
-  Message(
-      senderId: '5v4PoKCawiazfNwBWoUNWi2WFDo2',
-      creationDate: DateTime(2023, 10, 15, 12),
-      text: 'Hi'),
-  Message(
-      senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2',
-      creationDate: DateTime(2023, 10, 15, 13, 30),
-      text: 'Hell'),
-  Message(
-      senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2',
-      creationDate: DateTime(2023, 10, 15, 14, 50, 20),
-      text: '💬 '),
-  Message(
-      senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2',
-      creationDate: DateTime(2023, 10, 15, 15, 10),
-      text: 'Dinner'),
-  Message(
-      senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2',
-      creationDate: DateTime(2023, 10, 15, 16, 50, 20),
-      text: 'tonight?'),
+  Message(senderId: '5v4PoKCawiazfNwBWoUNWi2WFDo2', creationDate: DateTime(2023, 10, 15, 11), text: 'Cant wait to meet you'),
+  Message(senderId: '5v4PoKCawiazfNwBWoUNWi2WFDo2', creationDate: DateTime(2023, 10, 15, 12), text: 'Hi'),
+  Message(senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2', creationDate: DateTime(2023, 10, 15, 13, 30), text: 'Hell'),
+  Message(senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2', creationDate: DateTime(2023, 10, 15, 14, 50, 20), text: '💬 '),
+  Message(senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2', creationDate: DateTime(2023, 10, 15, 15, 10), text: 'Dinner'),
+  Message(senderId: 'CAFGy5wD0gOG2NXSp5goSVMOVQe2', creationDate: DateTime(2023, 10, 15, 16, 50, 20), text: 'tonight?'),
 ];
 
 // LikesModel likes = LikesModel(fromYou: [
@@ -183,8 +154,7 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity":
-          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -207,20 +177,10 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {
-          "s": 16.94214876033058,
-          "v": 94.90196078431372,
-          "h": 345.3658536585366
-        },
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {
-        "active": 0.7,
-        "independence": 0.1,
-        "finance": 0,
-        "fun": 0.2,
-        "knowledge": 0
-      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -249,8 +209,7 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity":
-          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -273,20 +232,10 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {
-          "s": 16.94214876033058,
-          "v": 94.90196078431372,
-          "h": 345.3658536585366
-        },
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {
-        "active": 0.7,
-        "independence": 0.1,
-        "finance": 0,
-        "fun": 0.2,
-        "knowledge": 0
-      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -315,8 +264,7 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity":
-          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -339,20 +287,10 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {
-          "s": 16.94214876033058,
-          "v": 94.90196078431372,
-          "h": 345.3658536585366
-        },
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {
-        "active": 0.7,
-        "independence": 0.1,
-        "finance": 0,
-        "fun": 0.2,
-        "knowledge": 0
-      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -381,8 +319,7 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity":
-          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -405,20 +342,10 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {
-          "s": 16.94214876033058,
-          "v": 94.90196078431372,
-          "h": 345.3658536585366
-        },
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {
-        "active": 0.7,
-        "independence": 0.1,
-        "finance": 0,
-        "fun": 0.2,
-        "knowledge": 0
-      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -447,8 +374,7 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity":
-          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -471,20 +397,10 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {
-          "s": 16.94214876033058,
-          "v": 94.90196078431372,
-          "h": 345.3658536585366
-        },
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {
-        "active": 0.7,
-        "independence": 0.1,
-        "finance": 0,
-        "fun": 0.2,
-        "knowledge": 0
-      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -513,8 +429,7 @@ final usersList2 = [
       ]
     },
     "personality": {
-      "sameKindCelebrity":
-          "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
+      "sameKindCelebrity": "Alia Bhatt, Salman Khan, CarryMinati, Manushi Chhillar",
       "hashTags": "#Humble #Restrained #Indecisive #Indecisive #Mild-mannered",
       "descriptions": [
         "Shy, not a risk taker, glue person, weave relationships",
@@ -537,20 +452,10 @@ final usersList2 = [
       "energyScore": 22,
       "color": {
         "hex": "#F2C9D3",
-        "hsv": {
-          "s": 16.94214876033058,
-          "v": 94.90196078431372,
-          "h": 345.3658536585366
-        },
+        "hsv": {"s": 16.94214876033058, "v": 94.90196078431372, "h": 345.3658536585366},
         "rgb": {"b": 211, "r": 242, "g": 201}
       },
-      "parameter": {
-        "active": 0.7,
-        "independence": 0.1,
-        "finance": 0,
-        "fun": 0.2,
-        "knowledge": 0
-      },
+      "parameter": {"active": 0.7, "independence": 0.1, "finance": 0, "fun": 0.2, "knowledge": 0},
       "type": {"ja": "草花", "en": "Flower"},
       "slogan": "Healing Classy Free person"
     },
@@ -735,531 +640,539 @@ final usersList = [
 
 List<FavCardItemModel> dummyFavCardItems = [
   FavCardItemModel(
-      id: "1",
+      id: "3",
+      likes: 200,
       name: "Drake",
       categories: ["top", "music"],
       image: Image.network('https://i.scdn'
           '.co/image/ab6761610000f1784293385d324db8558179afd9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Bad Bunny",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Taylor Swift",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "The Weeknd",
       categories: ["top", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ed Sheeran",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ariana Grande",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Justin Bieber",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Eminem",
       categories: ["travel", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "BTS",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Post Malone",
       categories: ["bike", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Kanye West",
       categories: ["anime", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Drake",
       categories: ["top", "music"],
       image: Image.network('https://i.scdn'
           '.co/image/ab6761610000f1784293385d324db8558179afd9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Bad Bunny",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Taylor Swift",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "The Weeknd",
       categories: ["top", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ed Sheeran",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ariana Grande",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Justin Bieber",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Eminem",
       categories: ["travel", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "BTS",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Post Malone",
       categories: ["bike", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Kanye West",
       categories: ["anime", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Drake",
       categories: ["top", "music"],
       image: Image.network('https://i.scdn'
           '.co/image/ab6761610000f1784293385d324db8558179afd9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Bad Bunny",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Taylor Swift",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "The Weeknd",
       categories: ["top", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ed Sheeran",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ariana Grande",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Justin Bieber",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Eminem",
       categories: ["travel", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "BTS",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Post Malone",
       categories: ["bike", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Kanye West",
       categories: ["anime", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Drake",
       categories: ["top", "music"],
       image: Image.network('https://i.scdn'
           '.co/image/ab6761610000f1784293385d324db8558179afd9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Bad Bunny",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Taylor Swift",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "The Weeknd",
       categories: ["top", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ed Sheeran",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ariana Grande",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Justin Bieber",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Eminem",
       categories: ["travel", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "BTS",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Post Malone",
       categories: ["bike", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Kanye West",
       categories: ["anime", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Drake",
       categories: ["top", "music"],
       image: Image.network('https://i.scdn'
           '.co/image/ab6761610000f1784293385d324db8558179afd9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Bad Bunny",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Taylor Swift",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "The Weeknd",
       categories: ["top", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ed Sheeran",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ariana Grande",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Justin Bieber",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Eminem",
       categories: ["travel", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "BTS",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Post Malone",
       categories: ["bike", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Kanye West",
       categories: ["anime", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Drake",
       categories: ["top", "music"],
       image: Image.network('https://i.scdn'
           '.co/image/ab6761610000f1784293385d324db8558179afd9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Bad Bunny",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Taylor Swift",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "The Weeknd",
       categories: ["top", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ed Sheeran",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ariana Grande",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Justin Bieber",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Eminem",
       categories: ["travel", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "BTS",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Post Malone",
       categories: ["bike", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Kanye West",
       categories: ["anime", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Drake",
       categories: ["top", "music"],
       image: Image.network('https://i.scdn'
           '.co/image/ab6761610000f1784293385d324db8558179afd9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Bad Bunny",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Taylor Swift",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "The Weeknd",
       categories: ["top", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ed Sheeran",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ariana Grande",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Justin Bieber",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Eminem",
       categories: ["travel", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "BTS",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Post Malone",
       categories: ["bike", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Kanye West",
       categories: ["anime", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Drake",
       categories: ["top", "music"],
       image: Image.network('https://i.scdn'
           '.co/image/ab6761610000f1784293385d324db8558179afd9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Bad Bunny",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ee9a6f54dcbd4bc95126b14')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Taylor Swift",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785a00969a4698c3132a15fbb0')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "The Weeknd",
       categories: ["top", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b5f9e28219c169fd4b9e8379')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ed Sheeran",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1789e690225ad4445530612ccc9')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Ariana Grande",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178cdce7620dc940db079bf4952')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Justin Bieber",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1788ae7f2aaa9817a704a87ea36')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Eminem",
       categories: ["travel", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178a00b11c129b27a88fc72f36b')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "BTS",
       categories: ["travel", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f1785704a64f34fe29ff73ab56bb')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Post Malone",
       categories: ["bike", "anime"],
-      image: Image.network(
-          'https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
+      image: Image.network('https://i.scdn.co/image/ab6761610000f178b894ef9fa437b0389c5567cc')),
   FavCardItemModel(
       id: "1",
+      likes: 200,
       name: "Kanye West",
       categories: ["anime", "music"],
-      image: Image.network(
-          'https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
+      image: Image.network('https://i.scdn.co/image/bd1c6fdf3705cf9b7d0c8ac8e7bbed98e31a1559')),
 ];
