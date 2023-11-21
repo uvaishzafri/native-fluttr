@@ -183,20 +183,13 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
                 context.router.replace(const HomeWrapperRoute());
               }
             } else {
-              if (state.loggedOut == true) {
-                // context.router.popUntilRoot();
-                context.router.replaceAll(
-                    [SignInRoute(isVerifiedEmail: state.hasVerifiedEmail)],
-                    onFailure: (failure) => _logger.d(failure.toString()));
-              } else {
-                (state.hasSkippedOnboarding == false)
-                    ? context.router.replace(OnboardingRoute(),
-                        onFailure: (failure) => _logger.d(failure.toString()))
-                    // : context.router.replace(const HomeWrapperRoute());
-                    : context.router.replaceAll(
-                        [SignInRoute(isVerifiedEmail: state.hasVerifiedEmail)],
-                        onFailure: (failure) => _logger.d(failure.toString()));
-              }
+              (state.hasSkippedOnboarding == false)
+                  ? context.router.replace(OnboardingRoute(),
+                      onFailure: (failure) => _logger.d(failure.toString()))
+                  // : context.router.replace(const HomeWrapperRoute());
+                  : context.router.replaceAll(
+                      [SignInRoute(isVerifiedEmail: state.hasVerifiedEmail)],
+                      onFailure: (failure) => _logger.d(failure.toString()));
             }
           },
           child: RepaintBoundary(

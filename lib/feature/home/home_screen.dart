@@ -14,6 +14,7 @@ import 'package:native/model/user.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/theme/theme.dart';
 import 'package:native/util/exceptions.dart';
+import 'package:native/widget/content_not_found.dart';
 import 'package:native/widget/dialogs/multi_match_dialog.dart';
 import 'package:native/widget/dialogs/single_match_dialog.dart';
 import 'package:native/widget/like_overlay.dart';
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       initUser();
+      _updateSystemUi();
       // setState(() {});
     });
   }
@@ -51,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   initUser() async {
-    _updateSystemUi();
     var prefs = await SharedPreferences.getInstance();
     var user = prefs.getString('user');
     if (user != null) {
@@ -72,7 +73,10 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void didChangeTabRoute(TabPageRoute previousRoute) {
-    _updateSystemUi();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateSystemUi();
+      // setState(() {});
+    });
     getMatches();
   }
 
@@ -113,13 +117,11 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    _updateSystemUi();
     return BlocProvider.value(
       value: getIt<HomeCubit>()..fetchRecommendations(),
       child: BlocConsumer<HomeCubit, HomeState>(
           buildWhen: (p, c) => p != c && c is HomeSuccessState,
           builder: (context, state) {
-            _updateSystemUi();
             final bloc = BlocProvider.of<HomeCubit>(context);
             return SafeArea(
               child: GestureDetector(
@@ -150,7 +152,12 @@ class _HomeScreenState extends State<HomeScreen>
                       SliverPadding(
                         padding: const EdgeInsets.all(12),
                         sliver: state is HomeSuccessState
-                            ? _recommendations(state.users, bloc)
+                            ? state.users.isNotEmpty
+                                ? _recommendations(state.users, bloc)
+                                : const SliverToBoxAdapter(
+                                    child: ContentNotFound(
+                                        'No recommendations yet', 400),
+                                  )
                             : context.loaderOverlay.visible
                                 ? const SizedBox()
                                 : const SliverToBoxAdapter(

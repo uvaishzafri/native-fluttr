@@ -14,6 +14,7 @@ import 'package:native/model/user.dart';
 import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/launcher.dart';
+import 'package:native/widget/common_scaffold.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
@@ -31,7 +32,8 @@ class AccountScreen extends StatefulWidget {
   State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _AccountScreenState extends State<AccountScreen> {
+class _AccountScreenState extends State<AccountScreen>
+    with AutoRouteAwareStateMixin<AccountScreen> {
   late String imageUrl;
   late String displayName;
 
@@ -44,14 +46,12 @@ class _AccountScreenState extends State<AccountScreen> {
     imageUrl = '';
     displayName = '';
     refreshUserDetails();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _updateSystemUi();
-    });
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
   }
 
-  _updateSystemUi() {
-    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
-        ColorUtils.aquaGreen);
+  @override
+  void didChangeTabRoute(TabPageRoute previousRoute) {
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
   }
 
   void refreshUserDetails() async {
@@ -73,6 +73,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
     Widget content = Column(
       children: [
         GestureDetector(
