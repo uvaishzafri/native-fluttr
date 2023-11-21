@@ -13,7 +13,9 @@ import 'package:native/theme/theme.dart';
 import 'package:native/util/app_constants.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/exceptions.dart';
+import 'package:native/widget/common_scaffold.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
+import 'package:native/widget/content_not_found.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
 
@@ -25,7 +27,8 @@ class NotificationsScreen extends StatefulWidget {
   State<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen> {
+class _NotificationsScreenState extends State<NotificationsScreen>
+    with AutoRouteAwareStateMixin<NotificationsScreen> {
   // List<ChatRoom> _chats = [];
   // TextEditingController? _searchController;
   bool isLikesSelected = true;
@@ -37,9 +40,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     // _searchController = TextEditingController();
     _fetchNotifications();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _updateSystemUi();
-    });
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
   }
 
   _fetchNotifications() {
@@ -47,15 +48,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     notificationBloc.fetchNotifications();
   }
 
-  _updateSystemUi() {
-    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
-        ColorUtils.aquaGreen);
-  }
-
   @override
   void dispose() {
     // _searchController?.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeTabRoute(TabPageRoute previousRoute) {
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
   }
 
   String _timeagoFormat(DateTime time) {
@@ -104,6 +105,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           );
         },
         builder: (context, state) {
+          CommonScaffold.commonScaffoldUpdateSystemUi(context);
           if (state is SuccessState) {
             List<AppNotification> notificationList = [];
             if (!isChatsSelected && !isLikesSelected) {
@@ -135,53 +137,58 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 // ),
                 const SizedBox(height: 12),
                 Expanded(
-                  child: GroupedListView<AppNotification, DateTime>(
-                    elements: notificationList,
-                    // elements: [
-                    //   usersList[0],
-                    //   usersList[1],
-                    //   usersList[2]
-                    // ],
-                    order: GroupedListOrder.DESC,
-                    groupBy: groupLikeList,
-                    // groupBy: (element) => element.timestamp!,
-                    // groupBy: (element) => likes.fromYou.firstWhere((ele) => element.uid == ele.userId).likedDate,
-                    groupSeparatorBuilder: (value) =>
-                        NativeMediumTitleText(groupHeaderText(value)),
-                    // groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
-                    itemBuilder: (context, element) => ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: CircleAvatar(
-                        // backgroundImage: AssetImage(element.imageUrl),
-                        backgroundImage: CachedNetworkImageProvider(
-                            element.fromUser?.photoURL! ?? ''),
-                      ),
-                      title: Row(
-                        children: [
-                          NativeSmallBodyText(
-                            element.fromUser?.displayName ?? '',
-                            fontWeight: FontWeight.w500,
-                            height: 22 / 12,
+                  child: notificationList.isNotEmpty
+                      ? GroupedListView<AppNotification, DateTime>(
+                          elements: notificationList,
+                          // elements: [
+                          //   usersList[0],
+                          //   usersList[1],
+                          //   usersList[2]
+                          // ],
+                          order: GroupedListOrder.DESC,
+                          groupBy: groupLikeList,
+                          // groupBy: (element) => element.timestamp!,
+                          // groupBy: (element) => likes.fromYou.firstWhere((ele) => element.uid == ele.userId).likedDate,
+                          groupSeparatorBuilder: (value) =>
+                              NativeMediumTitleText(groupHeaderText(value)),
+                          // groupSeparatorBuilder: (value) => NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
+                          itemBuilder: (context, element) => ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: CircleAvatar(
+                              // backgroundImage: AssetImage(element.imageUrl),
+                              backgroundImage: CachedNetworkImageProvider(
+                                  element.fromUser?.photoURL! ?? ''),
+                            ),
+                            title: Row(
+                              children: [
+                                NativeSmallBodyText(
+                                  element.fromUser?.displayName ?? '',
+                                  fontWeight: FontWeight.w500,
+                                  height: 22 / 12,
+                                ),
+                                const Spacer(),
+                                NativeSmallBodyText(
+                                  _timeagoFormat(element.timestamp!),
+                                  height: 22 / 12,
+                                )
+                              ],
+                            ),
+                            subtitle: NativeSmallBodyText(
+                              element.type == NotificationType.liked
+                                  ? 'Liked your profile'
+                                  : element.type == NotificationType.blocked
+                                      ? "Blocked you"
+                                      : element.type == NotificationType.matched
+                                          ? "Profile matched"
+                                          : "${element.content}",
+                              height: 22 / 12,
+                            ),
                           ),
-                          const Spacer(),
-                          NativeSmallBodyText(
-                            _timeagoFormat(element.timestamp!),
-                            height: 22 / 12,
-                          )
-                        ],
-                      ),
-                      subtitle: NativeSmallBodyText(
-                        element.type == NotificationType.liked
-                            ? 'Liked your profile'
-                            : element.type == NotificationType.blocked
-                                ? "Blocked you"
-                                : element.type == NotificationType.matched
-                                    ? "Profile matched"
-                                    : "${element.content}",
-                        height: 22 / 12,
-                      ),
-                    ),
-                  ),
+                        )
+                      : const Row(children: [
+                          ContentNotFound(
+                              'You have not received a notification yet', 400)
+                        ]),
                 ),
               ],
             );

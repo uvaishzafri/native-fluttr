@@ -13,6 +13,7 @@ import 'package:native/model/chat_room.dart';
 import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/exceptions.dart';
+import 'package:native/widget/common_scaffold.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/native_button.dart';
 import 'package:native/widget/native_text_field.dart';
@@ -31,7 +32,8 @@ class ChatsScreen extends StatefulWidget {
   State<ChatsScreen> createState() => _ChatsScreenState();
 }
 
-class _ChatsScreenState extends State<ChatsScreen> {
+class _ChatsScreenState extends State<ChatsScreen>
+    with AutoRouteAwareStateMixin<ChatsScreen> {
   List<ChatRoom> _chats = [];
   TextEditingController? _searchController;
 
@@ -39,9 +41,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _updateSystemUi();
-    });
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
   }
 
   @override
@@ -50,9 +50,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
     super.dispose();
   }
 
-  _updateSystemUi() {
-    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
-        ColorUtils.aquaGreen);
+  @override
+  void didChangeTabRoute(TabPageRoute previousRoute) {
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
   }
 
   @override
@@ -133,6 +133,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
           },
           buildWhen: (previous, current) => true,
           builder: (context, state) {
+            CommonScaffold.commonScaffoldUpdateSystemUi(context);
             // final chatCubit = BlocProvider.of<ChatCubit>(context);
             if (state is Initial) {
               return const Center(child: CircularProgressIndicator());

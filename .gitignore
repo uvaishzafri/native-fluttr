@@ -95,3 +95,5 @@ android/app/release/
 # Configuration files
 *.env.*
 !.env.sample
+android/app/src/prod/res/values/values.xml
+android/app/src/stg/res/values/values.xml
