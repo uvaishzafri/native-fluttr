@@ -136,6 +136,7 @@ flutter:
     - assets/native_card/
     - assets/fav_card/
     - assets/fav_card/fav_category/
+    - assets/fav_card/header/
     - .env.stg
     - .env.prod
 
