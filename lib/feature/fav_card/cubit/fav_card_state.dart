@@ -11,5 +11,6 @@ class FavCardState with _$FavCardState {
   const factory FavCardState.data(
       {required List<FavCardItemModel> items,
       required FavCardCategoryModel selectedCategory,
-      required bool hasCompletedFavCardOnBoarding}) = Data;
+      required bool hasCompletedFavCardOnBoarding,
+      required int noOfLikedFavCards}) = Data;
 }

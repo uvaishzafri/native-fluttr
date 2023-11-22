@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/fav_card/cubit/fav_card_cubit.dart';
@@ -62,16 +63,47 @@ class _FavCardScreenState extends State<FavCardScreen> {
           if (state is Data) {
             return SafeArea(
               child: Scaffold(
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: CustomScrollView(
-                    slivers: [
-                      const SliverToBoxAdapter(child: Header()),
-                      SliverToBoxAdapter(child: _searchBar()),
-                      const SliverToBoxAdapter(child: CategoryList()),
-                      SliverToBoxAdapter(child: ItemsGrid(selectedCategory: state.selectedCategory, items: state.items)),
-                    ],
-                  ),
+                body: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: CustomScrollView(
+                        slivers: [
+                          const SliverToBoxAdapter(child: Header()),
+                          SliverToBoxAdapter(child: _searchBar()),
+                          const SliverToBoxAdapter(child: CategoryList()),
+                          SliverToBoxAdapter(
+                              child: ItemsGrid(
+                            selectedCategory: state.selectedCategory,
+                            items: state.items,
+                          )),
+                          if (state.noOfLikedFavCards < 5) const SliverToBoxAdapter(child: SizedBox(height: 100))
+                        ],
+                      ),
+                    ),
+                    if (state.noOfLikedFavCards < 5)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          color: Colors.black,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.info_outline,
+                                color: Color(0xFF7BC6CC),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                t.strings.addMoreCards,
+                                style: GoogleFonts.poppins().copyWith(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.white),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                  ],
                 ),
               ),
             );

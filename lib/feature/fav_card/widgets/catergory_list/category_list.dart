@@ -22,19 +22,20 @@ class CategoryList extends StatelessWidget {
 
   List<Widget> categoriesList({required FavCardCubit cubit, required FavCardState state}) {
     List<Widget> categoriesList = [];
-    for (int i = 0; i < favCardCategories.length; i++) {
+    for (int i = 0; i < favCardBaseCategories.length; i++) {
       categoriesList.add(GestureDetector(
         onTap: () => cubit.addRemoveCategory(
-            category: favCardCategories[i],
+            category: favCardBaseCategories[i],
             items: (state is Data) ? state.items : [],
-            hasCompletedFavCardOnBoarding: (state is Data) ? state.hasCompletedFavCardOnBoarding : false),
+            hasCompletedFavCardOnBoarding: (state is Data) ? state.hasCompletedFavCardOnBoarding : false,
+            noOfLikedFavCards: (state is Data) ? state.noOfLikedFavCards : 0),
         child: Padding(
           padding: EdgeInsets.only(right: 10, left: (i == 0) ? 0 : 10),
           child: FavCardCategory(
-            model: favCardCategories[i],
+            model: favCardBaseCategories[i],
             radius: 26,
             isCaps: true,
-            isSelected: (state is Data) ? (state.selectedCategory == favCardCategories[i]) : false,
+            isSelected: (state is Data) ? (state.selectedCategory == favCardBaseCategories[i]) : false,
           ),
         ),
       ));

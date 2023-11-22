@@ -503,4 +503,9 @@ class UserRepository {
   Future<bool> hasCompletedFavCardOnBoarding() async {
     return Future.delayed(const Duration(seconds: 0), () => false);
   }
+
+  //TODO: Implement this
+  Future<int> getNoOfLikedFavCards() async{
+    return Future.delayed(const Duration(seconds: 0), ()=> 2);
+  }
 }

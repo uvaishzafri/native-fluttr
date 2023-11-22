@@ -9,6 +9,7 @@ import '../../../util/fav_card/fav_card_constants.dart';
 import '../models/fav_card_items/fav_card_items.dart';
 
 part 'fav_card_cubit.freezed.dart';
+
 part 'fav_card_state.dart';
 
 @lazySingleton
@@ -26,13 +27,20 @@ class FavCardCubit extends Cubit<FavCardState> {
 
     bool hasCompletedFavCardOnBoarding = await _userRepository.hasCompletedFavCardOnBoarding();
 
-    //TODO: Implement error handling
+    int noOfLikedFavCards = await _userRepository.getNoOfLikedFavCards();
+
+    //TODO Implement error handling
     emit(FavCardState.data(
-        items: celebs, selectedCategory: favCardCategories[0], hasCompletedFavCardOnBoarding: hasCompletedFavCardOnBoarding));
+        items: celebs,
+        selectedCategory: favCardBaseCategories[0],
+        hasCompletedFavCardOnBoarding: hasCompletedFavCardOnBoarding,
+        noOfLikedFavCards: noOfLikedFavCards));
   }
 
-  void addRemoveCategory({required FavCardCategoryModel category, required List<FavCardItemModel> items, required bool
-  hasCompletedFavCardOnBoarding}) async {
-    emit(FavCardState.data(items: items, selectedCategory: category, hasCompletedFavCardOnBoarding: hasCompletedFavCardOnBoarding));
+  void addRemoveCategory(
+      {required FavCardCategoryModel category, required List<FavCardItemModel> items, required bool hasCompletedFavCardOnBoarding,
+        required int noOfLikedFavCards}) async {
+    emit(FavCardState.data(items: items, selectedCategory: category, hasCompletedFavCardOnBoarding: hasCompletedFavCardOnBoarding,
+        noOfLikedFavCards: noOfLikedFavCards));
   }
 }
