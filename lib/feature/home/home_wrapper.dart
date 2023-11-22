@@ -106,8 +106,8 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                     const BottomNavigationBarItem(
                         icon: Icon(Icons.notifications_outlined), activeIcon: Icon(Icons.notifications), label: 'Notification'),
                     BottomNavigationBarItem(
-                        icon: SvgPicture.asset("assets/fav_card/fav_category/top.svg", color: Colors.black),
-                        activeIcon: SvgPicture.asset("assets/fav_card/fav_category/top.svg"),
+                        icon: SvgPicture.asset("assets/fav_card/fav_card.svg", color: Colors.black, height: 26, width: 26,),
+                        activeIcon: SvgPicture.asset("assets/fav_card/fav_card_filled.svg", height: 26, width: 26,),
                         label: 'Fav Card'),
                     const BottomNavigationBarItem(
                       icon: Icon(Icons.chat_outlined),
