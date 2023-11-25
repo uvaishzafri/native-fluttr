@@ -5,12 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/fav_card/cubit/fav_card_cubit.dart';
-import 'package:native/feature/fav_card/widgets/catergory_list/category_list.dart';
+import 'package:native/feature/fav_card/widgets/catergory_list/fav_card_category_list.dart';
 import 'package:native/feature/fav_card/widgets/header.dart';
 import 'package:native/feature/fav_card/widgets/items_grid/Items_grid.dart';
 import 'package:native/widget/native_text_field.dart';
 
 import '../../i18n/translations.g.dart';
+import '../../util/fav_card/fav_card_constants.dart';
 
 @RoutePage()
 class FavCardScreen extends StatefulWidget {
@@ -59,56 +60,55 @@ class _FavCardScreenState extends State<FavCardScreen> {
             data: (value) {},
           );
         },
+        buildWhen: (p, c) => p != c && c is Data,
         builder: (context, state) {
-          if (state is Data) {
-            return SafeArea(
-              child: Scaffold(
-                body: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32),
-                      child: CustomScrollView(
-                        slivers: [
-                          const SliverToBoxAdapter(child: Header()),
-                          SliverToBoxAdapter(child: _searchBar()),
-                          const SliverToBoxAdapter(child: CategoryList()),
-                          SliverToBoxAdapter(
-                              child: ItemsGrid(
-                            selectedCategory: state.selectedCategory,
-                            items: state.items,
-                          )),
-                          if (state.noOfLikedFavCards < 5) const SliverToBoxAdapter(child: SizedBox(height: 100))
-                        ],
-                      ),
+          return SafeArea(
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: CustomScrollView(
+                      slivers: [
+                        const SliverToBoxAdapter(child: Header()),
+                        SliverToBoxAdapter(child: _searchBar()),
+                        const SliverToBoxAdapter(child: CategoryList()),
+                        SliverToBoxAdapter(
+                            child: ItemsGrid(
+                          selectedCategory: (state is Data) ? (state.selectedCategory) : popularListModel,
+                          items: (state is Data) ? (state.items) : [],
+                          noOfLikedFavCards: (state is Data) ? (state.noOfLikedFavCards) : 0,
+                        )),
+                        if ((state is Data) ? (state.noOfLikedFavCards < 5) : true) const SliverToBoxAdapter(child: SizedBox(height: 100))
+                      ],
                     ),
-                    if (state.noOfLikedFavCards < 5)
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          color: Colors.black,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.info_outline,
-                                color: Color(0xFF7BC6CC),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                t.strings.addMoreCards,
-                                style: GoogleFonts.poppins().copyWith(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.white),
-                              )
-                            ],
-                          ),
+                  ),
+                  if ((state is Data) ? (state.noOfLikedFavCards < 5) : true)
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        color: Colors.black,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.info_outline,
+                              color: Color(0xFF7BC6CC),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              t.strings.addMoreCards,
+                              style: GoogleFonts.poppins().copyWith(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.white),
+                            )
+                          ],
                         ),
-                      )
-                  ],
-                ),
+                      ),
+                    )
+                ],
               ),
-            );
-          }
-          return Container();
+            ),
+          );
         },
       ),
     );
