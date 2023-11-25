@@ -1,90 +1,132 @@
-import 'dart:math';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:native/feature/fav_card/sub_pages/item_detail/cubit/item_detail_cubit.dart';
+import 'package:native/feature/fav_card/sub_pages/item_detail/widgets/fans_list.dart';
+import 'package:native/feature/fav_card/sub_pages/widgets/item_header.dart';
 
+import '../../../../di/di.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../app/app_router.gr.dart';
 import '../../models/fav_card_items/fav_card_items.dart';
 
 @RoutePage()
 class ItemDetailScreen extends StatelessWidget {
   final FavCardItemModel item;
+  final int noOfLikedFavCards;
 
-  const ItemDetailScreen({super.key, required this.item});
+  const ItemDetailScreen({super.key, required this.item, required this.noOfLikedFavCards});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(left: 32, right: 32, top: 73),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.arrow_back_ios_rounded)),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      t.strings.myFavCard,
-                      style: GoogleFonts.poppins().copyWith(fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 34),
-            Row(
-              children: [
-                Hero(
-                  tag: item.id,
-                  child: Container(
-                    width: 100,
-                    height: 90,
-                    decoration: ShapeDecoration(
-                      image: DecorationImage(
-                        image: item.image.image,
-                        fit: BoxFit.cover,
-                      ),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 13),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        child: BlocProvider<ItemDetailCubit>.value(
+          value: getIt<ItemDetailCubit>()..getData(favCardId: item.id),
+          child: BlocConsumer<ItemDetailCubit, ItemDetailState>(
+              listener: (context, state) {
+                state.map(
+                  initial: (value) {},
+                  loading: (value) {
+                    if (!context.loaderOverlay.visible) {
+                      context.loaderOverlay.show();
+                    }
+                  },
+                  error: (value) {
+                    if (context.loaderOverlay.visible) {
+                      context.loaderOverlay.hide();
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(value.appException.message),
+                    ));
+                  },
+                  data: (value) {
+                    if (context.loaderOverlay.visible) {
+                      context.loaderOverlay.hide();
+                    }
+                  },
+                );
+              },
+              buildWhen: (p, c) => p != c && c is Data,
+              builder: (context, state) {
+                final itemDetailCubit = BlocProvider.of<ItemDetailCubit>(context);
+                return Stack(
                   children: [
-                    Text(
-                      item.name,
-                      style: GoogleFonts.poppins().copyWith(fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 22),
-                    _categoryList(),
-                    const SizedBox(height: 22),
-                    Text(
-                      "${item.likes.toString()} ${t.strings.peopleLike}",
-                      style: GoogleFonts.poppins().copyWith(fontSize: 12, fontWeight: FontWeight.w400),
-                    ),
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                        IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.arrow_back_ios_rounded)),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              t.strings.myFavCard,
+                              style: GoogleFonts.poppins().copyWith(fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      ]),
+                      const SizedBox(height: 34),
+                      ItemHeader(item: item),
+                      const SizedBox(height: 27),
+                      //TODO: need to implement strings translating functions
+                      Text(
+                        "${t.strings.peopleWhoLike} ${item.name}",
+                        style: GoogleFonts.poppins().copyWith(fontSize: 16, fontWeight: FontWeight.w500, color: const Color(0xFFBE94C6)),
+                      ),
+                      const SizedBox(height: 21),
+                      FansList(fans: (state is Data) ? (state.fans) : []),
+                    ]),
+                    if (state is Data)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 58),
+                          child: GestureDetector(
+                            onTap: () => {
+                              if (state.isAlreadyLiked == false && noOfLikedFavCards >= 20)
+                                {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(t.strings.exceededFavCardLimit),
+                                  ))
+                                }
+                              else if (state.isAlreadyLiked)
+                                {itemDetailCubit.unLikeFavCard(favCardId: item.id, state: state)}
+                              else
+                                {context.router.push(ItemCommentRoute(item: item))}
+                            },
+                            child: Container(
+                              width: 65,
+                              height: 65,
+                              decoration: ShapeDecoration(
+                                  shape: const OvalBorder(),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      state.isAlreadyLiked ? const Color(0xB2BE94C6) : Colors.grey,
+                                      state.isAlreadyLiked ? const Color(0xB2BE94C6) : Colors.grey,
+                                      state.isAlreadyLiked ? const Color(0xB27BC6CC) : Colors.grey,
+                                    ],
+                                  )),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: SvgPicture.asset(
+                                    "assets/fav_card/fav_card.svg",
+                                    width: 22,
+                                    height: 22,
+                                    color: Colors.white,
+                                  )),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
-                ),
-              ],
-            )
-          ],
+                );
+              }),
         ),
       ),
     );
-  }
-
-  Widget _categoryList() {
-    List<Widget> categories = [];
-    for (int i = 0; i < min(3, item.categories.length); i++) {
-      categories.add(categoryWidget(item.categories[i]));
-    }
-    return Container();
-  }
-
-  Widget categoryWidget(String category) {
-    return Container();
   }
 }
