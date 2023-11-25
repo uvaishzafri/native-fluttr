@@ -8,5 +8,11 @@
     "whatFavCardShort": "What is Fav Card?",
     "learnMore": "Learn More",
     "peopleLike": "people like this",
-    "addMoreCards": "Add more cards to have more matches"
+    "addMoreCards": "Add more cards to have more matches",
+    "peopleWhoLike": "People who like",
+    "exceededFavCardLimit": "You have exceeded limit of liked cards",
+    "favCardLikeSent": "Like Sent",
+    "chooseYourInterest": "Choose your interest",
+    "favCardDescription": "Your description (optional)",
+    "save": "Save"
 }
