@@ -15,7 +15,10 @@ import 'package:native/model/user.dart';
 import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/util/exceptions.dart';
+import 'package:native/widget/common_scaffold.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
+import 'package:native/widget/content_not_found.dart';
+import 'package:native/widget/like_overlay.dart';
 import 'package:native/widget/text/native_medium_title_text.dart';
 import 'package:native/widget/text/native_small_body_text.dart';
 import 'package:native/util/datetime_extension.dart';
@@ -28,7 +31,8 @@ class LikesScreen extends StatefulWidget {
   State<LikesScreen> createState() => _LikesScreenState();
 }
 
-class _LikesScreenState extends State<LikesScreen> {
+class _LikesScreenState extends State<LikesScreen>
+    with AutoRouteAwareStateMixin<LikesScreen> {
   // List<ChatRoom> _chats = [];
   // TextEditingController? _searchController;
 
@@ -36,9 +40,7 @@ class _LikesScreenState extends State<LikesScreen> {
   void initState() {
     super.initState();
     // _searchController = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _updateSystemUi();
-    });
+    _updateSystemUi();
   }
 
   @override
@@ -47,9 +49,18 @@ class _LikesScreenState extends State<LikesScreen> {
     super.dispose();
   }
 
+  @override
+  void didChangeTabRoute(TabPageRoute previousRoute) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateSystemUi();
+    });
+  }
+
   _updateSystemUi() {
-    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
-        ColorUtils.aquaGreen);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+          ColorUtils.aquaGreen);
+    });
   }
 
   @override
@@ -77,6 +88,13 @@ class _LikesScreenState extends State<LikesScreen> {
                 content: Text(value.appException.message),
               ));
             },
+            requestMatchSuccess: (value) {
+              if (context.loaderOverlay.visible) {
+                context.loaderOverlay.hide();
+              }
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text('Like Sent')));
+            },
             successState: (_) {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
@@ -86,6 +104,7 @@ class _LikesScreenState extends State<LikesScreen> {
         },
         builder: (context, state) {
           if (state is SuccessState) {
+            CommonScaffold.commonScaffoldUpdateSystemUi(context);
             return DefaultTabController(
               length: 2,
               child: Column(
@@ -181,7 +200,8 @@ class _LikesScreenState extends State<LikesScreen> {
                                   ),
                                 ),
                               )
-                            : const SizedBox.expand(),
+                            : const ContentNotFound(
+                                'You have not sent a like yet', 400),
                         (state.likes.toMe?.length ?? 0) > 0
                             ? GroupedListView<LikedUser, DateTime>(
                                 elements: state.likes.toMe!,
@@ -194,10 +214,19 @@ class _LikesScreenState extends State<LikesScreen> {
                                 // groupSeparatorBuilder: (value) => NativeMediumTitleText(value),
                                 // NativeMediumTitleText(DateFormat('dd-MMM-yyyy').format(value)),
                                 itemBuilder: (context, element) => ListTile(
-                                  onTap: () => context.router.push(
-                                      NativeCardScaffold(
+                                  onTap: () =>
+                                      context.router.push(NativeCardScaffold(
                                           user: element.user!,
-                                          showBackButton: true)),
+                                          overlayItem: LikeOverlay(
+                                            onPressedLike: () async {
+                                              final likesBloc =
+                                                  getIt<LikesCubit>();
+                                              await likesBloc.requestMatch(
+                                                  element.user!.uid!);
+
+                                              likesBloc.fetchLikesReport();
+                                            },
+                                          ))),
                                   contentPadding: EdgeInsets.zero,
                                   leading: CircleAvatar(
                                     // backgroundImage: AssetImage(element.imageUrl),
@@ -239,7 +268,8 @@ class _LikesScreenState extends State<LikesScreen> {
                                   ),
                                 ),
                               )
-                            : const SizedBox.expand(),
+                            : const ContentNotFound(
+                                'You have not received a like yet', 400),
                       ],
                     ),
                   ),

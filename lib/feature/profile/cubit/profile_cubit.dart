@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:native/model/user.dart';
@@ -62,6 +63,18 @@ class ProfileCubit extends Cubit<ProfileState> {
     }, (right) async {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('user', jsonEncode(right.toJson()));
+
+      FirebaseAnalytics.instance.setUserProperty(name: 'uid', value: right.uid);
+      FirebaseAnalytics.instance.setUserProperty(
+          name: 'gender', value: user.customClaims?.gender?.toString());
+      FirebaseAnalytics.instance.setUserProperty(
+          name: 'birthday', value: user.customClaims?.birthday);
+      FirebaseAnalytics.instance.setUserProperty(
+          name: 'community', value: user.customClaims?.community);
+      FirebaseAnalytics.instance.setUserProperty(
+          name: 'religion', value: user.customClaims?.religion);
+      FirebaseAnalytics.instance.setUserProperty(
+          name: 'location', value: user.customClaims?.location);
       emit(const ProfileState.profileUpdated());
     });
   }

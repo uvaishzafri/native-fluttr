@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart';
+import 'package:native/config.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
@@ -39,7 +41,9 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final Logger logger = getIt<Logger>();
-  final String _initialCountry = 'IN';
+  final Config _config = getIt<Config>();
+
+  String _initialCountry = 'IN';
   PhoneNumber _number = PhoneNumber(isoCode: 'IN');
   bool _isEnabledSubmitPhoneButton = false;
   static const int initialTimerValue = 30;
@@ -54,6 +58,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void initState() {
+    _initialCountry = _config.supportedPhoneCountry;
+    _number = PhoneNumber(isoCode: _config.supportedPhoneCountry);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _updateSystemUi();
@@ -129,22 +135,33 @@ class _SignInScreenState extends State<SignInScreen> {
 
             if (state is AuthInputPincodeState ||
                 state is AuthErrorPincodeState) {
-              return AuthScaffold(_inputPincode(
-                  context, bloc, _number.phoneNumber ?? "", state));
+              return AuthScaffold(
+                  _inputPincode(
+                      context, bloc, _number.phoneNumber ?? "", state),
+                  _config);
             } else if (state is AuthInputEmailState ||
                 state is AuthEmailSendFailedState ||
-                state is AuthEmailVerificationSentState ||
-                state is AuthEmailVerificationCompleteState) {
+                state is AuthEmailVerificationSentState) {
               return AuthScaffold(
-                  _inputEmail(context, bloc, _number.phoneNumber ?? "", state));
+                  _inputEmail(context, bloc, _number.phoneNumber ?? "", state),
+                  _config);
             } else {
-              if (state is AuthInitialState) {
+              if (state is AuthInitialState ||
+                  state is AuthEmailVerificationCompleteState) {
                 final args = context.router.current.args as SignInRouteArgs;
-                if (args.isVerifiedEmail != null && args.isVerifiedEmail!) {
-                  bloc.emailVerified();
+                if (args.isVerifiedEmail != null &&
+                    args.isVerifiedEmail! &&
+                    state is AuthEmailVerificationCompleteState) {
+                  if (context.loaderOverlay.visible) {
+                    context.loaderOverlay.hide();
+                  }
+                  _checkEmailVerifiedTimer?.cancel();
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    _showEmailVerifiedDialog(context);
+                  });
                 }
               }
-              return AuthScaffold(_inputPhone(context, bloc));
+              return AuthScaffold(_inputPhone(context, bloc), _config);
             }
           },
           listener: (BuildContext context, AuthState state) async {
@@ -185,14 +202,14 @@ class _SignInScreenState extends State<SignInScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.exception.message)));
             }
-            if (state is AuthEmailVerificationCompleteState) {
-              if (context.loaderOverlay.visible) {
-                context.loaderOverlay.hide();
-              }
-              _checkEmailVerifiedTimer?.cancel();
-              // Navigator.pop(context);
-              _showEmailVerifiedDialog(context);
-            }
+            // if (state is AuthEmailVerificationCompleteState) {
+            //   if (context.loaderOverlay.visible) {
+            //     context.loaderOverlay.hide();
+            //   }
+            //   _checkEmailVerifiedTimer?.cancel();
+            //   // Navigator.pop(context);
+            //   _showEmailVerifiedDialog(context);
+            // }
             if (state is AuthEmailVerificationSentState) {
               if (context.loaderOverlay.visible) {
                 context.loaderOverlay.hide();
@@ -671,25 +688,26 @@ class _SignInScreenState extends State<SignInScreen> {
         });
   }
 
+  bool _isDialogShown = false;
+  _isThereCurrentDialogShowing(BuildContext context) => _isDialogShown;
+
   Future<void> _showEmailVerifiedDialog(BuildContext ctx) async {
+    if (_isThereCurrentDialogShowing(ctx)) return;
+    _isDialogShown = true;
+    Future.delayed(const Duration(seconds: 3), () {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        _isDialogShown = false;
+      }
+      if (ctx.mounted) {
+        BlocProvider.of<AuthCubit>(ctx).initial();
+      }
+    });
     await showDialog<void>(
-        context: context,
+        context: ctx,
         useRootNavigator: false,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          Future.delayed(const Duration(seconds: 3), () {
-            if (context.mounted) {
-              Navigator.of(context)
-                ..pop()
-                ..pop();
-              BlocProvider.of<AppCubit>(context).logout();
-            }
-            // var authBloc = getIt<AuthCubit>();
-            // authBloc.initial();
-            if (ctx.mounted) {
-              BlocProvider.of<AuthCubit>(ctx).initial();
-            }
-          });
           return WillPopScope(
               onWillPop: () => Future.value(false),
               child: SimpleDialog(

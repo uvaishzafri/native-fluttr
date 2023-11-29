@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
 import 'package:native/widget/like_dialog.dart';
 import 'package:native/widget/like_overlay.dart';
@@ -13,8 +15,14 @@ import 'package:native/widget/native_card.dart';
 class ChoosePartnerScreen extends StatelessWidget {
   const ChoosePartnerScreen({super.key});
 
+  _updateSystemUi(BuildContext context) {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        Theme.of(context).colorScheme.primaryContainer);
+  }
+
   @override
   Widget build(BuildContext context) {
+    _updateSystemUi(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorUtils.white,
@@ -59,12 +67,13 @@ class ChoosePartnerScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const Positioned(
+            Positioned(
               bottom: 100,
               left: 100,
-              child: Icon(
-                Icons.touch_app_outlined,
-                size: 80,
+              child: SvgPicture.asset(
+                'assets/home/ic_hand_point.svg',
+                width: 80,
+                height: 80,
               ),
             ),
           ],
@@ -96,10 +105,12 @@ class ChoosePartnerScreen extends StatelessWidget {
               },
               isTutorial: true,
             );
-            context.router.push(NativeCardScaffold(
-                user: usersList[index],
-                overlayItem: overlayItem,
-                isDemoUser: false));
+            context.router
+                .push(NativeCardScaffold(
+                    user: usersList[index],
+                    overlayItem: overlayItem,
+                    isDemoUser: true))
+                .then((value) => _updateSystemUi(context));
           },
           child: NativeUserCard(
             native: usersList[index],

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -75,6 +77,17 @@ class AppCubit extends HydratedCubit<AppState> {
     return false;
   }
 
+  Future<bool> checkIfEmailVerifiedByRefId(String refId) async {
+    // emit(const AuthState.checkEmailVerification());
+    var checkUser = await _userRepository.checkEmailRefId(refId);
+    if (checkUser.isRight && checkUser.right) {
+      // emit(const AuthState.emailVerificationComplete());
+      return true;
+    }
+
+    return false;
+  }
+
   checkAuth() async {
     bool isSkipped = await _getStoreOnboardInfo();
     bool isTutorialCompleted = await _getTutorialCompletedPref();
@@ -95,6 +108,9 @@ class AppCubit extends HydratedCubit<AppState> {
           logout();
           return;
         } else {
+          if (storedUser.uid != null) {
+            FirebaseCrashlytics.instance.setUserIdentifier(storedUser.uid!);
+          }
           emit(
             AppState.loggedIn(
               isSkipped,
@@ -126,6 +142,8 @@ class AppCubit extends HydratedCubit<AppState> {
     prefs.remove('userTokenTimestampInSeconds');
     prefs.remove('notificationSettings');
     _firebaseAuth.signOut();
+    FirebaseCrashlytics.instance.setUserIdentifier('');
+
     bool isSkipped = await _getStoreOnboardInfo();
     bool isTutorialCompleted = await _getTutorialCompletedPref();
     emit(AppState.loggedOut(isSkipped, isTutorialCompleted, isVerifiedEmail));

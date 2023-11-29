@@ -10,6 +10,13 @@ class CommonScaffold extends StatelessWidget {
   final Widget? trailing;
   const CommonScaffold(this.title, this.content, {super.key, this.trailing});
 
+  static commonScaffoldUpdateSystemUi(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+          ColorUtils.aquaGreen);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

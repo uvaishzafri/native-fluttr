@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -61,6 +63,13 @@ Future<void> main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform(config),
       );
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: kReleaseMode
+            ? AndroidProvider.playIntegrity
+            : AndroidProvider.debug,
+        appleProvider:
+            kReleaseMode ? AppleProvider.deviceCheck : AppleProvider.debug,
+      );
       FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 
       FlutterError.onError = (errorDetails) {
@@ -92,10 +101,8 @@ Future<void> main() async {
       return runApp(TranslationProvider(child: App()));
     },
     (exception, stackTrace) async {
-      getIt<Logger>()
-          .e("Unexpected error during initialization", exception, stackTrace);
-      FirebaseCrashlytics.instance.recordError(exception, stackTrace,
-          fatal: true, reason: "Unexpected error during initialization");
+      getIt<Logger>().e("Unexpected error", exception, stackTrace);
+      FirebaseCrashlytics.instance.recordError(exception, stackTrace);
     },
   );
 }

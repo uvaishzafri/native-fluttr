@@ -8,4 +8,6 @@ class LikesState with _$LikesState {
       ErrorState;
   const factory LikesState.successState({required LikesModel likes}) =
       SuccessState;
+  const factory LikesState.requestMatchSuccess() =
+      LikesRequestMatchSuccessState;
 }
