@@ -12,8 +12,14 @@ class SingleCategoryGrid extends StatelessWidget {
   final FavCardCategoryModel selectedCategory;
   final List<FavCardItemModel> items;
   final bool? restrictColumns;
+  final int noOfLikedFavCards;
 
-  const SingleCategoryGrid({super.key, required this.selectedCategory, required this.items, this.restrictColumns});
+  const SingleCategoryGrid(
+      {super.key,
+      required this.selectedCategory,
+      required this.items,
+      this.restrictColumns,
+      required this.noOfLikedFavCards});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +63,10 @@ class SingleCategoryGrid extends StatelessWidget {
           shrinkWrap: true,
           mainAxisSpacing: 10,
           children: List.generate(items.length, (index) {
-            return SingleItem(item: items[index]);
+            return SingleItem(
+              item: items[index],
+              noOfLikedFavCards: noOfLikedFavCards,
+            );
           }),
         ),
       );
@@ -73,7 +82,10 @@ class SingleCategoryGrid extends StatelessWidget {
             mainAxisSpacing: 10,
             // Generate 100 widgets that display their index in the List.
             children: List.generate(items.length, (index) {
-              return SingleItem(item: items[index]);
+              return SingleItem(
+                item: items[index],
+                noOfLikedFavCards: noOfLikedFavCards,
+              );
             }),
           ),
         ),

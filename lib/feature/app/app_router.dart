@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:native/feature/app/app_router.gr.dart';
+import 'package:native/feature/fav_card/sub_pages/fav_card_search/cubit/fav_card_search_cubit.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
 class AppRouter extends $AppRouter {
@@ -34,6 +35,10 @@ class AppRouter extends $AppRouter {
         FadeCustomRoute(page: NotificationsRoute.page),
         FadeCustomRoute(page: LikesRoute.page),
         FadeCustomRoute(page: ItemDetailRoute.page),
+        FadeCustomRoute(page: ItemCommentRoute.page),
+        FadeCustomRoute(page: TopFavCardRoute.page),
+        FadeCustomRoute(page: FavCardSearchRoute.page),
+        FadeCustomRoute(page: FavCardSearchRoute.page),
         CustomRoute(
           path: 'home',
           page: HomeWrapperRoute.page,

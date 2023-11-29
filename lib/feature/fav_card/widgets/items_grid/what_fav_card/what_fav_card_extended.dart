@@ -17,13 +17,16 @@ class WhatFavCardExtended extends StatelessWidget {
             Stack(children: [
               Stack(
                 children: [
-                  Image.asset("assets/fav_card/what_fav_card_background.png", fit: BoxFit.fill, width: double.infinity),
+                  Image.asset("assets/fav_card/what_fav_card_background.png",
+                      fit: BoxFit.fill, width: double.infinity),
                   Positioned.fill(
                     child: Opacity(
                       opacity: 0.5,
                       child: Container(
                         decoration: ShapeDecoration(
-                            color: Colors.black.withOpacity(0.9), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
+                            color: Colors.black.withOpacity(0.9),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6))),
                       ),
                     ),
                   ),
@@ -39,8 +42,12 @@ class WhatFavCardExtended extends StatelessWidget {
                             child: Text(
                               t.strings.whatFavCard.toUpperCase(),
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins()
-                                  .copyWith(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 2, height: 2),
+                              style: GoogleFonts.poppins().copyWith(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 2,
+                                  height: 2),
                             ),
                           ),
                           GestureDetector(
@@ -57,7 +64,11 @@ class WhatFavCardExtended extends StatelessWidget {
                                 decoration: TextDecoration.underline,
                                 decorationColor: Colors.white,
                                 decorationThickness: 2,
-                                shadows: [const Shadow(color: Colors.white, offset: Offset(0, -5))],
+                                shadows: [
+                                  const Shadow(
+                                      color: Colors.white,
+                                      offset: Offset(0, -5))
+                                ],
                               ),
                             ),
                           ),

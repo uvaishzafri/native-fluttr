@@ -6,7 +6,13 @@ import 'package:native/feature/fav_card/models/fav_card_category_model.dart';
 import 'package:native/util/fav_card/fav_card_constants.dart';
 
 class FavCardCategory extends StatelessWidget {
-  const FavCardCategory({super.key, required this.model, required this.radius, this.textStyle, this.isCaps, this.isSelected});
+  const FavCardCategory(
+      {super.key,
+      required this.model,
+      required this.radius,
+      this.textStyle,
+      this.isCaps,
+      this.isSelected});
 
   final FavCardCategoryModel model;
   final double radius;
@@ -39,12 +45,15 @@ class FavCardCategory extends StatelessWidget {
         ),
         const SizedBox(height: 3),
         Text(
-          (isCaps ?? false) ? model.name.stringify().capitalize : model.name.stringify().capitalize,
+          (isCaps ?? false)
+              ? model.name.stringify().capitalize
+              : model.name.stringify().capitalize,
           style: textStyle ??
               GoogleFonts.poppins().copyWith(
                 color: model.color,
                 fontSize: 12,
-                fontWeight: isSelected == true ? FontWeight.w600 : FontWeight.w400,
+                fontWeight:
+                    isSelected == true ? FontWeight.w600 : FontWeight.w400,
                 letterSpacing: 1.6,
                 height: 22 / 8,
               ),

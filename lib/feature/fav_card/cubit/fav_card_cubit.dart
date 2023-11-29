@@ -14,7 +14,7 @@ part 'fav_card_state.dart';
 
 @lazySingleton
 class FavCardCubit extends Cubit<FavCardState> {
-  FavCardCubit(this._userRepository) : super(const FavCardState.loading()) {
+  FavCardCubit(this._userRepository) : super(const FavCardState.initial()) {
     getFavCardData();
   }
 
@@ -23,24 +23,26 @@ class FavCardCubit extends Cubit<FavCardState> {
   void getFavCardData() async {
     emit(const FavCardState.loading());
 
-    List<FavCardItemModel> celebs = await _userRepository.getFavCardItems();
+    var favCardData = await _userRepository.getFavCardData();
 
-    bool hasCompletedFavCardOnBoarding = await _userRepository.hasCompletedFavCardOnBoarding();
-
-    int noOfLikedFavCards = await _userRepository.getNoOfLikedFavCards();
-
-    //TODO Implement error handling
-    emit(FavCardState.data(
-        items: celebs,
-        selectedCategory: favCardBaseCategories[0],
-        hasCompletedFavCardOnBoarding: hasCompletedFavCardOnBoarding,
-        noOfLikedFavCards: noOfLikedFavCards));
+    favCardData.fold(
+        (left) => emit(FavCardState.error(appException: left)),
+        (right) => emit(FavCardState.data(
+            items: right.items,
+            selectedCategory: favCardBaseCategories[0],
+            hasCompletedFavCardOnBoarding: right.hasCompletedFavCardOnBoarding,
+            noOfLikedFavCards: right.noOfLikedFavCards)));
   }
 
   void addRemoveCategory(
-      {required FavCardCategoryModel category, required List<FavCardItemModel> items, required bool hasCompletedFavCardOnBoarding,
-        required int noOfLikedFavCards}) async {
-    emit(FavCardState.data(items: items, selectedCategory: category, hasCompletedFavCardOnBoarding: hasCompletedFavCardOnBoarding,
+      {required FavCardCategoryModel category,
+      required List<FavCardItemModel> items,
+      required bool hasCompletedFavCardOnBoarding,
+      required int noOfLikedFavCards}) async {
+    emit(FavCardState.data(
+        items: items,
+        selectedCategory: category,
+        hasCompletedFavCardOnBoarding: hasCompletedFavCardOnBoarding,
         noOfLikedFavCards: noOfLikedFavCards));
   }
 }

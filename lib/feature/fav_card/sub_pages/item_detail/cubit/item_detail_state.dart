@@ -6,8 +6,9 @@ class ItemDetailState with _$ItemDetailState {
 
   const factory ItemDetailState.loading() = Loading;
 
-  const factory ItemDetailState.error({required AppException appException}) = Error;
+  const factory ItemDetailState.error({required AppException appException}) =
+      Error;
 
-  const factory ItemDetailState.data({required List<FanModel> fans, required bool isAlreadyLiked}) = Data;
-
+  const factory ItemDetailState.data(
+      {required List<FanModel> fans, required bool isAlreadyLiked}) = Data;
 }

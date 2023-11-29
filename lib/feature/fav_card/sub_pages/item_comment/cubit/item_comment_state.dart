@@ -6,7 +6,8 @@ class ItemCommentState with _$ItemCommentState {
 
   const factory ItemCommentState.loading() = Loading;
 
-  const factory ItemCommentState.error({required AppException appException}) = Error;
+  const factory ItemCommentState.error({required AppException appException}) =
+      Error;
 
   const factory ItemCommentState.success() = Success;
 }

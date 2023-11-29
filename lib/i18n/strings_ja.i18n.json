@@ -14,5 +14,12 @@
     "favCardLikeSent": "Like Sent",
     "chooseYourInterest": "Choose your interest",
     "favCardDescription": "Your description (optional)",
-    "save": "Save"
+    "save": "Save",
+    "changeSaved": "Your changes have been saved",
+    "startSearchingFavCards": "Start searching your fav cards",
+    "searchFavCards": "Search Fav Cards",
+    "edit": "Edit",
+    "delete": "Delete",
+    "favCardTrends": "Fav card Trends",
+    "favCardInterests": "Fav card Interests"
 }

@@ -27,6 +27,12 @@ class _ItemCommentScreenState extends State<ItemCommentScreen> {
   final int commentMaxLength = 100;
 
   @override
+  void initState() {
+    _controller.text = widget.item.comment ?? "";
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -39,7 +45,8 @@ class _ItemCommentScreenState extends State<ItemCommentScreen> {
         padding: const EdgeInsets.only(left: 32, right: 32, top: 73),
         child: BlocProvider<ItemCommentCubit>.value(
           value: getIt<ItemCommentCubit>(),
-          child: BlocConsumer<ItemCommentCubit, ItemCommentState>(listener: (context, state) {
+          child: BlocConsumer<ItemCommentCubit, ItemCommentState>(
+              listener: (context, state) {
             state.map(
               initial: (value) {},
               loading: (value) {
@@ -70,25 +77,46 @@ class _ItemCommentScreenState extends State<ItemCommentScreen> {
             return Stack(
               children: [
                 SingleChildScrollView(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                      IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.arrow_back_ios_rounded)),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            t.strings.chooseYourInterest,
-                            style: GoogleFonts.poppins().copyWith(fontSize: 16, fontWeight: FontWeight.w500),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 48,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: IconButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  icon: const Icon(
+                                      Icons.arrow_back_ios_new_outlined),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  t.strings.chooseYourInterest,
+                                  style: GoogleFonts.poppins().copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ]),
-                    const SizedBox(height: 34),
-                    ItemHeader(item: widget.item),
-                    const SizedBox(height: 27),
-                    NativeTextField(_controller, maxLines: 8, maxLength: commentMaxLength, hintText: t.strings.favCardDescription),
-                    const SizedBox(height: 200),
-                  ]),
+                        const SizedBox(height: 34),
+                        ItemHeader(
+                          item: widget.item,
+                          clickAble: false,
+                          noOfLikedCards: 0,
+                        ),
+                        const SizedBox(height: 27),
+                        NativeTextField(_controller,
+                            maxLines: 8,
+                            maxLength: commentMaxLength,
+                            hintText: t.strings.favCardDescription),
+                        const SizedBox(height: 200),
+                      ]),
                 ),
                 Align(
                     alignment: Alignment.bottomCenter,
@@ -97,7 +125,9 @@ class _ItemCommentScreenState extends State<ItemCommentScreen> {
                       child: NativeButton(
                         isEnabled: true,
                         text: t.strings.save,
-                        onPressed: () => itemCommentCubit.likeFavCard(favCardId: widget.item.id, comment: _controller.text),
+                        onPressed: () => itemCommentCubit.likeFavCard(
+                            favCardId: widget.item.id,
+                            comment: _controller.text),
                       ),
                     ))
               ],

@@ -10,27 +10,41 @@ import 'single_category_grid.dart';
 class ItemsGrid extends StatelessWidget {
   final FavCardCategoryModel selectedCategory;
   final List<FavCardItemModel> items;
+  final int noOfLikedFavCards;
+  final bool hasCompletedFavCardOnBoarding;
 
-  const ItemsGrid({super.key, required this.selectedCategory, required this.items});
+  const ItemsGrid(
+      {super.key,
+      required this.selectedCategory,
+      required this.items,
+      required this.noOfLikedFavCards,
+      required this.hasCompletedFavCardOnBoarding});
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Take firebase values
-    bool hasCompletedFavCardOnBoarding = false;
-
     if (selectedCategory.name.stringify().toUpperCase() == "TOP") {
       return Column(
         children: [
-          (hasCompletedFavCardOnBoarding == false) ? const WhatFavCardExtended() : const WhatFavCarsContracted(),
+          (hasCompletedFavCardOnBoarding == false)
+              ? const WhatFavCardExtended()
+              : const WhatFavCarsContracted(),
           SingleCategoryGrid(
             selectedCategory: recommendedListModel,
-            items: filterItems(selectedCategory: selectedCategory.name.stringify().toUpperCase(), items: items),
+            items: filterItems(
+                selectedCategory:
+                    selectedCategory.name.stringify().toUpperCase(),
+                items: items),
             restrictColumns: true,
+            noOfLikedFavCards: noOfLikedFavCards,
           ),
           SingleCategoryGrid(
             selectedCategory: popularListModel,
-            items: filterItems(selectedCategory: selectedCategory.name.stringify().toUpperCase(), items: items),
+            items: filterItems(
+                selectedCategory:
+                    selectedCategory.name.stringify().toUpperCase(),
+                items: items),
             restrictColumns: true,
+            noOfLikedFavCards: noOfLikedFavCards,
           )
         ],
       );
@@ -38,8 +52,13 @@ class ItemsGrid extends StatelessWidget {
       return Column(
         children: [
           SingleCategoryGrid(
-              selectedCategory: selectedCategory,
-              items: filterItems(selectedCategory: selectedCategory.name.stringify().toUpperCase(), items: items))
+            selectedCategory: selectedCategory,
+            items: filterItems(
+              selectedCategory: selectedCategory.name.stringify().toUpperCase(),
+              items: items,
+            ),
+            noOfLikedFavCards: noOfLikedFavCards,
+          )
         ],
       );
     }
@@ -55,7 +74,9 @@ class ItemsGrid extends StatelessWidget {
   ///
   /// Returns:
   ///   a List of FavCardItemModel objects that match the selected category.
-  List<FavCardItemModel> filterItems({required String selectedCategory, required List<FavCardItemModel> items}) {
+  List<FavCardItemModel> filterItems(
+      {required String selectedCategory,
+      required List<FavCardItemModel> items}) {
     List<FavCardItemModel> result = [];
     for (int i = 0; i < items.length; i++) {
       for (int j = 0; j < items[i].categories.length; j++) {

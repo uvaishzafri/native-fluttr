@@ -8,13 +8,16 @@ import '../../models/fav_card_items/fav_card_items.dart';
 
 class SingleItem extends StatelessWidget {
   final FavCardItemModel item;
+  final int noOfLikedFavCards;
 
-  const SingleItem({super.key, required this.item});
+  const SingleItem(
+      {super.key, required this.item, required this.noOfLikedFavCards});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => AutoRouter.of(context).push(ItemDetailRoute(item: item)),
+      onTap: () => context.router.push(
+          ItemDetailRoute(item: item, noOfLikedFavCards: noOfLikedFavCards)),
       child: Hero(
         tag: item.id,
         child: SizedBox(
@@ -28,10 +31,11 @@ class SingleItem extends StatelessWidget {
                   height: 75,
                   decoration: ShapeDecoration(
                     image: DecorationImage(
-                      image: item.image.image,
+                      image: Image.network(item.imageAddress).image,
                       fit: BoxFit.cover,
                     ),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
                   ),
                 ),
               ),

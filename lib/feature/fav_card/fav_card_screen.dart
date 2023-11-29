@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
+import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/fav_card/cubit/fav_card_cubit.dart';
 import 'package:native/feature/fav_card/widgets/catergory_list/fav_card_category_list.dart';
 import 'package:native/feature/fav_card/widgets/header.dart';
@@ -71,15 +72,28 @@ class _FavCardScreenState extends State<FavCardScreen> {
                     child: CustomScrollView(
                       slivers: [
                         const SliverToBoxAdapter(child: Header()),
-                        SliverToBoxAdapter(child: _searchBar()),
+                        SliverToBoxAdapter(
+                            child: _searchBar(
+                                noOfLikedCards: (state is Data)
+                                    ? (state.noOfLikedFavCards)
+                                    : 0)),
                         const SliverToBoxAdapter(child: CategoryList()),
                         SliverToBoxAdapter(
                             child: ItemsGrid(
-                          selectedCategory: (state is Data) ? (state.selectedCategory) : popularListModel,
+                          selectedCategory: (state is Data)
+                              ? (state.selectedCategory)
+                              : popularListModel,
                           items: (state is Data) ? (state.items) : [],
-                          noOfLikedFavCards: (state is Data) ? (state.noOfLikedFavCards) : 0,
+                          noOfLikedFavCards:
+                              (state is Data) ? (state.noOfLikedFavCards) : 0,
+                          hasCompletedFavCardOnBoarding: (state is Data)
+                              ? state.hasCompletedFavCardOnBoarding
+                              : false,
                         )),
-                        if ((state is Data) ? (state.noOfLikedFavCards < 5) : true) const SliverToBoxAdapter(child: SizedBox(height: 100))
+                        if ((state is Data)
+                            ? (state.noOfLikedFavCards < 5)
+                            : true)
+                          const SliverToBoxAdapter(child: SizedBox(height: 100))
                       ],
                     ),
                   ),
@@ -99,7 +113,10 @@ class _FavCardScreenState extends State<FavCardScreen> {
                             const SizedBox(width: 10),
                             Text(
                               t.strings.addMoreCards,
-                              style: GoogleFonts.poppins().copyWith(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.white),
+                              style: GoogleFonts.poppins().copyWith(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.white),
                             )
                           ],
                         ),
@@ -114,10 +131,21 @@ class _FavCardScreenState extends State<FavCardScreen> {
     );
   }
 
-  Widget _searchBar() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 28, top: 36),
-      child: NativeTextField(_searchController, hintText: t.strings.search, prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E))),
+  Widget _searchBar({required int noOfLikedCards}) {
+    return InkWell(
+      onTap: () => {
+        context.router.push(FavCardSearchRoute(noOfLikedCards: noOfLikedCards)),
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 28, top: 36),
+        child: IgnorePointer(
+          child: NativeTextField(
+            _searchController,
+            hintText: t.strings.search,
+            prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E)),
+          ),
+        ),
+      ),
     );
   }
 }

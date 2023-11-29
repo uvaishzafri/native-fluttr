@@ -11,26 +11,30 @@ part 'item_detail_state.dart';
 
 @lazySingleton
 class ItemDetailCubit extends Cubit<ItemDetailState> {
-  ItemDetailCubit(this._userRepository) : super(const ItemDetailState.initial());
+  ItemDetailCubit(this._userRepository)
+      : super(const ItemDetailState.initial());
 
   final UserRepository _userRepository;
 
   void getData({required String favCardId}) async {
     emit(const ItemDetailState.loading());
 
-    List<FanModel> fans = await _userRepository.getFavCardFanData(id: favCardId);
+    var itemDetails = await _userRepository.getItemDetail(id: favCardId);
 
-    bool isAlreadyLiked = await _userRepository.isFavCardAlreadyLiked(id: favCardId);
-
-    //TODO Implement error handling
-    emit(ItemDetailState.data(fans: fans, isAlreadyLiked: isAlreadyLiked));
+    itemDetails.fold(
+        (left) => emit(ItemDetailState.error(appException: left)),
+        (right) => emit(ItemDetailState.data(
+            fans: right.fans, isAlreadyLiked: right.isAlreadyLiked)));
   }
 
   void unLikeFavCard({required String favCardId, required Data state}) async {
     emit(const ItemDetailState.loading());
 
-    //TODO Implement error handling
-    void result = await _userRepository.unLikeFavCard(id: favCardId);
-    emit(ItemDetailState.data(fans: state.fans, isAlreadyLiked: false));
+    var result = await _userRepository.unLikeFavCard(id: favCardId);
+
+    result.fold(
+        (left) => emit(ItemDetailState.error(appException: left)),
+        (right) => emit(
+            ItemDetailState.data(fans: state.fans, isAlreadyLiked: false)));
   }
 }

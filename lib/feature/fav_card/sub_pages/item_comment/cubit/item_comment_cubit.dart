@@ -10,16 +10,18 @@ part 'item_comment_state.dart';
 
 @lazySingleton
 class ItemCommentCubit extends Cubit<ItemCommentState> {
-  ItemCommentCubit(this._userRepository) : super(const ItemCommentState.initial());
+  ItemCommentCubit(this._userRepository)
+      : super(const ItemCommentState.initial());
 
   final UserRepository _userRepository;
 
   void likeFavCard({required String favCardId, required String comment}) async {
     emit(const ItemCommentState.loading());
 
-    var response = await _userRepository.likeFavCard(id: favCardId, comment: comment);
+    var response =
+        await _userRepository.likeFavCard(id: favCardId, comment: comment);
 
-    //TODO Implement error handling
-    emit(const ItemCommentState.success());
+    response.fold((left) => emit(ItemCommentState.error(appException: left)),
+        (right) => emit(const ItemCommentState.success()));
   }
 }

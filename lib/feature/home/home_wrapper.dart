@@ -15,7 +15,6 @@ import 'package:native/manager/notification_manager/notification_navigator.dart'
 import 'package:native/manager/permission_manager/permission_manager.dart';
 import 'package:native/model/user.dart';
 import 'package:native/theme/theme.dart';
-import 'package:native/util/color_utils.dart';
 import 'package:native/widget/images.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -74,13 +73,14 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
   Widget build(BuildContext context) {
     return AutoTabsScaffold(
       // inheritNavigatorObservers: false,
-      routes: [
-        const HomeRoute(),
-        const LikesRoute(),
-        const NotificationsRoute(),
-        const FavCardRoute(),
-        const ChatsRoute(),
-        AccountRoute(/*imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!*/),
+      routes: const [
+        HomeRoute(),
+        LikesRoute(),
+        NotificationsRoute(),
+        FavCardRoute(),
+        ChatsRoute(),
+        AccountRoute(
+            /*imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!*/),
       ],
       bottomNavigationBuilder: (_, tabsRouter) {
         return FutureBuilder<User?>(
@@ -104,10 +104,21 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                       label: 'Likes',
                     ),
                     const BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications_outlined), activeIcon: Icon(Icons.notifications), label: 'Notification'),
+                        icon: Icon(Icons.notifications_outlined),
+                        activeIcon: Icon(Icons.notifications),
+                        label: 'Notification'),
                     BottomNavigationBarItem(
-                        icon: SvgPicture.asset("assets/fav_card/fav_card.svg", color: Colors.black, height: 26, width: 26,),
-                        activeIcon: SvgPicture.asset("assets/fav_card/fav_card_filled.svg", height: 26, width: 26,),
+                        icon: SvgPicture.asset(
+                          "assets/fav_card/fav_card.svg",
+                          color: Colors.black,
+                          height: 26,
+                          width: 26,
+                        ),
+                        activeIcon: SvgPicture.asset(
+                          "assets/fav_card/fav_card_filled.svg",
+                          height: 26,
+                          width: 26,
+                        ),
                         label: 'Fav Card'),
                     const BottomNavigationBarItem(
                       icon: Icon(Icons.chat_outlined),
@@ -127,7 +138,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                           },
                           child: snapshot.connectionState !=
                                   ConnectionState.done
-                              ? CircularProgressIndicator()
+                              ? const CircularProgressIndicator()
                               : snapshot.data!.photoURL != null
                                   ? NativeHeadImage(
                                       // Image.asset("$_assetFolder/ic_test.png"),
@@ -138,7 +149,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                                       borderRadius: 2,
                                       isGradientBorder: false,
                                     )
-                                  : Placeholder(),
+                                  : const Placeholder(),
                         ),
                       ),
                       label: 'Account',
