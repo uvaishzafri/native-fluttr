@@ -627,4 +627,9 @@ class UserRepository {
       {required List<FavCardItemModel> favCards}) {
     return Future.delayed(const Duration(seconds: 0), () => Right(true));
   }
+
+  //TODO: Implement this
+  Future<Either<AppException, bool>> getFavCardTutorialData() {
+    return Future.delayed(const Duration(seconds: 0), () => const Right(true));
+  }
 }
