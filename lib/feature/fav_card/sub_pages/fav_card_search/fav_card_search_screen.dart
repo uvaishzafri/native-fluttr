@@ -23,7 +23,6 @@ class FavCardSearchScreen extends StatefulWidget {
 
 class _FavCardSearchScreenState extends State<FavCardSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
 
   @override
   void dispose() {
@@ -53,6 +52,7 @@ class _FavCardSearchScreenState extends State<FavCardSearchScreen> {
                       }
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(value.appException.message),
+                        backgroundColor: const Color(0xFFFF0000),
                       ));
                     },
                     success: (value) {
@@ -63,8 +63,7 @@ class _FavCardSearchScreenState extends State<FavCardSearchScreen> {
               },
               buildWhen: (p, c) => p != c && (c is Success || c is Empty),
               builder: (context, state) {
-                final favCardSearchCubit =
-                    BlocProvider.of<FavCardSearchCubit>(context);
+                final favCardSearchCubit = BlocProvider.of<FavCardSearchCubit>(context);
                 return Column(children: [
                   SizedBox(
                     height: 48,
@@ -81,8 +80,7 @@ class _FavCardSearchScreenState extends State<FavCardSearchScreen> {
                           alignment: Alignment.center,
                           child: Text(
                             t.strings.searchFavCards,
-                            style: GoogleFonts.poppins().copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                            style: GoogleFonts.poppins().copyWith(fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                         ),
                       ],
@@ -92,11 +90,9 @@ class _FavCardSearchScreenState extends State<FavCardSearchScreen> {
                   NativeTextField(
                     _searchController,
                     hintText: t.strings.search,
-                    prefixIcon:
-                        const Icon(Icons.search, color: Color(0x321E1E1E)),
+                    prefixIcon: const Icon(Icons.search, color: Color(0x321E1E1E)),
                     suffixIcon: IconButton(
-                      icon: const Icon(Icons.close_outlined,
-                          color: Color(0xAF1E1E1E)),
+                      icon: const Icon(Icons.close_outlined, color: Color(0xAF1E1E1E)),
                       onPressed: () {
                         _searchController.text = "";
                         favCardSearchCubit.getSearchResults(query: "");
@@ -107,8 +103,7 @@ class _FavCardSearchScreenState extends State<FavCardSearchScreen> {
                     },
                     autoFocus: true,
                   ),
-                  if (state is Empty)
-                    const Expanded(child: FavCardSearchEmptyState()),
+                  if (state is Empty) const Expanded(child: FavCardSearchEmptyState()),
                   const SizedBox(height: 46),
                   if (state is Success)
                     Expanded(
@@ -116,10 +111,7 @@ class _FavCardSearchScreenState extends State<FavCardSearchScreen> {
                         padding: const EdgeInsets.all(8),
                         itemCount: state.items.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return ItemHeader(
-                              item: state.items[index],
-                              clickAble: true,
-                              noOfLikedCards: widget.noOfLikedCards);
+                          return ItemHeader(item: state.items[index], clickAble: true, noOfLikedCards: widget.noOfLikedCards);
                         },
                         separatorBuilder: (context, index) => const SizedBox(
                           height: 32,

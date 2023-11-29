@@ -60,6 +60,7 @@ class _ItemCommentScreenState extends State<ItemCommentScreen> {
                 }
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(value.appException.message),
+                  backgroundColor: const Color(0xFFFF0000),
                 ));
               },
               success: (value) {
@@ -68,6 +69,7 @@ class _ItemCommentScreenState extends State<ItemCommentScreen> {
                 }
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(t.strings.favCardLikeSent),
+                  backgroundColor: const Color(0xFF03C94F),
                 ));
                 Navigator.of(context).pop();
               },

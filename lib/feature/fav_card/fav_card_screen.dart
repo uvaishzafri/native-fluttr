@@ -56,6 +56,7 @@ class _FavCardScreenState extends State<FavCardScreen> {
               }
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(value.appException.message),
+                backgroundColor: const Color(0xFFFF0000),
               ));
             },
             data: (value) {},

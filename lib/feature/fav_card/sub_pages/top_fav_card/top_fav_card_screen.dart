@@ -39,6 +39,7 @@ class TopFavCardScreen extends StatelessWidget {
                     content: Text(
                       value.appException.message,
                     ),
+                    backgroundColor: const Color(0xFFFF0000),
                   ));
                 },
                 data: (value) {
@@ -52,7 +53,7 @@ class TopFavCardScreen extends StatelessWidget {
                   }
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(t.strings.changeSaved),
-                    backgroundColor: Colors.green,
+                    backgroundColor: const Color(0xFF03C94F),
                   ));
                   Navigator.of(context).pop();
                 },
