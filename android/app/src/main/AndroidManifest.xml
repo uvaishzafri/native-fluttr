@@ -39,8 +39,7 @@
 
                 <data
                     android:host="be-native.me"
-                    android:scheme="http" />
-                <data android:scheme="https" />
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

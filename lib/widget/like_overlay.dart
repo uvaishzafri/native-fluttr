@@ -53,11 +53,13 @@ class LikeOverlay extends StatelessWidget {
           Positioned(
             bottom: -0,
             right: 60,
-            child: SvgPicture.asset(
-              'assets/home/ic_hand_point.svg',
-              width: 80,
-              height: 80,
-            ),
+            child: IgnorePointer(
+                ignoring: true,
+                child: SvgPicture.asset(
+                  'assets/home/ic_hand_point.svg',
+                  width: 80,
+                  height: 80,
+                )),
           ),
       ],
     );

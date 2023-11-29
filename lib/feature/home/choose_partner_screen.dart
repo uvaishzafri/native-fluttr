@@ -70,10 +70,13 @@ class ChoosePartnerScreen extends StatelessWidget {
             Positioned(
               bottom: 100,
               left: 100,
-              child: SvgPicture.asset(
-                'assets/home/ic_hand_point.svg',
-                width: 80,
-                height: 80,
+              child: IgnorePointer(
+                ignoring: true,
+                child: SvgPicture.asset(
+                  'assets/home/ic_hand_point.svg',
+                  width: 80,
+                  height: 80,
+                ),
               ),
             ),
           ],
