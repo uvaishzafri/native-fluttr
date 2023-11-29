@@ -1,5 +1,25 @@
 {
-  "title": "native.",
-  "best": "Ranked by score",
-  "top": "Ranked by date"
+    "title": "native.",
+    "best": "Ranked by score",
+    "top": "Ranked by date",
+    "myFavCard": "My fav card",
+    "search": "Search",
+    "whatFavCard": "My Fav card is a feature that makes it easy to express what you like",
+    "whatFavCardShort": "What is Fav Card?",
+    "learnMore": "Learn More",
+    "peopleLike": "people like this",
+    "addMoreCards": "Add more cards to have more matches",
+    "peopleWhoLike": "People who like",
+    "exceededFavCardLimit": "You have exceeded limit of liked cards",
+    "favCardLikeSent": "Like Sent",
+    "chooseYourInterest": "Choose your interest",
+    "favCardDescription": "Your description (optional)",
+    "save": "Save",
+    "changeSaved": "Your changes have been saved",
+    "startSearchingFavCards": "Start searching your fav cards",
+    "searchFavCards": "Search Fav Cards",
+    "edit": "Edit",
+    "delete": "Delete",
+    "favCardTrends": "Fav card Trends",
+    "favCardInterests": "Fav card Interests"
 }

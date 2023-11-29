@@ -9,6 +9,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:native/di/di.dart';
 import 'package:native/dummy_data.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
+import 'package:native/feature/home/widgets/my_fav_card_interests.dart';
+import 'package:native/feature/home/widgets/my_fav_card_trends.dart';
 import 'package:native/model/native_card/native_card.dart';
 import 'package:native/model/user.dart';
 import 'package:native/repo/user_repository.dart';
@@ -41,6 +43,7 @@ class NativeCardDetailsScreen extends StatefulWidget {
 class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
   NativeCard? nativeUser;
   User? user;
+
   // NativeCard? nativeUser;
 
   @override
@@ -137,6 +140,17 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
                                   idealPartnerCard(),
                                   const SizedBox(height: 10),
                                   adviceCard(),
+                                  const SizedBox(height: 10),
+                                  MyFavCardInterests(
+                                      interests:
+                                          nativeUser?.favCardInterests ?? []),
+                                  const SizedBox(height: 10),
+                                  MyFavCardTrends(
+                                      trends:
+                                          (nativeUser?.favCardInterests != null)
+                                              ? (nativeUser?.favCardTrends
+                                                  as Map<String, int>)
+                                              : {}),
                                   SizedBox(
                                       height: widget.showBackButton ? 20 : 100),
                                 ],
@@ -252,7 +266,7 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
                           borderRadius: 1,
                           isGradientBorder: false,
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         NativeMediumBodyText(
                           e,
                           textAlign: TextAlign.center,

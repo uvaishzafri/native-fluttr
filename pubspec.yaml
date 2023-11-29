@@ -88,13 +88,15 @@ dependencies:
   syncfusion_flutter_sliders: ^23.1.42
   syncfusion_flutter_core: ^23.1.42
   firebase_crashlytics: ^3.4.4
+  flutter_svg_provider: ^1.0.6
   uni_links: ^0.5.1
   firebase_dynamic_links: ^5.4.4
   webview_flutter: ^4.4.2
   in_app_review: ^2.0.8
   firebase_analytics: ^10.7.0
   firebase_app_check: ^0.2.1+4
-  
+  dotted_border: ^2.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -138,6 +140,9 @@ flutter:
     - assets/profile/
     - assets/chat/
     - assets/native_card/
+    - assets/fav_card/
+    - assets/fav_card/fav_category/
+    - assets/fav_card/header/
     - .env.stg
     - .env.prod
 

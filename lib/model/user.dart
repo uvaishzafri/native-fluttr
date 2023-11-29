@@ -3,7 +3,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native/model/custom_claims.dart';
 import 'package:native/model/native_card/meta.dart';
-import 'package:native/model/native_card/native_card.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';

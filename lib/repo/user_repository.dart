@@ -5,6 +5,8 @@ import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:native/config.dart';
+import 'package:native/feature/fav_card/models/fav_card_data.dart';
+import 'package:native/feature/fav_card/models/item_detail_model.dart';
 import 'package:native/manager/refresh_token_manager.dart';
 import 'package:native/model/app_notification.dart';
 import 'package:native/model/likes_model.dart';
@@ -14,12 +16,16 @@ import 'package:native/model/user_prefs.dart';
 import 'package:native/util/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../dummy_data.dart';
+import '../feature/fav_card/models/fav_card_items/fav_card_items.dart';
+
 bool isSuccess(int? statusCode) =>
     statusCode != null && statusCode >= 200 && statusCode < 400;
 
 @lazySingleton
 class UserRepository {
   UserRepository(this._dioClient, this._config, this._refreshTokenManager);
+
   final Dio _dioClient;
   final Config _config;
   final RefreshTokenManager _refreshTokenManager;
@@ -578,5 +584,47 @@ class UserRepository {
     } catch (e) {
       return Left(CustomException());
     }
+  }
+
+  //TODO: Implement this
+  Future<Either<AppException, FavCardDataModel>> getFavCardData() async {
+    return Future.delayed(
+        const Duration(seconds: 0), () => Right(favCardDataModel));
+  }
+
+  //TODO: Implement this
+  Future<Either<AppException, ItemDetailModel>> getItemDetail(
+      {required String id}) {
+    return Future.delayed(const Duration(seconds: 0), () => Right(itemDetail));
+  }
+
+  //TODO: Implement this
+  Future<Either<AppException, bool>> unLikeFavCard({required String id}) {
+    return Future.delayed(const Duration(seconds: 0), () => Right(true));
+  }
+
+  //TODO: Implement this
+  Future<Either<AppException, bool>> likeFavCard(
+      {required String id, required String comment}) {
+    return Future.delayed(const Duration(seconds: 0), () => Right(true));
+  }
+
+  //TODO: Implement this
+  Future<Either<AppException, List<FavCardItemModel>>> getFavCardSearchResults(
+      {required String query}) {
+    return Future.delayed(
+        const Duration(seconds: 0), () => Right(dummyFavCardItems));
+  }
+
+  //TODO: Implement this
+  Future<Either<AppException, List<FavCardItemModel>>> getTopFavCards() async {
+    return Future.delayed(
+        const Duration(seconds: 0), () => Right(dummyFavCardItems));
+  }
+
+  //TODO: Implement this
+  Future<Either<AppException, bool>> updateTopFavCards(
+      {required List<FavCardItemModel> favCards}) {
+    return Future.delayed(const Duration(seconds: 0), () => Right(true));
   }
 }
