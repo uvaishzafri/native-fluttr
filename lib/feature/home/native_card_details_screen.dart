@@ -58,7 +58,7 @@ class _NativeCardDetailsScreenState extends State<NativeCardDetailsScreen> {
 
   Future initUser() async {
     user = widget.user;
-    if (!widget.isDemoUser) {
+    if (widget.isDemoUser) {
       nativeUser = usersList2[0];
       // user = usersList[0];
     } else {
