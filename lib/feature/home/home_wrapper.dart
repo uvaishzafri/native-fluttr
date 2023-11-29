@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,12 +66,14 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
   }
 
   _updateSystemUi() {
-    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
-        Theme.of(context).colorScheme.primaryContainer);
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer, Theme.of(context).colorScheme.primaryContainer);
   }
+
+  final _labelList = const <String>['Home', 'Likes', 'Notification', 'Chat', 'Account'];
 
   @override
   Widget build(BuildContext context) {
+    _updateSystemUi();
     return AutoTabsScaffold(
       // inheritNavigatorObservers: false,
       routes: const [
@@ -79,8 +82,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
         NotificationsRoute(),
         FavCardRoute(),
         ChatsRoute(),
-        AccountRoute(
-            /*imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!*/),
+        AccountRoute(/*imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!*/),
       ],
       bottomNavigationBuilder: (_, tabsRouter) {
         return FutureBuilder<User?>(
@@ -90,23 +92,22 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: BottomNavigationBar(
                   currentIndex: tabsRouter.activeIndex,
-                  onTap: tabsRouter.setActiveIndex,
+                  onTap: (idx) {
+                    FirebaseAnalytics.instance.logScreenView(screenName: _labelList[idx]);
+                    tabsRouter.setActiveIndex(idx);
+                  },
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   items: <BottomNavigationBarItem>[
-                    const BottomNavigationBarItem(
-                        icon: Icon(Icons.home_outlined),
-                        activeIcon: Icon(Icons.home_filled),
-                        label: 'Home'),
-                    const BottomNavigationBarItem(
-                      icon: Icon(Icons.favorite_border_outlined),
-                      activeIcon: Icon(Icons.favorite),
-                      label: 'Likes',
+                    BottomNavigationBarItem(
+                        icon: const Icon(Icons.home_outlined), activeIcon: const Icon(Icons.home_filled), label: _labelList[0]),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.favorite_border_outlined),
+                      activeIcon: const Icon(Icons.favorite),
+                      label: _labelList[1],
                     ),
-                    const BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications_outlined),
-                        activeIcon: Icon(Icons.notifications),
-                        label: 'Notification'),
+                    BottomNavigationBarItem(
+                        icon: const Icon(Icons.notifications_outlined), activeIcon: const Icon(Icons.notifications), label: _labelList[2]),
                     BottomNavigationBarItem(
                         icon: SvgPicture.asset(
                           "assets/fav_card/fav_card.svg",
@@ -136,15 +137,13 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                               // setState(() {});
                             }
                           },
-                          child: snapshot.connectionState !=
-                                  ConnectionState.done
+                          child: snapshot.connectionState != ConnectionState.done
                               ? const CircularProgressIndicator()
                               : snapshot.data!.photoURL != null
                                   ? NativeHeadImage(
                                       // Image.asset("$_assetFolder/ic_test.png"),
                                       Image.network(snapshot.data!.photoURL!),
-                                      borderColor:
-                                          Theme.of(context).colorScheme.primary,
+                                      borderColor: Theme.of(context).colorScheme.primary,
                                       radius: 14,
                                       borderRadius: 2,
                                       isGradientBorder: false,
@@ -152,7 +151,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                                   : const Placeholder(),
                         ),
                       ),
-                      label: 'Account',
+                      label: _labelList[4],
                     ),
                   ],
                   type: BottomNavigationBarType.fixed,
@@ -172,21 +171,17 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
   void _listenForLocalNotifications() {
     _localNotificationManager.data.addListener(() {
       if (_localNotificationManager.data.value != null) {
-        _notificationNavigator.navigateNotification(
-            context: context,
-            data: jsonDecode(_localNotificationManager.data.value!));
+        _notificationNavigator.navigateNotification(context: context, data: jsonDecode(_localNotificationManager.data.value!));
       }
     });
   }
 
   void _registerNotificationCallbacks() {
-    _notificationManager
-        .setBackgroundMessageCallback(_firebaseMessagingBackgroundHandler);
+    _notificationManager.setBackgroundMessageCallback(_firebaseMessagingBackgroundHandler);
     _notificationManager.setForegroundMessageCallback((RemoteMessage message) {
       _localNotificationManager.showLocalNotification(message: message);
     });
-    _notificationManager
-        .setBackgroundMessageOpenedCallback((RemoteMessage message) {
+    _notificationManager.setBackgroundMessageOpenedCallback((RemoteMessage message) {
       _notificationNavigator.navigateNotification(
         context: context,
         data: message.data,

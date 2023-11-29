@@ -64,14 +64,15 @@ final _appThemeDataLight = FlexThemeData.light(
 
 final _appThemeDataDark = FlexThemeData.dark(
   colors: const FlexSchemeColor(
-    primary: Color(0xff9fc9ff),
-    primaryContainer: Color(0xff00325b),
-    secondary: Color(0xffffb59d),
-    secondaryContainer: Color(0xff872100),
-    tertiary: Color(0xff86d2e1),
-    tertiaryContainer: Color(0xff004e59),
-    appBarColor: Color(0xff872100),
-    error: Color(0x0dcf6679),
+    // TODO: Need to redefine the color scheme for dark mode
+    primary: Color(0xffBE94C6),
+    primaryContainer: Color(0xffffffff),
+    secondary: Color(0xff7BC6CC),
+    secondaryContainer: Color(0xffff8738),
+    tertiary: Color(0xffa5a7b3),
+    tertiaryContainer: Color(0x0D7B7B7B),
+    appBarColor: Color(0xffff8738),
+    error: Color(0xffb00020),
   ),
   subThemesData: const FlexSubThemesData(
     interactionEffects: false,

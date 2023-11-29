@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 const _assetFolder = 'assets/home';
 

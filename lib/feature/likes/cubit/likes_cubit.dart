@@ -14,6 +14,16 @@ class LikesCubit extends Cubit<LikesState> {
 
   final UserRepository _userRepository;
 
+  requestMatch(String userId) async {
+    emit(const LikesState.loading());
+
+    var requestRep = await _userRepository.requestMatch(userId);
+    requestRep.fold(
+      (left) => emit(LikesState.errorState(appException: left)),
+      (right) => emit(const LikesState.requestMatchSuccess()),
+    );
+  }
+
   fetchLikesReport() async {
     emit(const LikesState.loading());
 

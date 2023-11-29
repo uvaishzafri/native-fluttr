@@ -4,7 +4,6 @@ import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/home/native_card_details_screen.dart';
 import 'package:native/model/user.dart';
 import 'package:native/theme/theme.dart';
-import 'package:native/util/color_utils.dart';
 import 'package:native/widget/native_button.dart';
 
 @RoutePage()
@@ -24,8 +23,15 @@ class NativeCardScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    updateSystemUi(context, Theme.of(context).primaryColor,
-        Theme.of(context).primaryColor);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Due to the page transition animation,
+      // add a little delay to avoid the system ui update before seeing the next page
+      Future.delayed(const Duration(milliseconds: 200), () async {
+        updateSystemUi(context, Theme.of(context).primaryColor,
+            Theme.of(context).primaryColor);
+      });
+    });
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       // body: NativeCardDetailsScreen(

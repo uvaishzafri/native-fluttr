@@ -2,17 +2,24 @@ import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:native/config.dart';
+import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/model/user.dart';
 import 'package:native/theme/theme.dart';
 import 'package:native/util/color_utils.dart';
+import 'package:native/util/launcher.dart';
+import 'package:native/widget/common_scaffold.dart';
 import 'package:native/widget/common_scaffold_with_padding.dart';
 import 'package:native/widget/text/native_large_body_text.dart';
 import 'package:native/widget/text/native_small_title_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class AccountScreen extends StatefulWidget {
@@ -25,9 +32,13 @@ class AccountScreen extends StatefulWidget {
   State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _AccountScreenState extends State<AccountScreen> {
+class _AccountScreenState extends State<AccountScreen>
+    with AutoRouteAwareStateMixin<AccountScreen> {
   late String imageUrl;
   late String displayName;
+
+  final InAppReview _inAppReview = InAppReview.instance;
+  final Config _config = getIt<Config>();
 
   @override
   void initState() {
@@ -35,14 +46,12 @@ class _AccountScreenState extends State<AccountScreen> {
     imageUrl = '';
     displayName = '';
     refreshUserDetails();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _updateSystemUi();
-    });
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
   }
 
-  _updateSystemUi() {
-    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
-        ColorUtils.aquaGreen);
+  @override
+  void didChangeTabRoute(TabPageRoute previousRoute) {
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
   }
 
   void refreshUserDetails() async {
@@ -64,6 +73,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    CommonScaffold.commonScaffoldUpdateSystemUi(context);
     Widget content = Column(
       children: [
         GestureDetector(
@@ -126,14 +136,23 @@ class _AccountScreenState extends State<AccountScreen> {
               //   ),
               // ),
               GestureDetector(
-                onTap: () {},
+                onTap: () async {
+                  if (await _inAppReview.isAvailable()) {
+                    _inAppReview.requestReview();
+                  }
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'clicked_user_feedback',
+                  );
+                },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: NativeLargeBodyText('Feedback'),
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  launcher(Uri.parse(_config.nativePricingUrl));
+                },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: Row(
@@ -149,12 +168,32 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  launcher(Uri.parse(_config.termsAndConditionsUrl));
+                },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: Row(
                     children: [
                       NativeLargeBodyText('Terms & Conditions'),
+                      Icon(
+                        Icons.open_in_new_rounded,
+                        size: 16,
+                        color: ColorUtils.purple,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  launcher(Uri.parse(_config.privacyPolicyUrl));
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                  child: Row(
+                    children: [
+                      NativeLargeBodyText('Privacy Policy'),
                       Icon(
                         Icons.open_in_new_rounded,
                         size: 16,

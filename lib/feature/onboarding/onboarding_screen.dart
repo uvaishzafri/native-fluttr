@@ -17,21 +17,21 @@ class OnboardingScreen extends StatelessWidget {
   final List<Onboarding> _screens = <Onboarding>[
     Onboarding(
       img: "$_assetFolder/ill_profile.png",
-      title: "Create Profile",
+      title: "Welcome to native.",
       desc:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
+          "Creating your unique native profile is effortless – just enter your date of birth, and voila! Your profile is instantly generated.",
     ),
     Onboarding(
       img: "$_assetFolder/ill_native.png",
-      title: "Get your native score",
+      title: "Get your native. score",
       desc:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
+          "The native score is the indicator of your energy. Understanding your energy is the key to discovering what you truly seek in a partner.",
     ),
     Onboarding(
       img: "$_assetFolder/ill_match.png",
       title: "Find your match",
       desc:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
+          "Think of your native. card as a compass guiding you to someone who aligns with your authentic self. Discover connections that are meant to last.",
     ),
   ];
 
