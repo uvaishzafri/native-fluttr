@@ -8,5 +8,5 @@ class FavCardTutorialState with _$FavCardTutorialState {
 
   const factory FavCardTutorialState.error({required AppException appException}) = Error;
 
-  const factory FavCardTutorialState.success({required bool success}) = Success;
+  const factory FavCardTutorialState.success({required FavCardTutorialModel tutorialModel}) = Success;
 }

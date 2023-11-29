@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:native/feature/fav_card/sub_pages/fav_card_tutorial/models/fav_card_tutorial_model.dart';
 import 'package:native/repo/user_repository.dart';
 import 'package:native/util/exceptions.dart';
 
@@ -20,6 +21,6 @@ class FavCardTutorialCubit extends Cubit<FavCardTutorialState> {
     var response = await _userRepository.getFavCardTutorialData();
 
     response.fold(
-        (left) => emit(FavCardTutorialState.error(appException: left)), (right) => emit(FavCardTutorialState.success(success: right)));
+        (left) => emit(FavCardTutorialState.error(appException: left)), (right) => emit(FavCardTutorialState.success(tutorialModel: right)));
   }
 }

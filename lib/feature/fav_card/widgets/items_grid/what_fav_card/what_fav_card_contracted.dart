@@ -17,16 +17,13 @@ class WhatFavCarsContracted extends StatelessWidget {
             Stack(children: [
               Stack(
                 children: [
-                  Image.asset("assets/fav_card/what_fav_card_background.png",
-                      fit: BoxFit.fill, width: double.infinity),
+                  Image.asset("assets/fav_card/what_fav_card_background.png", fit: BoxFit.fill, width: double.infinity),
                   Positioned.fill(
                     child: Opacity(
                       opacity: 0.5,
                       child: Container(
                         decoration: ShapeDecoration(
-                            color: Colors.black.withOpacity(0.9),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6))),
+                            color: Colors.black.withOpacity(0.9), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
                       ),
                     ),
                   ),
@@ -41,33 +38,22 @@ class WhatFavCarsContracted extends StatelessWidget {
                           Text(
                             t.strings.whatFavCardShort.toUpperCase(),
                             textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins().copyWith(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 2,
-                                height: 2),
+                            style: GoogleFonts.poppins()
+                                .copyWith(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 2, height: 2),
                           ),
-                          GestureDetector(
-                            onTap: () => navigateToCSMPage(),
-                            child: Text(
-                              "${t.strings.learnMore} >>",
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins().copyWith(
-                                color: Colors.transparent,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: 2,
-                                height: 22 / 8,
-                                decoration: TextDecoration.underline,
-                                decorationColor: Colors.white,
-                                decorationThickness: 2,
-                                shadows: [
-                                  const Shadow(
-                                      color: Colors.white,
-                                      offset: Offset(0, -5))
-                                ],
-                              ),
+                          Text(
+                            "${t.strings.learnMore} >>",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins().copyWith(
+                              color: Colors.transparent,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 2,
+                              height: 22 / 8,
+                              decoration: TextDecoration.underline,
+                              decorationColor: Colors.white,
+                              decorationThickness: 2,
+                              shadows: [const Shadow(color: Colors.white, offset: Offset(0, -5))],
                             ),
                           ),
                         ],
@@ -82,6 +68,4 @@ class WhatFavCarsContracted extends StatelessWidget {
       ),
     );
   }
-
-  navigateToCSMPage() {}
 }
