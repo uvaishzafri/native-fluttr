@@ -23,4 +23,8 @@ class FavCardTutorialCubit extends Cubit<FavCardTutorialState> {
     response.fold(
         (left) => emit(FavCardTutorialState.error(appException: left)), (right) => emit(FavCardTutorialState.success(tutorialModel: right)));
   }
+
+  Future<void> markTutorialCompletion() async {
+     await _userRepository.markTutorialCompletion();
+  }
 }

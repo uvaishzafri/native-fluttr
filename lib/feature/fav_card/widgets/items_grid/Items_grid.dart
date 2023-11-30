@@ -28,7 +28,7 @@ class ItemsGrid extends StatelessWidget {
       return Column(
         children: [
           GestureDetector(
-            onTap: () => context.router.push(const FavCardTutorialRoute()),
+            onTap: () => context.router.push(FavCardTutorialRoute(hasCompletedFavCardOnBoarding: hasCompletedFavCardOnBoarding)),
             child: (hasCompletedFavCardOnBoarding == false) ? const WhatFavCardExtended() : const WhatFavCarsContracted(),
           ),
           SingleCategoryGrid(

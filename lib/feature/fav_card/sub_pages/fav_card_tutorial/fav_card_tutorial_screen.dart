@@ -1,16 +1,19 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:native/di/di.dart';
+import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/fav_card/sub_pages/fav_card_tutorial/cubit/fav_card_tutorial_cubit.dart';
 import 'package:native/feature/fav_card/sub_pages/fav_card_tutorial/models/fav_card_tutorial_item_model.dart';
 import 'package:native/i18n/translations.g.dart';
 
 @RoutePage()
 class FavCardTutorialScreen extends StatelessWidget {
-  const FavCardTutorialScreen({super.key});
+  final bool hasCompletedFavCardOnBoarding;
+
+  const FavCardTutorialScreen({super.key, required this.hasCompletedFavCardOnBoarding});
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +131,7 @@ class FavCardTutorialScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 18, top: 10),
                       child: GestureDetector(
-                        onTap: () => {},
+                        onTap: () => context.router.push(const FavCardTutorialSliderRoute()),
                         child: SizedBox(
                           height: 50,
                           child: Stack(

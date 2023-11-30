@@ -38,6 +38,7 @@ class AppRouter extends $AppRouter {
         FadeCustomRoute(page: TopFavCardRoute.page),
         FadeCustomRoute(page: FavCardSearchRoute.page),
         FadeCustomRoute(page: FavCardTutorialRoute.page),
+        FadeCustomRoute(page: FavCardTutorialSliderRoute.page),
         CustomRoute(
           path: 'home',
           page: HomeWrapperRoute.page,

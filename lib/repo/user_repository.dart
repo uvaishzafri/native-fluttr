@@ -569,4 +569,7 @@ class UserRepository {
   Future<Either<AppException, FavCardTutorialModel>> getFavCardTutorialData() {
     return Future.delayed(const Duration(seconds: 0), () => Right(tutorialModel));
   }
+
+  //TODO: Implement this
+  Future<void> markTutorialCompletion() async {}
 }
