@@ -27,7 +27,7 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
   final TextEditingController locationSearchTextController =
       TextEditingController();
   SfRangeValues minMaxAge = const SfRangeValues(22, 40);
-  String? selectedLocation;
+  List<String>? selectedLocation;
   final TextEditingController _rangeStartController =
       TextEditingController(text: '22');
   final TextEditingController _rangeEndController =
@@ -177,15 +177,27 @@ class _BasicPrefrencesScreenState extends State<BasicPrefrencesScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          const NativeSmallBodyText('Location'),
+          const Row(
+            children: [
+              NativeSmallBodyText('Location'),
+              NativeSmallBodyText('(maximum select items: 3)', fontSize: 10),
+            ],
+          ),
           NativeDropdown<String>(
             onChanged: (value) {
-              setState(() {
-                selectedLocation = value;
-              });
+              if (value.isNotEmpty) {
+                setState(() {
+                  selectedLocation = value;
+                });
+              } else {
+                setState(() {
+                  selectedLocation = null;
+                });
+              }
             },
-            value: selectedLocation,
             searchController: locationSearchTextController,
+            maxItems: 3,
+            textStyle: NativeMediumBodyText.getStyle(context),
             items: locations
                 .map((item) => DropdownMenuItem(
                       value: item,

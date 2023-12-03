@@ -19,17 +19,22 @@ class NativeMediumBodyText extends StatelessWidget {
   final double? letterSpacing;
   final TextAlign? textAlign;
 
+  static TextStyle getStyle(BuildContext context) => Theme.of(context)
+      .textTheme
+      .bodyMedium!
+      .copyWith(color: ColorUtils.textGrey);
+
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
       textAlign: textAlign,
-      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            color: color ?? ColorUtils.textGrey,
-            fontWeight: fontWeight,
-            height: height,
-            letterSpacing: letterSpacing,
-          ),
+      style: getStyle(context).copyWith(
+        color: color ?? ColorUtils.textGrey,
+        fontWeight: fontWeight,
+        height: height,
+        letterSpacing: letterSpacing,
+      ),
     );
   }
 }

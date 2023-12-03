@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:logger/logger.dart';
 import 'package:native/config.dart';
@@ -33,40 +34,50 @@ class App extends StatelessWidget {
         buildWhen: (p, c) => p.theme != c.theme,
         builder: (context, state) {
           return GlobalLoaderOverlay(
-              useDefaultLoading: false,
-              overlayWidget: Center(
-                child: CircularProgressIndicator(
-                  color: state.theme.light.primaryColor,
-                ),
+            useDefaultLoading: false,
+            overlayWidget: Center(
+              child: CircularProgressIndicator(
+                color: state.theme.light.primaryColor,
               ),
-              overlayColor: const Color(0x3c1e1e1e),
-              child: MaterialApp.router(
-                /// Theme configuration.
-                theme: state.theme.light,
-                darkTheme: state.theme.light, // TODO: need to support dark mode
-                themeMode: state.theme.mode,
-                title: t.strings.title,
+            ),
+            overlayColor: const Color(0x3c1e1e1e),
+            child: ScreenUtilInit(
+              designSize: const Size(393, 852),
+              minTextAdapt: true,
+              splitScreenMode: true,
+              // Use builder only if you need to use library outside ScreenUtilInit context
+              builder: (_, child) {
+                return MaterialApp.router(
+                  /// Theme configuration.
+                  theme: state.theme.light,
+                  darkTheme:
+                      state.theme.light, // TODO: need to support dark mode
+                  themeMode: state.theme.mode,
+                  title: t.strings.title,
 
-                /// Environment configuration.
-                debugShowCheckedModeBanner: config.debugShowCheckedModeBanner,
-                debugShowMaterialGrid: config.debugShowMaterialGrid,
+                  /// Environment configuration.
+                  debugShowCheckedModeBanner: config.debugShowCheckedModeBanner,
+                  debugShowMaterialGrid: config.debugShowMaterialGrid,
 
-                /// AutoRouter configuration.
-                // routerDelegate: appRouter.delegate(),
-                // routeInformationParser: appRouter.defaultRouteParser(),
-                routerConfig: appRouter.config(
-                  navigatorObservers: () => [AutoRouteObserver()],
-                ),
+                  /// AutoRouter configuration.
+                  // routerDelegate: appRouter.delegate(),
+                  // routeInformationParser: appRouter.defaultRouteParser(),
+                  routerConfig: appRouter.config(
+                    navigatorObservers: () => [AutoRouteObserver()],
+                  ),
 
-                /// EasyLocalization configuration.
-                locale: TranslationProvider.of(context).flutterLocale,
-                supportedLocales: AppLocaleUtils.supportedLocales,
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-              ));
+                  /// EasyLocalization configuration.
+                  locale: TranslationProvider.of(context).flutterLocale,
+                  supportedLocales: AppLocaleUtils.supportedLocales,
+                  localizationsDelegates: const [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                );
+              },
+            ),
+          );
         },
       ),
     );
