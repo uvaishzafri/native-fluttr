@@ -98,12 +98,16 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
             const NativeSmallBodyText('Location'),
             NativeDropdown(
               onChanged: (value) {
-                setState(() {
-                  _selectedLocation = value;
-                });
+                if (value.isNotEmpty) {
+                  setState(() {
+                    _selectedLocation = value.first;
+                  });
+                }
               },
-              value: _selectedLocation,
+              // value: _selectedLocation != null ? [_selectedLocation] : null,
               searchController: _locationSearchTextController,
+              maxItems: 1,
+              textStyle: NativeMediumBodyText.getStyle(context),
               items: locations
                   .map((item) => DropdownMenuItem(
                         value: item,
@@ -140,11 +144,11 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
                                     value: e,
                                     groupValue: _selectedGender,
                                     onChanged: (value) {
-                                      setState(() {
-                                        if (value != null) {
+                                      if (value != null) {
+                                        setState(() {
                                           _selectedGender = value;
-                                        }
-                                      });
+                                        });
+                                      }
                                     },
                                     fillColor:
                                         MaterialStateProperty.resolveWith<

@@ -2,7 +2,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native/util/app_constants.dart';
-import 'package:native/util/datetime_serializer.dart';
 
 part 'custom_claims.freezed.dart';
 part 'custom_claims.g.dart';
@@ -12,8 +11,8 @@ class CustomClaims with _$CustomClaims {
   factory CustomClaims({
     @JsonKey(includeIfNull: false) Gender? gender,
     @JsonKey(includeIfNull: false) String? birthday,
-    @JsonKey(includeIfNull: false) String? religion,
-    @JsonKey(includeIfNull: false) String? community,
+    @JsonKey(includeIfNull: false) List<String>? religion,
+    @JsonKey(includeIfNull: false) List<String>? community,
     @JsonKey(includeIfNull: false) String? location,
     @JsonKey(includeIfNull: false) String? about,
   }) = _CustomClaims;
