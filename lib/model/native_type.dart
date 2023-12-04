@@ -70,7 +70,7 @@ class NativeType with _$NativeType {
   factory NativeType.fields() => _NativeType(
         name: "Fields",
         color: Colors.amber,
-        imageProvider: Image.asset('assets/home/ic_native_field.png').image,
+        imageProvider: Image.asset('assets/home/ic_native_fields.png').image,
       );
   factory NativeType.moon() => _NativeType(
         name: "Moon",
