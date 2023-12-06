@@ -33,7 +33,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final Logger logger = getIt<Logger>();
+  final Logger _logger = getIt<Logger>();
   final Config _config = getIt<Config>();
 
   String _initialCountry = 'IN';
@@ -287,7 +287,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           //   print("Pressed");
           // },
           onChanged: (value) {
-            debugPrint(value);
+            _logger.d(value);
             // bloc.inputPincode(value);
 
             if (value.length == 6) {
@@ -302,7 +302,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             }
           },
           beforeTextPaste: (text) {
-            debugPrint("Allowing to paste $text");
+            _logger.d("Allowing to paste $text");
             //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
             //but you can show anything you want here, like your pop up saying wrong paste format or etc
             return true;
@@ -470,14 +470,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               _number = number;
             });
 
-            logger.d("Phone number: ${_number.phoneNumber}");
+            _logger.d("Phone number: ${_number.phoneNumber}");
           },
           onInputValidated: (bool value) {
             setState(() {
               _isEnabledSubmitPhoneButton = value;
             });
             // isEnabledButton = value;
-            logger.d("Phone validation: $value");
+            _logger.d("Phone validation: $value");
           },
           selectorConfig: const SelectorConfig(
             selectorType: PhoneInputSelectorType.DROPDOWN,
@@ -511,7 +511,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
 
           onSaved: (PhoneNumber number) {
-            logger.d("On Saved: $number");
+            _logger.d("On Saved: $number");
           },
           // initialValue: _number,
           countries: [_initialCountry],

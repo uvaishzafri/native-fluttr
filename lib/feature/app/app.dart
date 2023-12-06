@@ -15,7 +15,6 @@ import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.dart';
 import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/app/bloc/app_cubit.dart';
-import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/i18n/translations.g.dart';
 import 'package:uni_links/uni_links.dart';
 
@@ -136,13 +135,12 @@ class _AppWrapperState extends State<AppWrapper> with WidgetsBindingObserver {
   Future<void> initUniLinks() async {
     try {
       // Check if you received the link via `getInitialLink` first
-      final PendingDynamicLinkData? initialLink =
-          await FirebaseDynamicLinks.instance.getInitialLink();
-
-      if (initialLink != null) {
-        final Uri deepLink = initialLink.link;
-        _handleLink(deepLink);
-      }
+      FirebaseDynamicLinks.instance.getInitialLink().then((initialLink) {
+        if (initialLink != null) {
+          final Uri deepLink = initialLink.link;
+          _handleLink(deepLink);
+        }
+      });
 
       FirebaseDynamicLinks.instance.onLink.listen(
         (pendingDynamicLinkData) {

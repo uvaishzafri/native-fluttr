@@ -99,7 +99,6 @@ class NativeDropdown<T> extends StatelessWidget {
       showClearIcon: false,
       controller: _controller,
       onOptionSelected: (options) {
-        debugPrint(options.toString());
         options.removeWhere((e) => e.value == null);
         // (options as List<ValueItem<Object>>).map((e) => e.value as T).toList();
         onChanged(options.map((e) => e.value as T).toList());
