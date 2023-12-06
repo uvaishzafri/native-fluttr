@@ -10,9 +10,9 @@ part 'looking_for.g.dart';
 class LookingFor with _$LookingFor {
   factory LookingFor({
     @JsonKey(includeIfNull: false) Gender? gender,
-    @JsonKey(includeIfNull: false) String? location,
-    @JsonKey(includeIfNull: false) String? religion,
-    @JsonKey(includeIfNull: false) String? community,
+    @JsonKey(includeIfNull: false) List<String>? location,
+    @JsonKey(includeIfNull: false) List<String>? religion,
+    @JsonKey(includeIfNull: false) List<String>? community,
     @JsonKey(includeIfNull: false) num? minAge,
     @JsonKey(includeIfNull: false) num? maxAge,
   }) = _LookingFor;

@@ -44,7 +44,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     return true;
   }
 
-  bool validateOtherDetails(String? religion, String? community) {
+  bool validateOtherDetails(List<String>? religion, List<String>? community) {
     //validate info
     if (religion?.isEmpty ?? true) {
       return false;
@@ -70,9 +70,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       FirebaseAnalytics.instance.setUserProperty(
           name: 'birthday', value: user.customClaims?.birthday);
       FirebaseAnalytics.instance.setUserProperty(
-          name: 'community', value: user.customClaims?.community);
+          name: 'community', value: user.customClaims?.community?.join(','));
       FirebaseAnalytics.instance.setUserProperty(
-          name: 'religion', value: user.customClaims?.religion);
+          name: 'religion', value: user.customClaims?.religion?.join(','));
       FirebaseAnalytics.instance.setUserProperty(
           name: 'location', value: user.customClaims?.location);
       emit(const ProfileState.profileUpdated());

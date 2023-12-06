@@ -28,15 +28,15 @@ class OtherPreferencesScreen extends StatefulWidget {
       required this.location});
   final Gender gender;
   final RangeValues minMaxAge;
-  final String location;
+  final List<String> location;
 
   @override
   State<OtherPreferencesScreen> createState() => _OtherPreferencesScreenState();
 }
 
 class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
-  String? selectedReligion;
-  String? selectedCommunity;
+  List<String>? selectedReligion;
+  List<String>? selectedCommunity;
   final TextEditingController religionSearchController =
       TextEditingController();
   final TextEditingController communitySearchController =
@@ -74,17 +74,28 @@ class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          const NativeSmallBodyText('Religion'),
+          const Row(
+            children: [
+              NativeSmallBodyText('Religion'),
+              NativeSmallBodyText('(maximum select items: 3)', fontSize: 10),
+            ],
+          ),
           const SizedBox(height: 8),
-          NativeDropdown(
+          NativeDropdown<String>(
               onChanged: (value) {
-                setState(() {
-                  selectedReligion = value;
-                  // selectedCommunity = null;
-                });
+                if (value.isNotEmpty) {
+                  setState(() {
+                    selectedReligion = value;
+                  });
+                } else {
+                  setState(() {
+                    selectedReligion = null;
+                  });
+                }
               },
-              value: selectedReligion,
               searchController: religionSearchController,
+              maxItems: 3,
+              textStyle: NativeMediumBodyText.getStyle(context),
               items: religions.keys
                   .map((item) => DropdownMenuItem(
                         value: item,
@@ -92,16 +103,28 @@ class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
                       ))
                   .toList()),
           const SizedBox(height: 24),
-          const NativeSmallBodyText('Language'),
+          const Row(
+            children: [
+              NativeSmallBodyText('Language'),
+              NativeSmallBodyText('(maximum select items: 3)', fontSize: 10),
+            ],
+          ),
           const SizedBox(height: 8),
           NativeDropdown(
             onChanged: (value) {
-              setState(() {
-                selectedCommunity = value;
-              });
+              if (value.isNotEmpty) {
+                setState(() {
+                  selectedCommunity = value;
+                });
+              } else {
+                setState(() {
+                  selectedCommunity = null;
+                });
+              }
             },
-            value: selectedCommunity,
             searchController: communitySearchController,
+            maxItems: 3,
+            textStyle: NativeMediumBodyText.getStyle(context),
             items: languages
                 .map((item) => DropdownMenuItem(
                       value: item,
@@ -111,8 +134,9 @@ class _OtherPreferencesScreenState extends State<OtherPreferencesScreen> {
           ),
           const Spacer(),
           NativeButton(
-            isEnabled: profileCubit.validateOtherDetails(
-                selectedReligion, selectedCommunity),
+            isEnabled: true,
+            // isEnabled: profileCubit.validateOtherDetails(
+            //     selectedReligion, selectedCommunity),
             text: 'Next',
             onPressed: () {
               final userPrefs = UserPrefs(

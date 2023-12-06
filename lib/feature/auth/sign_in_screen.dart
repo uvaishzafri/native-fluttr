@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +12,6 @@ import 'package:logger/logger.dart';
 import 'package:native/config.dart';
 import 'package:native/di/di.dart';
 import 'package:native/feature/app/app_router.gr.dart';
-import 'package:native/feature/app/bloc/app_cubit.dart';
 import 'package:native/feature/auth/auth_scaffold.dart';
 import 'package:native/feature/auth/bloc/auth_cubit.dart';
 import 'package:native/model/user.dart';
@@ -40,7 +38,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final Logger logger = getIt<Logger>();
+  final Logger _logger = getIt<Logger>();
   final Config _config = getIt<Config>();
 
   String _initialCountry = 'IN';
@@ -85,23 +83,27 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _startTimer() {
-    setState(() {
-      _start = initialTimerValue;
-    });
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start == 0) {
-          timer.cancel();
-          setState(() {});
-        } else {
-          setState(() {
-            _start--;
-          });
-        }
-      },
-    );
+    if (mounted && _timer?.isActive == false) {
+      setState(() {
+        _start = initialTimerValue;
+      });
+      const oneSec = Duration(seconds: 1);
+      _timer = Timer.periodic(
+        oneSec,
+        (Timer timer) {
+          if (mounted) {
+            if (_start == 0) {
+              timer.cancel();
+              setState(() {});
+            } else {
+              setState(() {
+                _start--;
+              });
+            }
+          }
+        },
+      );
+    }
   }
 
   void _backToEditPhoneNumber(AuthCubit bloc) {
@@ -348,7 +350,7 @@ class _SignInScreenState extends State<SignInScreen> {
           //   print("Pressed");
           // },
           onChanged: (value) {
-            debugPrint(value);
+            _logger.d(value);
             // bloc.inputPincode(value);
             // setState(() {
             //   _isError = false;
@@ -366,7 +368,7 @@ class _SignInScreenState extends State<SignInScreen> {
             }
           },
           beforeTextPaste: (text) {
-            debugPrint("Allowing to paste $text");
+            _logger.d("Allowing to paste $text");
             //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
             //but you can show anything you want here, like your pop up saying wrong paste format or etc
             return true;
@@ -532,14 +534,14 @@ class _SignInScreenState extends State<SignInScreen> {
               _number = number;
             });
 
-            logger.d("Phone number: ${_number.phoneNumber}");
+            _logger.d("Phone number: ${_number.phoneNumber}");
           },
           onInputValidated: (bool value) {
             setState(() {
               _isEnabledSubmitPhoneButton = value;
             });
             // isEnabledButton = value;
-            logger.d("Phone validation: $value");
+            _logger.d("Phone validation: $value");
           },
           selectorConfig: const SelectorConfig(
             selectorType: PhoneInputSelectorType.DROPDOWN,
@@ -573,7 +575,7 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
 
           onSaved: (PhoneNumber number) {
-            logger.d("On Saved: $number");
+            _logger.d("On Saved: $number");
           },
           // initialValue: _number,
           countries: [_initialCountry],
