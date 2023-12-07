@@ -49,6 +49,14 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
     _listenForUserUpdates();
     // _handleInitialNotificationMessages();
     futureUser = getStoredUser();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateSystemUi();
+    });
+  }
+
+  _updateSystemUi() {
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
+        Theme.of(context).colorScheme.primaryContainer);
   }
 
   Future<User?> getStoredUser() async {
@@ -65,15 +73,11 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
     super.dispose();
   }
 
-  _updateSystemUi() {
-    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer, Theme.of(context).colorScheme.primaryContainer);
-  }
 
   final _labelList = const <String>['Home', 'Likes', 'Notification', 'FavCard', 'Chat', 'Account'];
 
   @override
   Widget build(BuildContext context) {
-    _updateSystemUi();
     return AutoTabsScaffold(
       // inheritNavigatorObservers: false,
       routes: const [
@@ -181,7 +185,8 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
     _notificationManager.setForegroundMessageCallback((RemoteMessage message) {
       _localNotificationManager.showLocalNotification(message: message);
     });
-    _notificationManager.setBackgroundMessageOpenedCallback((RemoteMessage message) {
+    _notificationManager
+        .setBackgroundMessageOpenedCallback((RemoteMessage message) {
       _notificationNavigator.navigateNotification(
         context: context,
         data: message.data,

@@ -34,10 +34,10 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController locationSearchTextController =
       TextEditingController();
-  String? selectedLocation;
+  String selectedLocation = '';
 
-  String? selectedReligion;
-  String? selectedCommunity;
+  List<String>? selectedReligion;
+  List<String>? selectedCommunity;
   final TextEditingController religionSearchController =
       TextEditingController();
   final TextEditingController communitySearchController =
@@ -64,9 +64,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _user = User.fromJson(jsonDecode(prefs.getString('user') ?? ""));
     nameTextEditingController.text = _user?.displayName ?? '';
     aboutYouTextEditingController.text = _user?.customClaims?.about ?? '';
-    selectedCommunity = _user?.customClaims?.community! ?? '';
+    selectedCommunity = _user?.customClaims?.community! ?? [];
     selectedLocation = _user?.customClaims?.location! ?? '';
-    selectedReligion = _user?.customClaims?.religion! ?? '';
+    selectedReligion = _user?.customClaims?.religion! ?? [];
     setState(() {});
   }
 
@@ -214,13 +214,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const NativeSmallBodyText('Location'),
                 NativeDropdown<String>(
                   onChanged: (value) {
-                    setState(() {
-                      selectedLocation = value;
-                      valueChanged = true;
-                    });
+                    if (value.isNotEmpty) {
+                      setState(() {
+                        selectedLocation = value.first;
+                        valueChanged = true;
+                      });
+                    }
                   },
-                  value: selectedLocation,
+                  value: [selectedLocation],
                   searchController: locationSearchTextController,
+                  maxItems: 1,
+                  textStyle: NativeMediumBodyText.getStyle(context),
                   items: locations
                       .map((item) => DropdownMenuItem(
                             value: item,
@@ -229,18 +233,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       .toList(),
                 ),
                 const SizedBox(height: 20),
-                const NativeSmallBodyText('Religion'),
+                const Row(
+                  children: [
+                    NativeSmallBodyText('Religion'),
+                    NativeSmallBodyText('(maximum select items: 3)',
+                        fontSize: 10),
+                  ],
+                ),
                 const SizedBox(height: 8),
                 NativeDropdown(
                   onChanged: (value) {
-                    setState(() {
-                      selectedReligion = value;
-                      // selectedCommunity = null;
-                      valueChanged = true;
-                    });
+                    if (value.isNotEmpty) {
+                      setState(() {
+                        selectedReligion = value;
+                        // selectedCommunity = null;
+                        valueChanged = true;
+                      });
+                    } else {
+                      setState(() {
+                        selectedReligion = [];
+                        valueChanged = true;
+                      });
+                    }
                   },
-                  value: selectedReligion,
+                  value:
+                      selectedReligion != null ? [...selectedReligion!] : null,
                   searchController: religionSearchController,
+                  maxItems: 3,
+                  textStyle: NativeMediumBodyText.getStyle(context),
                   items: religions.keys
                       .map((item) => DropdownMenuItem(
                             value: item,
@@ -249,17 +269,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       .toList(),
                 ),
                 const SizedBox(height: 24),
-                const NativeSmallBodyText('Language'),
+                const Row(
+                  children: [
+                    NativeSmallBodyText('Language'),
+                    NativeSmallBodyText('(maximum select items: 3)',
+                        fontSize: 10),
+                  ],
+                ),
                 const SizedBox(height: 8),
                 NativeDropdown(
                   onChanged: (value) {
-                    setState(() {
-                      selectedCommunity = value;
-                      valueChanged = true;
-                    });
+                    if (value.isNotEmpty) {
+                      setState(() {
+                        selectedCommunity = value;
+                        // selectedCommunity = null;
+                        valueChanged = true;
+                      });
+                    } else {
+                      setState(() {
+                        selectedCommunity = [];
+                        valueChanged = true;
+                      });
+                    }
                   },
-                  value: selectedCommunity,
+                  value: selectedCommunity != null
+                      ? [...selectedCommunity!]
+                      : null,
                   searchController: communitySearchController,
+                  maxItems: 3,
+                  textStyle: NativeMediumBodyText.getStyle(context),
                   items: languages
                       .map((item) => DropdownMenuItem(
                             value: item,
@@ -278,12 +316,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     User? user;
                     if (valueChanged) {
                       user = _user!.copyWith(
-                        displayName: nameTextEditingController.text,
+                        displayName: nameTextEditingController.text.trim(),
                         customClaims: _user!.customClaims!.copyWith(
                             community: selectedCommunity,
                             religion: selectedReligion,
                             location: selectedLocation,
-                            about: aboutYouTextEditingController.text),
+                            about: aboutYouTextEditingController.text.trim()),
                       );
                     }
                     editProfileBloc.updateUserProfile(
