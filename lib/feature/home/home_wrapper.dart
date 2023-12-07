@@ -69,7 +69,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
     updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer, Theme.of(context).colorScheme.primaryContainer);
   }
 
-  final _labelList = const <String>['Home', 'Likes', 'Notification', 'Chat', 'Account'];
+  final _labelList = const <String>['Home', 'Likes', 'Notification', 'FavCard', 'Chat', 'Account'];
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +151,7 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
                                   : const Placeholder(),
                         ),
                       ),
-                      label: _labelList[4],
+                      label: _labelList[5],
                     ),
                   ],
                   type: BottomNavigationBarType.fixed,
