@@ -66,7 +66,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     aboutYouTextEditingController.text = _user?.customClaims?.about ?? '';
     selectedCommunity = _user?.customClaims?.community! ?? [];
     selectedLocation = _user?.customClaims?.location! ?? '';
-    selectedReligion = _user?.customClaims?.religion! ?? [];
+    selectedReligion = _user?.customClaims?.religion ?? [];
     setState(() {});
   }
 
