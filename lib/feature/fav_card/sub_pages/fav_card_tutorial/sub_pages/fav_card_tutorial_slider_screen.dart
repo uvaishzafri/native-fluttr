@@ -76,22 +76,21 @@ class _FavCardTutorialSliderScreenState extends State<FavCardTutorialSliderScree
                         },
                         controller: pageController,
                         children: const [
-                          SliderPage(imageAddress: "assets/fav_card/tutorial_slider_1.png", title: "Select any artist", index: 1),
-                          SliderPage(imageAddress: "assets/fav_card/tutorial_slider_1.png", title: "Register my fav card", index: 2),
+                          SliderPage(imageAddress: "assets/fav_card/tutorial_slide_one.png", title: "Select any artist", index: 1),
+                          SliderPage(imageAddress: "assets/fav_card/tutorial_slide_two.png", title: "Register my fav card", index: 2),
                           SliderPage(
-                              imageAddress: "assets/fav_card/tutorial_slider_1.png",
+                              imageAddress: "assets/fav_card/tutorial_slide_three.png",
                               title: "Write your reason to like the arist",
                               index: 3),
                           SliderPage(
-                              imageAddress: "assets/fav_card/tutorial_slider_1.png",
+                              imageAddress: "assets/fav_card/tutorial_slide_four.png",
                               title: "Select my fav card icon and "
                                   "choose the category you like. Choose your fav",
                               index: 4),
                           SliderPage(
-                              imageAddress: "assets/fav_card/tutorial_slider_1.png",
+                              imageAddress: "assets/fav_card/tutorial_slide_five.png",
                               title: "Re-order you fav card to shown in your profile",
                               index: 5),
-                          SliderPage(imageAddress: "assets/fav_card/tutorial_slider_1.png", title: "Select any artist", index: 6),
                         ]),
                   ),
                 ]),
