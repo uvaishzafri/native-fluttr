@@ -20,7 +20,7 @@ class FavCardTutorialSliderScreen extends StatefulWidget {
 
 class _FavCardTutorialSliderScreenState extends State<FavCardTutorialSliderScreen> {
   PageController pageController = PageController();
-  static const lastIndex = 5;
+  static const lastIndex = 4;
 
   int currentIndex = 0;
 
@@ -75,21 +75,26 @@ class _FavCardTutorialSliderScreenState extends State<FavCardTutorialSliderScree
                           });
                         },
                         controller: pageController,
-                        children: const [
-                          SliderPage(imageAddress: "assets/fav_card/tutorial_slide_one.png", title: "Select any artist", index: 1),
-                          SliderPage(imageAddress: "assets/fav_card/tutorial_slide_two.png", title: "Register my fav card", index: 2),
+                        children: [
+                          SliderPage(
+                              imageAddress: "assets/fav_card/tutorial_slide_one.png",
+                              title: t.strings.fav_card_tutorial_one_title,
+                              index: 1),
+                          SliderPage(
+                              imageAddress: "assets/fav_card/tutorial_slide_two.png",
+                              title: t.strings.fav_card_tutorial_two_title,
+                              index: 2),
                           SliderPage(
                               imageAddress: "assets/fav_card/tutorial_slide_three.png",
-                              title: "Write your reason to like the arist",
+                              title: t.strings.fav_card_tutorial_three_title,
                               index: 3),
                           SliderPage(
                               imageAddress: "assets/fav_card/tutorial_slide_four.png",
-                              title: "Select my fav card icon and "
-                                  "choose the category you like. Choose your fav",
+                              title: t.strings.fav_card_tutorial_four_title,
                               index: 4),
                           SliderPage(
                               imageAddress: "assets/fav_card/tutorial_slide_five.png",
-                              title: "Re-order you fav card to shown in your profile",
+                              title: t.strings.fav_card_tutorial_five_title,
                               index: 5),
                         ]),
                   ),
@@ -164,7 +169,7 @@ class _FavCardTutorialSliderScreenState extends State<FavCardTutorialSliderScree
                         Flexible(
                           child: NativeButton(
                             isEnabled: true,
-                            text: currentIndex == lastIndex ? "Done" : "Next",
+                            text: currentIndex == lastIndex ? t.strings.done : t.strings.next,
                             onPressed: () {
                               if (pageController.hasClients) {
                                 pageController.animateToPage(

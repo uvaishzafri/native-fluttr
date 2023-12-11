@@ -680,8 +680,8 @@ final fansList = [
       customClaims: CustomClaims(
         gender: Gender.male,
         birthday: '2001-10-12',
-        religion: 'Hindu',
-        community: 'Marwadi',
+        religion: ['Hindu'],
+        community: ['Marwadi'],
         location: 'Pune',
         about: 'about me',
       ),
@@ -709,8 +709,8 @@ final fansList = [
       customClaims: CustomClaims(
         gender: Gender.male,
         birthday: '2005-10-12',
-        religion: 'Hindu',
-        community: 'Marwadi',
+        religion: ['Hindu'],
+        community: ['Marwadi'],
         location: 'Pune',
         about: 'about me',
       ),
@@ -738,8 +738,8 @@ final fansList = [
       customClaims: CustomClaims(
         gender: Gender.male,
         birthday: '2002-10-12',
-        religion: 'Hindu',
-        community: 'Marwadi',
+        religion: ['Hindu'],
+        community: ['Marwadi'],
         location: 'Pune',
         about: 'about me',
       ),
@@ -767,8 +767,8 @@ final fansList = [
       customClaims: CustomClaims(
         gender: Gender.male,
         birthday: '2003-10-12',
-        religion: 'Hindu',
-        community: 'Marwadi',
+        religion: ['Hindu'],
+        community: ['Marwadi'],
         location: 'Pune',
         about: 'about me',
       ),
@@ -796,8 +796,8 @@ final fansList = [
       customClaims: CustomClaims(
         gender: Gender.male,
         birthday: '2004-10-12',
-        religion: 'Hindu',
-        community: 'Marwadi',
+        religion: ['Hindu'],
+        community: ['Marwadi'],
         location: 'Pune',
         about: 'about me',
       ),
@@ -825,8 +825,8 @@ final fansList = [
       customClaims: CustomClaims(
         gender: Gender.male,
         birthday: '2005-10-12',
-        religion: 'Hindu',
-        community: 'Marwadi',
+        religion: ['Hindu'],
+        community: ['Marwadi'],
         location: 'Pune',
         about: 'about me',
       ),
@@ -847,8 +847,8 @@ final fansList = [
 
 FavCardDataModel favCardDataModel = FavCardDataModel(items: dummyFavCardItems, hasCompletedFavCardOnBoarding: false, noOfLikedFavCards: 4);
 
-FavCardTutorialModel tutorialModel = FavCardTutorialModel(title: "This is a sample tutorial and the data can change anytime as you wish",
-    steps: [
+FavCardTutorialModel tutorialModel =
+    FavCardTutorialModel(title: "This is a sample tutorial and the data can change anytime as you wish", steps: [
   FavCardTutorialItemModel(
       title: "Lorem Ipsum",
       stepIconImageAddress: "https://i.scdn.co/image/ab6761610000f1784293385d324db8558179afd9",
@@ -865,14 +865,14 @@ FavCardTutorialModel tutorialModel = FavCardTutorialModel(title: "This is a samp
       stepContentImageAddress: "https://i.scdn.co/image/ab6761610000f1784293385d324db8558179afd9",
       stepContentImageWidth: 400,
       stepContentImageHeight: 400),
-      FavCardTutorialItemModel(
-          title: "Lorem Ipsum",
-          stepIconImageAddress: "https://i.scdn.co/image/ab6761610000f1784293385d324db8558179afd9",
-          stepIconImageWidth: 35,
-          stepIconImageHeight: 35,
-          stepContentImageAddress: "https://i.scdn.co/image/ab6761610000f1784293385d324db8558179afd9",
-          stepContentImageWidth: 600,
-          stepContentImageHeight: 600)
+  FavCardTutorialItemModel(
+      title: "Lorem Ipsum",
+      stepIconImageAddress: "https://i.scdn.co/image/ab6761610000f1784293385d324db8558179afd9",
+      stepIconImageWidth: 35,
+      stepIconImageHeight: 35,
+      stepContentImageAddress: "https://i.scdn.co/image/ab6761610000f1784293385d324db8558179afd9",
+      stepContentImageWidth: 600,
+      stepContentImageHeight: 600)
 ]);
 
 List<FavCardItemModel> dummyFavCardItems = [
