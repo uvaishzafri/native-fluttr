@@ -21,5 +21,12 @@
     "edit": "Edit",
     "delete": "Delete",
     "favCardTrends": "Fav card Trends",
-    "favCardInterests": "Fav card Interests"
+    "favCardInterests": "Fav card Interests",
+    "done": "Done",
+    "next": "Next",
+    "fav_card_tutorial_one_title": "Select any artist",
+    "fav_card_tutorial_two_title": "Register my fav card",
+    "fav_card_tutorial_three_title": "Write your reason to like the arist",
+    "fav_card_tutorial_four_title": "Select my fav card icon and choose the category you like. Choose your fav",
+    "fav_card_tutorial_five_title": "Re-order you fav card to shown in your profile"
 }

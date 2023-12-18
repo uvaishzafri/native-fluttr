@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:native/feature/app/app_router.gr.dart';
 import 'package:native/feature/fav_card/widgets/items_grid/what_fav_card/what_fav_card_contracted.dart';
 import 'package:native/feature/fav_card/widgets/items_grid/what_fav_card/what_fav_card_extended.dart';
 import 'package:native/util/fav_card/fav_card_constants.dart';
@@ -25,24 +27,19 @@ class ItemsGrid extends StatelessWidget {
     if (selectedCategory.name.stringify().toUpperCase() == "TOP") {
       return Column(
         children: [
-          (hasCompletedFavCardOnBoarding == false)
-              ? const WhatFavCardExtended()
-              : const WhatFavCarsContracted(),
+          GestureDetector(
+            onTap: () => context.router.push(FavCardTutorialRoute(hasCompletedFavCardOnBoarding: hasCompletedFavCardOnBoarding)),
+            child: (hasCompletedFavCardOnBoarding == false) ? const WhatFavCardExtended() : const WhatFavCarsContracted(),
+          ),
           SingleCategoryGrid(
             selectedCategory: recommendedListModel,
-            items: filterItems(
-                selectedCategory:
-                    selectedCategory.name.stringify().toUpperCase(),
-                items: items),
+            items: filterItems(selectedCategory: selectedCategory.name.stringify().toUpperCase(), items: items),
             restrictColumns: true,
             noOfLikedFavCards: noOfLikedFavCards,
           ),
           SingleCategoryGrid(
             selectedCategory: popularListModel,
-            items: filterItems(
-                selectedCategory:
-                    selectedCategory.name.stringify().toUpperCase(),
-                items: items),
+            items: filterItems(selectedCategory: selectedCategory.name.stringify().toUpperCase(), items: items),
             restrictColumns: true,
             noOfLikedFavCards: noOfLikedFavCards,
           )
@@ -74,9 +71,7 @@ class ItemsGrid extends StatelessWidget {
   ///
   /// Returns:
   ///   a List of FavCardItemModel objects that match the selected category.
-  List<FavCardItemModel> filterItems(
-      {required String selectedCategory,
-      required List<FavCardItemModel> items}) {
+  List<FavCardItemModel> filterItems({required String selectedCategory, required List<FavCardItemModel> items}) {
     List<FavCardItemModel> result = [];
     for (int i = 0; i < items.length; i++) {
       for (int j = 0; j < items[i].categories.length; j++) {

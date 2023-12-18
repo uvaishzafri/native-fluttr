@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:native/config.dart';
 import 'package:native/feature/fav_card/models/fav_card_data.dart';
 import 'package:native/feature/fav_card/models/item_detail_model.dart';
+import 'package:native/feature/fav_card/sub_pages/fav_card_tutorial/models/fav_card_tutorial_model.dart';
 import 'package:native/manager/refresh_token_manager.dart';
 import 'package:native/model/app_notification.dart';
 import 'package:native/model/likes_model.dart';
@@ -19,8 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../dummy_data.dart';
 import '../feature/fav_card/models/fav_card_items/fav_card_items.dart';
 
-bool isSuccess(int? statusCode) =>
-    statusCode != null && statusCode >= 200 && statusCode < 400;
+bool isSuccess(int? statusCode) => statusCode != null && statusCode >= 200 && statusCode < 400;
 
 @lazySingleton
 class UserRepository {
@@ -36,10 +36,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/users/me',
         options: Options(headers: headers),
@@ -61,17 +58,13 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, NativeCard>>
-      getCurrentUserNativeCardDetails() async {
+  Future<Either<AppException, NativeCard>> getCurrentUserNativeCardDetails() async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/users/me/nativeCard',
         options: Options(headers: headers),
@@ -93,17 +86,13 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, NativeCard>> getUserNativeCardDetails(
-      {required String userId}) async {
+  Future<Either<AppException, NativeCard>> getUserNativeCardDetails({required String userId}) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/users/$userId/nativeCard',
         options: Options(headers: headers),
@@ -131,10 +120,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/users/$userId',
         options: Options(headers: headers),
@@ -251,13 +237,9 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       var data = jsonEncode(user.toJson());
-      final response = await _dioClient.patch('/users/me',
-          data: data, options: Options(headers: headers));
+      final response = await _dioClient.patch('/users/me', data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -275,20 +257,15 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, bool>> updateUserPrefs(
-      UserPrefs userPrefs) async {
+  Future<Either<AppException, bool>> updateUserPrefs(UserPrefs userPrefs) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       var data = jsonEncode(userPrefs.toJson());
-      final response = await _dioClient.patch('/users/me/preference',
-          data: data, options: Options(headers: headers));
+      final response = await _dioClient.patch('/users/me/preference', data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -311,13 +288,9 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       var data = jsonEncode({"photo": img64});
-      final response = await _dioClient.post('/users/me/photo',
-          data: data, options: Options(headers: headers));
+      final response = await _dioClient.post('/users/me/photo', data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -334,17 +307,13 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, bool>> verifyEmail(
-      String email, String uid) async {
+  Future<Either<AppException, bool>> verifyEmail(String email, String uid) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       var data = jsonEncode({
         'email': email,
         'actionCodeSettings': {
@@ -355,8 +324,7 @@ class UserRepository {
           'iOSBundleId': 'me.benative.mobile',
         }
       });
-      final response = await _dioClient.post('/users/me/verify/email',
-          data: data, options: Options(headers: headers));
+      final response = await _dioClient.post('/users/me/verify/email', data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -379,17 +347,13 @@ class UserRepository {
     return prefs.getString('userIdToken');
   }
 
-  Future<Either<AppException, List<AppNotification>>>
-      getCurrentUserNotifications() async {
+  Future<Either<AppException, List<AppNotification>>> getCurrentUserNotifications() async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/users/me/notifications?size=10',
         options: Options(headers: headers),
@@ -430,10 +394,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/users/me/likes?size=10',
         options: Options(headers: headers),
@@ -455,17 +416,13 @@ class UserRepository {
     }
   }
 
-  Future<Either<AppException, bool>> reportUser(
-      String userId, String reasonCategory, String? reasonDesc) async {
+  Future<Either<AppException, bool>> reportUser(String userId, String reasonCategory, String? reasonDesc) async {
     try {
       var token = await _getStoreUserIdToken();
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       dynamic data;
       if (reasonDesc?.isNotEmpty ?? false) {
         data = jsonEncode({
@@ -476,8 +433,7 @@ class UserRepository {
           'reason': {"category": reasonCategory}
         });
       }
-      final response = await _dioClient.post('/chats/users/$userId/issue',
-          data: data, options: Options(headers: headers));
+      final response = await _dioClient.post('/chats/users/$userId/issue', data: data, options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -500,10 +456,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/matches/recommendation',
         options: Options(headers: headers),
@@ -514,8 +467,7 @@ class UserRepository {
       }
       if (response.data == null) return Left(NoResponseBody());
 
-      return Right(
-          (response.data as List).map((e) => User.fromJson(e)).toList());
+      return Right((response.data as List).map((e) => User.fromJson(e)).toList());
     } on DioException catch (error) {
       if (error.response?.statusCode == 403) {
         return Left(UnauthorizedException());
@@ -532,12 +484,8 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
-      final response = await _dioClient.post('/matches/users/$userId/request',
-          options: Options(headers: headers));
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
+      final response = await _dioClient.post('/matches/users/$userId/request', options: Options(headers: headers));
 
       if (!isSuccess(response.statusCode)) {
         return Left(RequestError(response.statusMessage ?? ''));
@@ -560,10 +508,7 @@ class UserRepository {
       if (token == null) {
         return Left(CustomException('Token not found'));
       }
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
+      var headers = {'Accept': 'application/json', 'Authorization': 'Bearer $token'};
       final response = await _dioClient.get(
         '/matches',
         options: Options(headers: headers),
@@ -574,8 +519,7 @@ class UserRepository {
       }
       if (response.data == null) return Left(NoResponseBody());
 
-      return Right(
-          (response.data as List).map((e) => User.fromJson(e)).toList());
+      return Right((response.data as List).map((e) => User.fromJson(e)).toList());
     } on DioException catch (error) {
       if (error.response?.statusCode == 403) {
         return Left(UnauthorizedException());
@@ -588,13 +532,11 @@ class UserRepository {
 
   //TODO: Implement this
   Future<Either<AppException, FavCardDataModel>> getFavCardData() async {
-    return Future.delayed(
-        const Duration(seconds: 0), () => Right(favCardDataModel));
+    return Future.delayed(const Duration(seconds: 0), () => Right(favCardDataModel));
   }
 
   //TODO: Implement this
-  Future<Either<AppException, ItemDetailModel>> getItemDetail(
-      {required String id}) {
+  Future<Either<AppException, ItemDetailModel>> getItemDetail({required String id}) {
     return Future.delayed(const Duration(seconds: 0), () => Right(itemDetail));
   }
 
@@ -604,27 +546,30 @@ class UserRepository {
   }
 
   //TODO: Implement this
-  Future<Either<AppException, bool>> likeFavCard(
-      {required String id, required String comment}) {
+  Future<Either<AppException, bool>> likeFavCard({required String id, required String comment}) {
     return Future.delayed(const Duration(seconds: 0), () => Right(true));
   }
 
   //TODO: Implement this
-  Future<Either<AppException, List<FavCardItemModel>>> getFavCardSearchResults(
-      {required String query}) {
-    return Future.delayed(
-        const Duration(seconds: 0), () => Right(dummyFavCardItems));
+  Future<Either<AppException, List<FavCardItemModel>>> getFavCardSearchResults({required String query}) {
+    return Future.delayed(const Duration(seconds: 0), () => Right(dummyFavCardItems));
   }
 
   //TODO: Implement this
   Future<Either<AppException, List<FavCardItemModel>>> getTopFavCards() async {
-    return Future.delayed(
-        const Duration(seconds: 0), () => Right(dummyFavCardItems));
+    return Future.delayed(const Duration(seconds: 0), () => Right(dummyFavCardItems));
   }
 
   //TODO: Implement this
-  Future<Either<AppException, bool>> updateTopFavCards(
-      {required List<FavCardItemModel> favCards}) {
+  Future<Either<AppException, bool>> updateTopFavCards({required List<FavCardItemModel> favCards}) {
     return Future.delayed(const Duration(seconds: 0), () => Right(true));
   }
+
+  //TODO: Implement this
+  Future<Either<AppException, FavCardTutorialModel>> getFavCardTutorialData() {
+    return Future.delayed(const Duration(seconds: 0), () => Right(tutorialModel));
+  }
+
+  //TODO: Implement this
+  Future<void> markTutorialCompletion() async {}
 }

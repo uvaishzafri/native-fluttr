@@ -73,13 +73,8 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
     super.dispose();
   }
 
-  final _labelList = const <String>[
-    'Home',
-    'Likes',
-    'Notification',
-    'Chat',
-    'Account'
-  ];
+
+  final _labelList = const <String>['Home', 'Likes', 'Notification', 'FavCard', 'Chat', 'Account'];
 
   @override
   Widget build(BuildContext context) {
@@ -91,86 +86,82 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
         NotificationsRoute(),
         FavCardRoute(),
         ChatsRoute(),
-        AccountRoute(
-            /*imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!*/),
+        AccountRoute(/*imageUrl: snapshot.data!.photoURL!, displayName: snapshot.data!.displayName!*/),
       ],
       bottomNavigationBuilder: (_, tabsRouter) {
         return FutureBuilder<User?>(
-          future: futureUser,
-          builder: (context, snapshot) {
-            return BottomNavigationBar(
-              currentIndex: tabsRouter.activeIndex,
-              onTap: (idx) {
-                FirebaseAnalytics.instance
-                    .logScreenView(screenName: _labelList[idx]);
-                tabsRouter.setActiveIndex(idx);
-              },
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                    icon: const Icon(Icons.home_outlined),
-                    activeIcon: const Icon(Icons.home_filled),
-                    label: _labelList[0]),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.favorite_border_outlined),
-                  activeIcon: const Icon(Icons.favorite),
-                  label: _labelList[1],
-                ),
-                BottomNavigationBarItem(
-                    icon: const Icon(Icons.notifications_outlined),
-                    activeIcon: const Icon(Icons.notifications),
-                    label: _labelList[2]),
-                BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      "assets/fav_card/fav_card.svg",
-                      color: Colors.black,
-                      height: 26,
-                      width: 26,
+            future: futureUser,
+            builder: (context, snapshot) {
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: BottomNavigationBar(
+                  currentIndex: tabsRouter.activeIndex,
+                  onTap: (idx) {
+                    FirebaseAnalytics.instance.logScreenView(screenName: _labelList[idx]);
+                    tabsRouter.setActiveIndex(idx);
+                  },
+                  showSelectedLabels: false,
+                  showUnselectedLabels: false,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                        icon: const Icon(Icons.home_outlined), activeIcon: const Icon(Icons.home_filled), label: _labelList[0]),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.favorite_border_outlined),
+                      activeIcon: const Icon(Icons.favorite),
+                      label: _labelList[1],
                     ),
-                    activeIcon: SvgPicture.asset(
-                      "assets/fav_card/fav_card_filled.svg",
-                      height: 26,
-                      width: 26,
+                    BottomNavigationBarItem(
+                        icon: const Icon(Icons.notifications_outlined), activeIcon: const Icon(Icons.notifications), label: _labelList[2]),
+                    BottomNavigationBarItem(
+                        icon: SvgPicture.asset(
+                          "assets/fav_card/fav_card.svg",
+                          color: Colors.black,
+                          height: 26,
+                          width: 26,
+                        ),
+                        activeIcon: SvgPicture.asset(
+                          "assets/fav_card/fav_card_filled.svg",
+                          height: 26,
+                          width: 26,
+                        ),
+                        label: 'Fav Card'),
+                    const BottomNavigationBarItem(
+                      icon: Icon(Icons.chat_outlined),
+                      activeIcon: Icon(Icons.chat),
+                      label: 'Chat',
                     ),
-                    label: 'Fav Card'),
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.chat_outlined),
-                  activeIcon: Icon(Icons.chat),
-                  label: 'Chat',
-                ),
-                BottomNavigationBarItem(
-                  icon: BlocProvider<EditProfileCubit>.value(
-                    value: getIt<EditProfileCubit>(),
-                    child: BlocListener<EditProfileCubit, EditProfileState>(
-                      listener: (context, state) {
-                        if (state is EditProfileSuccessState) {
-                          futureUser = Future(() => state.user);
-                          // context.tabsRouter.setActiveIndex(4);
-                          // setState(() {});
-                        }
-                      },
-                      child: snapshot.connectionState != ConnectionState.done
-                          ? const CircularProgressIndicator()
-                          : snapshot.data!.photoURL != null
-                              ? NativeHeadImage(
-                                  // Image.asset("$_assetFolder/ic_test.png"),
-                                  Image.network(snapshot.data!.photoURL!),
-                                  borderColor:
-                                      Theme.of(context).colorScheme.primary,
-                                  radius: 14,
-                                  borderRadius: 2,
-                                  isGradientBorder: false,
-                                )
-                              : const Placeholder(),
+                    BottomNavigationBarItem(
+                      icon: BlocProvider<EditProfileCubit>.value(
+                        value: getIt<EditProfileCubit>(),
+                        child: BlocListener<EditProfileCubit, EditProfileState>(
+                          listener: (context, state) {
+                            if (state is EditProfileSuccessState) {
+                              futureUser = Future(() => state.user);
+                              // context.tabsRouter.setActiveIndex(4);
+                              // setState(() {});
+                            }
+                          },
+                          child: snapshot.connectionState != ConnectionState.done
+                              ? const CircularProgressIndicator()
+                              : snapshot.data!.photoURL != null
+                                  ? NativeHeadImage(
+                                      // Image.asset("$_assetFolder/ic_test.png"),
+                                      Image.network(snapshot.data!.photoURL!),
+                                      borderColor: Theme.of(context).colorScheme.primary,
+                                      radius: 14,
+                                      borderRadius: 2,
+                                      isGradientBorder: false,
+                                    )
+                                  : const Placeholder(),
+                        ),
+                      ),
+                      label: _labelList[5],
                     ),
-                  ),
+                  ],
+                  type: BottomNavigationBarType.fixed,
                 ),
-              ],
-              type: BottomNavigationBarType.fixed,
-            );
-          },
-        );
+              );
+            });
       },
     );
   }
@@ -184,16 +175,13 @@ class _HomeWrapperScreenState extends State<HomeWrapperScreen> {
   void _listenForLocalNotifications() {
     _localNotificationManager.data.addListener(() {
       if (_localNotificationManager.data.value != null) {
-        _notificationNavigator.navigateNotification(
-            context: context,
-            data: jsonDecode(_localNotificationManager.data.value!));
+        _notificationNavigator.navigateNotification(context: context, data: jsonDecode(_localNotificationManager.data.value!));
       }
     });
   }
 
   void _registerNotificationCallbacks() {
-    _notificationManager
-        .setBackgroundMessageCallback(_firebaseMessagingBackgroundHandler);
+    _notificationManager.setBackgroundMessageCallback(_firebaseMessagingBackgroundHandler);
     _notificationManager.setForegroundMessageCallback((RemoteMessage message) {
       _localNotificationManager.showLocalNotification(message: message);
     });
