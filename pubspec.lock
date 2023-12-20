@@ -1288,10 +1288,10 @@ packages:
     dependency: "direct main"
     description:
       name: multi_dropdown
-      sha256: "43f580a3a641462d6962c1dd4bccede40884d9210519b6f8809337e39b62bc2f"
+      sha256: "85647129b9ee7aedf7db90165c54403879c7ca1876b827c3c042c6631e55bd11"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   nested:
     dependency: transitive
     description:

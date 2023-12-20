@@ -34,6 +34,12 @@ enum NativeTypeEnum {
   mountain,
 }
 
+extension StringExt on NativeTypeEnum {
+  String stringify() {
+    return toString().split('.').last;
+  }
+}
+
 NativeType getNativeTypeDetail(NativeTypeEnum nativeType) {
   switch (nativeType) {
     case NativeTypeEnum.fields:

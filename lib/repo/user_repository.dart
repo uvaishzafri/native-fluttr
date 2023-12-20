@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logger/logger.dart';
 import 'package:native/config.dart';
 import 'package:native/feature/fav_card/models/fav_card_data.dart';
 import 'package:native/feature/fav_card/models/item_detail_model.dart';
 import 'package:native/feature/fav_card/sub_pages/fav_card_tutorial/models/fav_card_tutorial_model.dart';
+import 'package:native/feature/search/models/filter_model.dart';
 import 'package:native/manager/refresh_token_manager.dart';
 import 'package:native/model/app_notification.dart';
 import 'package:native/model/likes_model.dart';
@@ -572,4 +572,9 @@ class UserRepository {
 
   //TODO: Implement this
   Future<void> markTutorialCompletion() async {}
+
+  //TODO: Implement this
+  Future<Either<AppException, List<User>>> getSearchResults({required FilterModel filter}) async {
+    return Future.delayed(const Duration(seconds: 0), () => Right(usersList));
+  }
 }

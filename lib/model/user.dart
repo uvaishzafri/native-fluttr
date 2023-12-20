@@ -19,6 +19,7 @@ class User with _$User {
     @JsonKey(includeIfNull: false) bool? phoneNumberVerified,
     @JsonKey(includeIfNull: false) Meta? native,
     @JsonKey(includeIfNull: false) CustomClaims? customClaims,
+    @JsonKey(includeIfNull: false) bool? hasActiveSubscription,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

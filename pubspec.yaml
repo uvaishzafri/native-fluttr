@@ -95,7 +95,7 @@ dependencies:
   in_app_review: ^2.0.8
   firebase_analytics: ^10.7.0
   firebase_app_check: ^0.2.1+4
-  multi_dropdown: ^2.1.1
+  multi_dropdown: ^2.1.2
   flutter_screenutil: ^5.9.0
   dotted_border: ^2.1.0
 
@@ -145,6 +145,7 @@ flutter:
     - assets/fav_card/
     - assets/fav_card/fav_category/
     - assets/fav_card/header/
+    - assets/search/
     - .env.stg
     - .env.prod
 

@@ -12,6 +12,7 @@ class NativeDropdown<T> extends StatelessWidget {
     required this.onChanged,
     this.searchController,
   });
+
   final List<DropdownMenuItem<T>>? items;
   final String? hintText;
   final int? maxItems;
@@ -20,6 +21,7 @@ class NativeDropdown<T> extends StatelessWidget {
   final ValueChanged<List<T>> onChanged;
   final TextEditingController? searchController;
   final MultiSelectController<T> _controller = MultiSelectController();
+
   @override
   Widget build(BuildContext context) {
     // return DropdownButtonHideUnderline(
@@ -87,13 +89,9 @@ class NativeDropdown<T> extends StatelessWidget {
     //   ),
     // );
     _controller.setOptions(
-      items!
-          .map((e) => ValueItem(label: e.value.toString(), value: e.value as T))
-          .toList(),
+      items!.map((e) => ValueItem(label: e.value.toString(), value: e.value as T)).toList(),
     );
-    _controller.setSelectedOptions(value != null
-        ? value!.map((e) => ValueItem(label: e.toString(), value: e)).toList()
-        : []);
+    _controller.setSelectedOptions(value != null ? value!.map((e) => ValueItem(label: e.toString(), value: e)).toList() : []);
     return MultiSelectDropDown<T>(
       dropdownMargin: 8,
       showClearIcon: false,
@@ -103,9 +101,8 @@ class NativeDropdown<T> extends StatelessWidget {
         // (options as List<ValueItem<Object>>).map((e) => e.value as T).toList();
         onChanged(options.map((e) => e.value as T).toList());
       },
-      options: items!
-          .map((e) => ValueItem(label: e.value.toString(), value: e.value as T))
-          .toList(),
+      options: items!.map((e) => ValueItem(label: e.value.toString(), value: e.value as T)).toList(),
+      selectedOptions: value!.map((e) => ValueItem(label: e.toString(), value: e)).toList(),
       maxItems: maxItems ?? 1,
       selectionType: maxItems == 1 ? SelectionType.single : SelectionType.multi,
       chipConfig: const ChipConfig(wrapType: WrapType.wrap),
