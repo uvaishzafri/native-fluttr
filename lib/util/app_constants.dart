@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:native/i18n/translations.g.dart';
 
 enum Gender {
   @JsonValue('MALE')
@@ -58,14 +59,6 @@ List<String> languages = [
   "Others",
 ];
 
-List<String> locations = [
-  'Bangalore',
-  'Delhi',
-  'Gurgaon',
-  'Chennai',
-  'Hyderabad',
-  'Mumbai',
-  'Pune',
-  'Kolkata',
-  'Ahmedabad'
-];
+List<String> locations = ['Bangalore', 'Delhi', 'Gurgaon', 'Chennai', 'Hyderabad', 'Mumbai', 'Pune', 'Kolkata', 'Ahmedabad'];
+
+List<String> needs = [t.strings.financial, t.strings.expression, t.strings.curiosity, t.strings.independence, t.strings.activity];
