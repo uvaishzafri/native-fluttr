@@ -27,14 +27,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 @RoutePage()
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with AutoRouteAwareStateMixin<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with AutoRouteAwareStateMixin<HomeScreen> {
   TextEditingController? _searchController;
   User? _user;
+
   @override
   void initState() {
     _searchController = TextEditingController();
@@ -81,38 +82,32 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   _updateSystemUi() {
-    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer,
-        Theme.of(context).colorScheme.primaryContainer);
+    updateSystemUi(context, Theme.of(context).colorScheme.primaryContainer, Theme.of(context).colorScheme.primaryContainer);
   }
 
   getMatches() {
     final userRepo = getIt<UserRepository>();
-    userRepo
-        .getMatches()
-        .then((value) => value.fold((left) => null, (right) async {
-              if (right.isNotEmpty) {
-                Widget dialog;
-                var prefs = await SharedPreferences.getInstance();
-                var userJson = prefs.getString('user');
-                if (userJson != null) {
-                  var currUser = User.fromJson(jsonDecode(userJson));
-                  if (right.length > 1) {
-                    dialog = MultiMatchDialog(
-                        matchedUsers: right,
-                        selfPhotoUrl: currUser.photoURL ?? '');
-                  } else {
-                    dialog = SingleMatchDialog(
-                        userName: right.first.displayName!,
-                        matchedUserPhotoUrl: right.first.photoURL ?? '',
-                        selfPhotoUrl: currUser.photoURL ?? '');
-                  }
-                  if (context.mounted) {
-                    return showDialog(
-                        context: context, builder: (context) => dialog);
-                  }
-                }
+    userRepo.getMatches().then((value) => value.fold((left) => null, (right) async {
+          if (right.isNotEmpty) {
+            Widget dialog;
+            var prefs = await SharedPreferences.getInstance();
+            var userJson = prefs.getString('user');
+            if (userJson != null) {
+              var currUser = User.fromJson(jsonDecode(userJson));
+              if (right.length > 1) {
+                dialog = MultiMatchDialog(matchedUsers: right, selfPhotoUrl: currUser.photoURL ?? '');
+              } else {
+                dialog = SingleMatchDialog(
+                    userName: right.first.displayName!,
+                    matchedUserPhotoUrl: right.first.photoURL ?? '',
+                    selfPhotoUrl: currUser.photoURL ?? '');
               }
-            }));
+              if (context.mounted) {
+                return showDialog(context: context, builder: (context) => dialog);
+              }
+            }
+          }
+        }));
   }
 
   @override
@@ -137,8 +132,7 @@ class _HomeScreenState extends State<HomeScreen>
                       SliverAppBar(
                         toolbarHeight: 100,
                         centerTitle: true,
-                        title:
-                            SvgPicture.asset('assets/home/ic_logo_black.svg'),
+                        title: SvgPicture.asset('assets/home/ic_logo_black.svg'),
                       ),
                       SliverPadding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -146,17 +140,14 @@ class _HomeScreenState extends State<HomeScreen>
                           child: _searchBar(),
                         ),
                       ),
-                      SliverPadding(
-                          padding: const EdgeInsets.all(12),
-                          sliver: SliverToBoxAdapter(child: _nativeCard())),
+                      SliverPadding(padding: const EdgeInsets.all(12), sliver: SliverToBoxAdapter(child: _nativeCard())),
                       SliverPadding(
                         padding: const EdgeInsets.all(12),
                         sliver: state is HomeSuccessState
                             ? state.users.isNotEmpty
                                 ? _recommendations(state.users, bloc)
                                 : const SliverToBoxAdapter(
-                                    child: ContentNotFound(
-                                        'No recommendations yet', 400),
+                                    child: ContentNotFound('No recommendations yet', 400),
                                   )
                             : context.loaderOverlay.visible
                                 ? const SizedBox()
@@ -201,8 +192,7 @@ class _HomeScreenState extends State<HomeScreen>
                 if (context.loaderOverlay.visible) {
                   context.loaderOverlay.hide();
                 }
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text('Like Sent')));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Like Sent')));
               },
             );
           }),
@@ -212,9 +202,8 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _searchBar() {
     return NativeTextField(
       onTap: () async {
-        context.router
-            .push(const AccountPlansRoute())
-            .then((_) => _updateSystemUi());
+        //TODO: Change default back to false
+        context.router.push(SearchRoute(hasActiveSubscription: _user?.hasActiveSubscription ?? true)).then((_) => _updateSystemUi());
       },
       _searchController,
       hintText: 'Search',
@@ -253,10 +242,7 @@ class _HomeScreenState extends State<HomeScreen>
                 likesBloc.fetchLikesReport();
               },
             );
-            await context.router
-                .push(NativeCardScaffold(
-                    user: users[index], overlayItem: overlayItem))
-                .then((_) => _updateSystemUi());
+            await context.router.push(NativeCardScaffold(user: users[index], overlayItem: overlayItem)).then((_) => _updateSystemUi());
             getMatches();
           },
           child: NativeUserCard(
